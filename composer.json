@@ -1,0 +1,16 @@
+{
+    "name": "app/erv",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\Erv\\": "backend/src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "catherin",
+            "email": "catherinr24@gmail.com"
+        }
+    ],
+    "require": {}
+}
