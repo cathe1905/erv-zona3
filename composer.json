@@ -3,7 +3,9 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "App\\Erv\\": "backend/src/"
+            "MVC\\" : "backend/",
+            "Controllers\\" : "backend/app/controllers",
+            "Model\\" : "backend/app/models"
         }
     },
     "authors": [
