@@ -3,7 +3,7 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "MVC\\" : "backend/",
+            "MVC\\" : "backend/routes",
             "Controllers\\" : "backend/app/controllers",
             "Model\\" : "backend/app/models"
         }
