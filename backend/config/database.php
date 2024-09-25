@@ -12,9 +12,7 @@
         // Comprobando la conexión
         if ($db->connect_error) {
             die("Conexión fallida: " . $db->connect_error);
-        } else {
-            echo 'Se conectó correctamente';
-        }
+        } 
         
         return $db;
 }

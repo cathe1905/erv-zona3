@@ -16,13 +16,20 @@
             self::$db = $database;
         }
 
+        public static function allStatistics(){
+            $query= "SELECT COUNT(*) AS total FROM " . static::$table;
+            $result= static::$db->query($query);
+            $statistic= $result->fetch_assoc();
+            return $statistic;
+        }
+
         // public static function all(){
         //     $query= "SELECT * FROM " . static::$table;
         //     $result= static::$db->query($query);
         //     $records= [];
 
         //     if($result){
-        //         while($row= $result->fetch_array){
+        //         while($row= $result->fetch_assoc()){
         //             // $records[] = 
         //         }
         //     }else{
