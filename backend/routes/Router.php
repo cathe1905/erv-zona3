@@ -15,7 +15,8 @@ namespace MVC;
 
         // en esta se comprueba si existe la ruta en nuestros arrays y manda a llamar la funcion asociada
         public function comprobarRutas() {
-            $current_url = $_SERVER['REQUEST_URI'] ?? '/backend/';
+            //este parse_url es una funcion que tomaa solo el path de la ruta sin los parámetros, de esta forma funcionan las rutas asi tengan parámetros.
+            $current_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/backend/';
             $method= $_SERVER['REQUEST_METHOD'];
 
             if($method === 'GET'){

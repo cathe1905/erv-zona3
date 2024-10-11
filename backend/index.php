@@ -20,6 +20,7 @@ $router= new Router();
 
 $router->get('/backend/', [StatisticsController::class, 'getStatistics']);
 $router->get('/backend/explo', [ExploController::class, 'getExploradores']);
+// $router->get('/backend/explo?destacamento=', [ExploController::class, 'getExploradores']);
 
 
 $router->comprobarRutas();

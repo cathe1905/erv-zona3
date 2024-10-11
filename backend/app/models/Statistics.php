@@ -2,7 +2,7 @@
     namespace Model;
 
     class Statistics extends ActiveRecord{
-
+        //en este caso se usa la tabla exploradores para usar la funcion de obtener estadísticas.
         public static $table= 'exploradores';
         
         //obtiene las estadísticas por ramas

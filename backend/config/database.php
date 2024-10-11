@@ -13,7 +13,7 @@
         if ($db->connect_error) {
             die("Conexión fallida: " . $db->connect_error);
         } 
-        
+        // echo('db conectada');
         return $db;
 }
 
