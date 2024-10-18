@@ -20,7 +20,11 @@ $router= new Router();
 
 $router->get('/backend/', [StatisticsController::class, 'getStatistics']);
 $router->get('/backend/explo', [ExploController::class, 'getExploradores']);
-// $router->get('/backend/explo?destacamento=', [ExploController::class, 'getExploradores']);
+$router->post('/backend/explo', [ExploController::class, 'newExplorador']);
+$router->post('/backend/explo/actualizar', [ExploController::class, 'editExplorador']);
+$router->get('/backend/explo/actualizar', [ExploController::class, 'editExplorador']);
+$router->post('/backend/explo/eliminar', [ExploController::class, 'deleteExplorador']);
+
 
 
 $router->comprobarRutas();
