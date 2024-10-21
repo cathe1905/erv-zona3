@@ -1,6 +1,6 @@
 <?php
+header('Content-Type: application/json; charset=UTF-8');
 // header('Access-Control-Allow-Origin: *');
-// header('Content-Type: application/json');
 // header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE');
 // header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
@@ -24,8 +24,16 @@ $router->post('/backend/explo', [ExploController::class, 'newExplorador']);
 $router->post('/backend/explo/actualizar', [ExploController::class, 'editExplorador']);
 $router->get('/backend/explo/actualizar', [ExploController::class, 'editExplorador']);
 $router->post('/backend/explo/eliminar', [ExploController::class, 'deleteExplorador']);
-
-
+$router->get('/backend/destacamentos', [DetachmentController::class, 'getDestacamentos']);
+$router->post('/backend/destacamentos', [DetachmentController::class, 'newDestacamento']);
+$router->get('/backend/destacamentos/actualizar', [DetachmentController::class, 'editDestacamento']);
+$router->post('/backend/destacamentos/actualizar', [DetachmentController::class, 'editDestacamento']);
+$router->post('/backend/destacamentos/eliminar', [DetachmentController::class, 'deleteDestacamento']);
+$router->get('/backend/directiva', [LeadershipController::class, 'getLeadership']);
+$router->post('/backend/directiva', [LeadershipController::class, 'newLeadership']);
+$router->get('/backend/directiva/actualizar', [LeadershipController::class, 'editLeadership']);
+$router->post('/backend/directiva/actualizar', [LeadershipController::class, 'editLeadership']);
+$router->post('/backend/directiva/eliminar', [LeadershipController::class, 'deleteLeadership']);
 
 $router->comprobarRutas();
 

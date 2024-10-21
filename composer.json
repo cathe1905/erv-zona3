@@ -14,5 +14,7 @@
             "email": "catherinr24@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "intervention/image": "^2.5"
+    }
 }

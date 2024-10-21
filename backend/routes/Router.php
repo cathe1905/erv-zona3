@@ -18,7 +18,7 @@ namespace MVC;
             //este parse_url es una funcion que tomaa solo el path de la ruta sin los parámetros, de esta forma funcionan las rutas asi tengan parámetros.
             $current_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/backend/';
             $method= $_SERVER['REQUEST_METHOD'];
-
+            
             if($method === 'GET'){
                 $fn= $this->getRoutes[$current_url] ?? null;
             } elseif($method === 'POST'){

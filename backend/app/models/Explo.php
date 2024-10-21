@@ -62,7 +62,7 @@ class Explo extends ActiveRecord
         return self::$errors;
     }
 
-    public static function get_exploradores($destacamento, $rama, $id, $searchTerm, $page, $limit)
+    public static function get_exploradores($destacamento, $id, $rama, $searchTerm, $page, $limit)
     {
         //añadir al final luego de todas las validaciones
         $inicio= ($page - 1) * $limit;

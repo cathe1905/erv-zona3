@@ -24,7 +24,6 @@
 
             return $statistic;
         }
-
            // Identificar y unir los atributos de la BD
         public function atributos() {
             $atributos = [];
@@ -57,7 +56,6 @@
             $query .= " ) VALUES (' "; 
             $query .= join("', '", array_values($atributos));
             $query .= " ') ";
-    
             // Resultado de la consulta
             $resultado = self::$db->query($query);
             if($resultado){
@@ -130,19 +128,41 @@
 
             return $resultado;
         }
-        // public static function all(){
-        //     $query= "SELECT * FROM " . static::$table;
-        //     $result= static::$db->query($query);
-        //     $records= [];
 
-        //     if($result){
-        //         while($row= $result->fetch_assoc()){
-        //             // $records[] = 
-        //         }
-        //     }else{
-        //         echo 'Error en la ejecución de la consulta: ' . static::$db->error;
-        //     }
-        // }
+        public static function all(){
+            $query= "SELECT * FROM " . static::$table;
+            $result= static::$db->query($query);
+            $destacamentos= [];
+
+            if($result){
+                while($row= $result->fetch_assoc()){
+                    $destacamentos[] = $row;
+                }
+            }else{
+                echo 'Error en la ejecución de la consulta: ' . static::$db->error;
+            }
+            return $destacamentos;
+        }
+            // Subida de archivos
+        public function setImagen($imagen, $imagen_antigua= null) {
+            // Elimina la imagen previa
+            if( !is_null($this->id) ) {
+                $this->borrarImagen($imagen_antigua);
+            }
+            // Asignar al atributo de imagen el nombre de la imagen
+            if($imagen) {
+                $this->foto = $imagen;
+            }
+        }
+
+        // Elimina el archivo
+        public function borrarImagen($imagen) {
+            // Comprobar si existe el archivo
+            $existeArchivo = file_exists(CARPETA_IMAGENES . $imagen);
+            if($existeArchivo) {
+                unlink(CARPETA_IMAGENES . $imagen);
+            }
+        }
 
     }
 ?>
