@@ -19,21 +19,30 @@ use Controllers\UserController;
 $router= new Router();
 
 $router->get('/backend/', [StatisticsController::class, 'getStatistics']);
+
 $router->get('/backend/explo', [ExploController::class, 'getExploradores']);
 $router->post('/backend/explo', [ExploController::class, 'newExplorador']);
 $router->post('/backend/explo/actualizar', [ExploController::class, 'editExplorador']);
 $router->get('/backend/explo/actualizar', [ExploController::class, 'editExplorador']);
 $router->post('/backend/explo/eliminar', [ExploController::class, 'deleteExplorador']);
+
 $router->get('/backend/destacamentos', [DetachmentController::class, 'getDestacamentos']);
 $router->post('/backend/destacamentos', [DetachmentController::class, 'newDestacamento']);
 $router->get('/backend/destacamentos/actualizar', [DetachmentController::class, 'editDestacamento']);
 $router->post('/backend/destacamentos/actualizar', [DetachmentController::class, 'editDestacamento']);
 $router->post('/backend/destacamentos/eliminar', [DetachmentController::class, 'deleteDestacamento']);
+
 $router->get('/backend/directiva', [LeadershipController::class, 'getLeadership']);
 $router->post('/backend/directiva', [LeadershipController::class, 'newLeadership']);
 $router->get('/backend/directiva/actualizar', [LeadershipController::class, 'editLeadership']);
 $router->post('/backend/directiva/actualizar', [LeadershipController::class, 'editLeadership']);
 $router->post('/backend/directiva/eliminar', [LeadershipController::class, 'deleteLeadership']);
+
+$router->get('/backend/ascensos', [RankController::class, 'getAscensos']);
+$router->post('/backend/ascensos', [RankController::class, 'newAscenso']);
+$router->get('/backend/ascensos/actualizar', [RankController::class, 'editAscenso']);
+$router->post('/backend/ascensos/actualizar', [RankController::class, 'editAscenso']);
+$router->post('/backend/ascensos/eliminar', [RankController::class, 'deleteAscenso']);
 
 $router->comprobarRutas();
 
