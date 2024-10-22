@@ -57,6 +57,10 @@ function newRecord($class, $type)
         //Intentar crear el recurso
         $result = $record->crear();
 
+        if($type= 'usuario'){
+            $record->sendVerificationEmail();
+        }
+
         if ($result ) {
             http_response_code(201);
             $response = [
@@ -199,3 +203,5 @@ function deleteRecord($class, $type){
 
     }
 }
+
+

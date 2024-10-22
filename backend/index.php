@@ -1,4 +1,5 @@
 <?php
+phpinfo(); 
 header('Content-Type: application/json; charset=UTF-8');
 // header('Access-Control-Allow-Origin: *');
 // header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE');
@@ -43,6 +44,13 @@ $router->post('/backend/ascensos', [RankController::class, 'newAscenso']);
 $router->get('/backend/ascensos/actualizar', [RankController::class, 'editAscenso']);
 $router->post('/backend/ascensos/actualizar', [RankController::class, 'editAscenso']);
 $router->post('/backend/ascensos/eliminar', [RankController::class, 'deleteAscenso']);
+
+$router->get('/backend/users', [UserController::class, 'getUsers']);
+$router->post('/backend/users', [UserController::class, 'newUser']);
+$router->get('/backend/users/verification', [UserController::class, 'verificationUser']);
+$router->get('/backend/users/actualizar', [UserController::class, 'editUser']);
+$router->post('/backend/users/actualizar', [UserController::class, 'editUser']);
+$router->post('/backend/users/eliminar', [UserController::class, 'deleteUser']);
 
 $router->comprobarRutas();
 

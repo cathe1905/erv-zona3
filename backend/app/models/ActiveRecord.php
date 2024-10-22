@@ -1,6 +1,8 @@
 <?php
     namespace Model;
 
+use function Controllers\debuguear;
+
     class ActiveRecord{
 
         // Base DE DATOS
@@ -53,9 +55,10 @@
             // Insertar en la base de datos
             $query = " INSERT INTO " . static::$table . " ( ";
             $query .= join(', ', array_keys($atributos));
-            $query .= " ) VALUES (' "; 
+            $query .= " ) VALUES ('"; 
             $query .= join("', '", array_values($atributos));
             $query .= " ') ";
+
             // Resultado de la consulta
             $resultado = self::$db->query($query);
             if($resultado){
@@ -163,6 +166,22 @@
                 unlink(CARPETA_IMAGENES . $imagen);
             }
         }
+
+        public static function find_field_record($table, $column, $condition){
+            $query = 'SELECT * FROM ' . $table . ' WHERE ' . $column . ' = "' . self::$db->escape_string($condition) . '" LIMIT 1';
+            $request = self::$db->query($query);
+
+            if ($request->num_rows > 0) {
+                 $user= $request->fetch_assoc(); // Retorna los datos del registro
+                
+                 return $user;
+            } else {
+                return false; // Retorna falso si no encontró ningún registro
+            }
+            
+            
+        }
+
 
     }
 ?>
