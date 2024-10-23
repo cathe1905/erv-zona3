@@ -58,7 +58,7 @@ class UserController
             } else {
                 http_response_code(500);
                 $response = [
-                    'mensaje' => 'Error al crear usuario o enviar el correo. Intente nuevamente más tarde.' . $result_email,
+                    'mensaje' => 'Error al crear usuario o enviar el correo. Intente nuevamente más tarde.' 
                 ];
                 echo json_encode($response);
             }

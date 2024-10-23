@@ -58,11 +58,11 @@ class User extends ActiveRecord
 
     public static function all()
     {
-        $query =  "SELECT usuarios.id, usuarios.email, destacamentos.nombre, CASE
+        $query =  "SELECT usuarios.id, usuarios.email, destacamentos.nombre AS destacamento, CASE
             WHEN rol = 1 THEN 'Administrador'
             WHEN rol= 2 THEN 'Usuario'
             ELSE 'No clasificado'
-            END AS Rol
+            END AS rol
             FROM usuarios INNER JOIN destacamentos ON usuarios.destacamento_id = destacamentos.id";
 
         $result = static::$db->query($query);

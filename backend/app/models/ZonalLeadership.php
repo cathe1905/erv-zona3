@@ -63,6 +63,31 @@
                 self::$errors[] = 'La Imagen es Obligatoria';
             }
         }
+
+        public static function all(){
+            $query= "SELECT 
+            dz.id, 
+            dz.nombres, 
+            dz.apellidos, 
+            dz.ascenso, 
+            dz.cargo, 
+            dz.telefono,
+            dz.foto,
+            dt.nombre AS destacamento 
+             FROM directiva_zonal AS dz INNER JOIN destacamentos as dt ON dt.id = dz.destacamento_id";
+
+            $result= static::$db->query($query);
+            $destacamentos= [];
+
+            if($result){
+                while($row= $result->fetch_assoc()){
+                    $destacamentos[] = $row;
+                }
+            }else{
+                echo 'Error en la ejecución de la consulta: ' . static::$db->error;
+            }
+            return $destacamentos;
+        }
         
     }
 

@@ -11,12 +11,11 @@ class ExploController
   {
     $destacamento = isset($_GET['destacamento']) ? $_GET['destacamento'] : null;
     $rama = isset($_GET['rama']) ? $_GET['rama'] : null;
-    $id = isset($_GET['id']) ? intval($_GET['id']) : null;
     $query = isset($_GET['query']) && $_GET['query'] !== '' ? $_GET['query'] : '';
-    $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-    $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
+    $ascenso= isset($_GET['ascenso']) ? $_GET['ascenso'] : null;
+    $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 25;
 
-    $response = Explo::get_exploradores($destacamento, $rama, $id, $query, $page, $limit);
+    $response = Explo::get_exploradores($destacamento, $rama, $ascenso, $query, $limit);
     echo json_encode($response);
   }
 

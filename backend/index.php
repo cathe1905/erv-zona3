@@ -1,5 +1,5 @@
 <?php
-phpinfo(); 
+
 header('Content-Type: application/json; charset=UTF-8');
 // header('Access-Control-Allow-Origin: *');
 // header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE');
@@ -11,7 +11,7 @@ use MVC\Router;
 use Controllers\DetachmentController;
 use Controllers\ExploController;
 use Controllers\LeadershipController;
-use Controllers\LoginController;
+use Controllers\ExcelController;
 use Controllers\PagesController;
 use Controllers\RankController;
 use Controllers\StatisticsController;
@@ -51,6 +51,8 @@ $router->get('/backend/users/verification', [UserController::class, 'verificatio
 $router->get('/backend/users/actualizar', [UserController::class, 'editUser']);
 $router->post('/backend/users/actualizar', [UserController::class, 'editUser']);
 $router->post('/backend/users/eliminar', [UserController::class, 'deleteUser']);
+
+$router->get('/backend/excel', [ExcelController::class, 'descargarExcel']);
 
 $router->comprobarRutas();
 

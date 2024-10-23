@@ -62,31 +62,53 @@ class Explo extends ActiveRecord
         return self::$errors;
     }
 
-    public static function get_exploradores($destacamento, $id, $rama, $searchTerm, $page, $limit)
+    public static function get_exploradores($destacamento, $rama, $ascenso, $searchTerm, $limit)
     {
-        //añadir al final luego de todas las validaciones
-        $inicio= ($page - 1) * $limit;
         // primera parte de la consulta
-        $query = "SELECT exploradores.*, CASE
-        WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 3 AND 5 THEN 'pre-junior'
-        WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 6 AND 10 THEN 'pionero'
-        WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 11 AND 17 THEN 'brijer'
-        WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) >= 18 THEN 'oficial'
-        ELSE 'no clasificado'
-        END AS rama,
-        destacamentos.nombre AS destacamento FROM exploradores
-        INNER JOIN destacamentos ON exploradores.destacamento_id = destacamentos.id ";
+        $query = "SELECT
+            ex.id, 
+            ex.nombres, 
+            ex.apellidos, 
+            ex.fecha_nacimiento, 
+            ex.fecha_promesacion, 
+            ex.cargo, 
+            ex.cedula, 
+            ex.telefono, 
+            ex.email, 
+            CASE
+                WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) BETWEEN 3 AND 5 THEN 'pre-junior'
+                WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) BETWEEN 6 AND 10 THEN 'pionero'
+                WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) BETWEEN 11 AND 17 THEN 'brijer'
+                WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) >= 18 THEN 'oficial'
+                ELSE 'no clasificado'
+            END AS rama,
+            destacamentos.nombre AS destacamento,
+            ascensos.nombre AS ascenso 
+        FROM 
+            exploradores AS ex
+        INNER JOIN 
+            destacamentos ON ex.destacamento_id = destacamentos.id
+        LEFT JOIN 
+        ascensos ON ex.ascenso_id = ascensos.id";
 
         // se añade destacamento a la query si es que existe 
         if ($destacamento) {
-            $query .= " WHERE destacamentos.nombre = '" . self::$db->escape_string($destacamento) . "'";
+            $query .= " WHERE destacamentos.id = '" . self::$db->escape_string($destacamento) . "'";
         }
         // si existe un término de busqueda se añade a la query, evaluando también si existe destacamente para saber si usar where o and
         if($searchTerm != ''){
             if($destacamento){
-                $query.= " AND exploradores.nombres LIKE " . "'%" . self::$db->escape_string($searchTerm) . "%'";
+                $query.= " AND ex.nombres LIKE " . "'%" . self::$db->escape_string($searchTerm) . "%'";
             } else{
-                $query.= " WHERE exploradores.nombres LIKE " . "'%" . self::$db->escape_string($searchTerm) . "%'";
+                $query.= " WHERE ex.nombres LIKE " . "'%" . self::$db->escape_string($searchTerm) . "%'";
+            }
+        }
+
+        if($ascenso){
+            if($destacamento || $searchTerm != ''){
+                $query.= " AND ascensos.id =  " . self::$db->escape_string($ascenso);
+            } else{
+                $query.= " WHERE ascensos.id =  " . self::$db->escape_string($ascenso);
             }
         }
         // se añade rama si es que existe, se usa having ya que rama es una columna calculada, no se puede usar where
@@ -95,7 +117,7 @@ class Explo extends ActiveRecord
             
         }
         // se añade inicio y limite
-        $query.= " LIMIT " . $inicio . ", " . self::$db->escape_string($limit);
+        $query.= " LIMIT " . self::$db->escape_string($limit);
         
         $result= static::$db->query($query);
         
