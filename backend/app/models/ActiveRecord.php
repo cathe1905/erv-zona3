@@ -12,6 +12,9 @@ use function Controllers\debuguear;
 
         // Errores
         protected static $errors = [];
+
+        protected $id; // Definición de la propiedad id
+        protected $foto; // Definición de la propiedad foto
         
         // Definir la conexión a la BD
         public static function setDB($database) {
