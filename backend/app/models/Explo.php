@@ -62,7 +62,7 @@ class Explo extends ActiveRecord
         return self::$errors;
     }
 
-    public static function get_exploradores($destacamento, $rama, $ascenso, $searchTerm, $limit)
+    public static function get_exploradores($destacamento, $rama, $ascenso, $searchTerm, $page, $limit)
     {
         // primera parte de la consulta
         $query = "SELECT
@@ -91,6 +91,7 @@ class Explo extends ActiveRecord
         LEFT JOIN 
         ascensos ON ex.ascenso_id = ascensos.id";
 
+        $inicio= (($limit * $page) - $limit) + 1;
         // se añade destacamento a la query si es que existe 
         if ($destacamento) {
             $query .= " WHERE destacamentos.id = '" . self::$db->escape_string($destacamento) . "'";
@@ -117,7 +118,7 @@ class Explo extends ActiveRecord
             
         }
         // se añade inicio y limite
-        $query.= " LIMIT " . self::$db->escape_string($limit);
+        $query.= " LIMIT " . self::$db->escape_string($limit) . " OFFSET " . $inicio;
         
         $result= static::$db->query($query);
         
