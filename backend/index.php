@@ -51,6 +51,7 @@ $router->get('/backend/users/verification', [UserController::class, 'verificatio
 $router->get('/backend/users/actualizar', [UserController::class, 'editUser']);
 $router->post('/backend/users/actualizar', [UserController::class, 'editUser']);
 $router->post('/backend/users/eliminar', [UserController::class, 'deleteUser']);
+$router->post('/backend/users/auth', [UserController::class, 'authUser']);
 
 $router->get('/backend/excel', [ExcelController::class, 'descargarExcel']);
 

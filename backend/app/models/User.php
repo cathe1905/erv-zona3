@@ -80,6 +80,22 @@ class User extends ActiveRecord
         return $users;
     }
 
+    public static function datos_auth($email){
+        $query= 'SELECT usuarios.*, destacamentos.nombre AS destacamento
+        FROM usuarios 
+        INNER JOIN destacamentos on usuarios.destacamento_id = destacamentos.id
+        WHERE usuarios.email = ' . "'" . $email . "'";
+
+        $result= static::$db->query($query);
+        if ($result) {
+            $user = $result->fetch_assoc();
+            return $user;
+
+        } else {
+            echo 'Error en la ejecución de la consulta: ' . static::$db->error;
+        }
+    }
+
     
 
     

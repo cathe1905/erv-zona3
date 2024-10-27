@@ -190,4 +190,29 @@ class UserController
         deleteRecord(User::class, 'usuario');
     }
 
+    public static function authUser(){
+        $jsonInput = file_get_contents('php://input');
+        $data = json_decode($jsonInput, true); 
+
+        if(!isset($data['email']) || !isset($data['contraseña'])){
+            http_response_code(404);
+            echo json_encode(['error' =>' Email o contraseña no encontrado']);
+            return;
+        }
+
+        $email= $data['email'] ;
+        $contraseña= $data['contraseña'];
+
+         $user= User::datos_auth($email);
+
+        if(password_verify($contraseña, $user['contraseña'])){
+            http_response_code(200);
+            echo json_encode(['email' => $email, 'token' => $user['token'], 'rol' => $user['rol'], 'destacamento' => $user['destacamento']]);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' =>'Contraseña incorrecta']);
+        }
+
+    }
+
 }
