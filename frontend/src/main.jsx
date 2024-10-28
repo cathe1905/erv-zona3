@@ -1,66 +1,37 @@
-// src/main.jsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import App from './App';
-import PrivateRoute from './components/PrivateRoute';
-import AdminRoute from './components/AdminRoute';
-import Login from './pages/Login';
-import LeaderHome from './pages/leader/LeaderHome';
-import MemberList from './pages/leader/MemberList';
-import AdminHome from './admin/AdminHome';
-import ChurchList from './admin/ChurchList';
-import CreateChurch from './admin/CreateChurch';
-
-// Simulación de estado de autenticación
-const isAuthenticated = true;  // Cambiar según sea necesario
-const isAdmin = true;          // Cambiar para pruebas de roles
-
-const router = createBrowserRouter([
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        element: <PrivateRoute isAuthenticated={isAuthenticated} />, // Rutas protegidas
-        children: [
-          {
-            path: "leader/home",
-            element: <LeaderHome />,
-          },
-          {
-            path: "leader/members",
-            element: <MemberList />,
-          },
-        ],
-      },
-      {
-        element: <AdminRoute isAuthenticated={isAuthenticated} isAdmin={isAdmin} />, // Rutas de administrador
-        children: [
-          {
-            path: "admin/home",
-            element: <AdminHome />,
-          },
-          {
-            path: "admin/churches",
-            element: <ChurchList />,
-          },
-          {
-            path: "admin/churches/create",
-            element: <CreateChurch />,
-          },
-        ],
-      },
-    ],
-  },
-]);
+import App from "./App.jsx"
+import Dashboard from "./views/admin/Dashboard.jsx"
+import Dashboard_dest from "./views/lider/Dashboard_dest.jsx";
+import RequireAuth from "./components/requireAuth.jsx";
+import Explo from "./views/admin/explo/exploradores.jsx";
+import Explo_dest from "./views/lider/explo/exploradores_destc.jsx";
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./views/admin/Layout.jsx";
+import LayoutDest from "./views/lider/LayoutDest.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route element={<Layout/>}>
+
+          <Route element={<RequireAuth role={1} />}>
+            <Route path="/dashboard/admin" element={<Dashboard />} />
+            <Route path="/dashboard/admin/explo" element={<Explo />} />
+          
+          </Route>
+        </Route>
+
+        <Route element={<LayoutDest/>}>
+          <Route element={<RequireAuth role={2} />}>
+            <Route path="/dashboard/dest" element={<Dashboard_dest />} />
+            <Route path="/dashboard/dest/explo" element={<Explo_dest />} />
+          </Route>
+        </Route>
+
+      </Routes>
+    </BrowserRouter>
+  </React.StrictMode>
 );
