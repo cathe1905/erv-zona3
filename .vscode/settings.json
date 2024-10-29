@@ -1,0 +1,14 @@
+{
+    "html-css-class-completion.CSSLanguages": [
+        "html",
+        "css",
+        "javascript",
+        "javascriptreact",
+        "typescriptreact",
+        "sass",
+        "scss"
+    ],
+    "emmet.includeLanguages": {
+        "\"javascript\"": "\"javascriptreact\""
+    }
+}

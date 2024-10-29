@@ -6,11 +6,11 @@ const RequireAuth = ({role}) => {
     const navigate = useNavigate();
     const [isAuthorized, setIsAuthorized] = useState(false);
     const info = localStorage.getItem('token');
-
+    console.log(info)
     useEffect(() => {
         if (info) {
             const token = jwtDecode(info);
-
+            console.log(token)
             if (token && token.data.role == role) {
                 setIsAuthorized(true); 
             } else {
@@ -20,7 +20,7 @@ const RequireAuth = ({role}) => {
             navigate('/'); 
         }
     }, [info, role, navigate]);
-
+    console.log(isAuthorized)
     return isAuthorized ? <Outlet></Outlet> : null;
 }
 

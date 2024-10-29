@@ -26,17 +26,19 @@ function LoginPage(){
             
 
             if(respuesta.ok){
+
                 setLoged(true);
                 const data = await respuesta.json();
                 localStorage.setItem('token', data.token);
-                console.log(data)
+
                 const data_decode= jwtDecode(data.token);
-                console.log(data_decode)
-                
-                if(data.rol == 1){
-                    navigate(`/dashboard/admin?rol=${data.rol}`)
-                } else if(data.rol == 2){
-                    navigate(`/dashboard/dest?rol=${data.rol}&destacamento=${data.destacamento}`)
+    
+                if(data_decode.data.role == 1){
+                    navigate('/dashboard/admin')
+
+                } else if(data_decode.data.role == 2){
+                    navigate(`/dashboard/dest?destacamento=${data_decode.data.destacamento}`)
+
                 }
                 
             }else {

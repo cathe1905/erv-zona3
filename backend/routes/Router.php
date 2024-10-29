@@ -1,6 +1,8 @@
 <?php
 namespace MVC;
 
+use function Controllers\debuguear;
+
     class Router {
         public $getRoutes= [];
         public $postRoutes= [];
@@ -16,9 +18,10 @@ namespace MVC;
         // en esta se comprueba si existe la ruta en nuestros arrays y manda a llamar la funcion asociada
         public function comprobarRutas() {
             //este parse_url es una funcion que tomaa solo el path de la ruta sin los parámetros, de esta forma funcionan las rutas asi tengan parámetros.
-            $current_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/backend/';
+            $current_url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/backend');
             $method= $_SERVER['REQUEST_METHOD'];
-            
+
+            // debuguear($this->postRoutes);
             if($method === 'GET'){
                 $fn= $this->getRoutes[$current_url] ?? null;
             } elseif($method === 'POST'){
@@ -28,7 +31,7 @@ namespace MVC;
             if($fn){
                 call_user_func($fn, $this);
             }else{
-                echo json_encode(['error' => 'Pagina no encontrada']);
+                echo json_encode(['error' => 'Pagina no encontrada', 'url' => $current_url, 'method' => $method]);
             }
             
         }
