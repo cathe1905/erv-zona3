@@ -24,6 +24,7 @@ import Usuarios from "./views/admin/usuarios/usuarios.jsx";
 import CrearUsuario from "./views/admin/usuarios/crear_usuario.jsx";
 import EditarUsuario from "./views/admin/usuarios/editar_usuario.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
