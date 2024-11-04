@@ -6,18 +6,24 @@
         public static $table= 'exploradores';
         
         //obtiene las estadísticas por ramas
-        public static function getStatisticsByRama(){
+        public static function getStatisticsByRama($destacamento){
 
-            $query= "SELECT COUNT(*) AS total,
+            $query= "SELECT COUNT(*) AS total, 
                 CASE
                     WHEN TIMESTAMPDIFF(YEAR,fecha_nacimiento,CURDATE()) BETWEEN 3 AND 5 THEN 'pre-junior'
                     WHEN TIMESTAMPDIFF(YEAR,fecha_nacimiento,CURDATE()) BETWEEN 6 AND 10 THEN 'pionero'
                     WHEN TIMESTAMPDIFF(YEAR,fecha_nacimiento,CURDATE()) BETWEEN 11 AND 17 THEN 'brijer'
                     WHEN TIMESTAMPDIFF(YEAR,fecha_nacimiento,CURDATE()) >= 18 THEN 'oficial'
                     ELSE 'no clasificado'
-                    END AS rama
-                FROM " . static::$table . 
-                " GROUP BY rama";
+                    END AS rama FROM exploradores 
+                    INNER JOIN destacamentos ON exploradores.destacamento_id = destacamentos.id ";
+                
+            if($destacamento){
+                $query .= "WHERE destacamentos.nombre = '" . self::$db->escape_string($destacamento) . "'";
+            }
+            
+            $query .=  " GROUP BY rama";
+              
             
             $result= static::$db->query($query);
             $statistics_ramas= [];
@@ -35,4 +41,5 @@
         }
         
     }
+    
 ?>

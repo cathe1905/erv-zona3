@@ -21,9 +21,13 @@ use function Controllers\debuguear;
             self::$db = $database;
         }
 
-        public static function allStatistics(){
+        public static function allStatistics($destacamento){
             // se obtiene el conteo de los registros por tablas
             $query= "SELECT COUNT(*) AS total FROM " . static::$table;
+
+            if($destacamento){
+                $query.= " INNER JOIN destacamentos ON " . static::$table . ".destacamento_id = destacamentos.id WHERE destacamentos.nombre = '" . self::$db->escape_string($destacamento) . "'";
+            }
             $result= static::$db->query($query);
             $statistic= $result->fetch_assoc();
 

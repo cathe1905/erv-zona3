@@ -10,8 +10,6 @@ require_once __DIR__ . '/app/app.php';
 // Cargar el archivo .env
 use Dotenv\Dotenv;
 
-
-
 // Acceder a las variables de entorno
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -21,7 +19,6 @@ use Controllers\DetachmentController;
 use Controllers\ExploController;
 use Controllers\LeadershipController;
 use Controllers\ExcelController;
-use Controllers\PagesController;
 use Controllers\RankController;
 use Controllers\StatisticsController;
 use Controllers\UserController;

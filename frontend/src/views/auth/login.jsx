@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
+import { getDestacamento } from "../lider/LayoutDest";
+import Swal from 'sweetalert2'
 
 function LoginPage(){
     const [loged, setLoged] = useState(false);
     const [error, setError] = useState();
     const navigate = useNavigate();
+
 
     const logIn = async (e) => {
         e.preventDefault();
@@ -23,7 +26,6 @@ function LoginPage(){
                 },
                 body: JSON.stringify(datos)
             });
-            
 
             if(respuesta.ok){
 
@@ -43,7 +45,13 @@ function LoginPage(){
                 
             }else {
                 setError('Error al iniciar sesión');
-                alert('contraseña o email incorrectos')
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Contraseña o email incorrectos',
+                    icon: 'error',
+                    confirmButtonText: 'ok'
+                });
+                return;
                 
             }
         } catch(error){
@@ -53,8 +61,15 @@ function LoginPage(){
         }
     }
 
+    useEffect(() =>{
+        const user= getDestacamento();
+        if(user){
+            navigate(`/dashboard/dest?destacamento=${user.destacamento}`);
+        }
+    },[navigate])
+
     return (
-        <div>
+        <>
             <h1>Ingresa a tu dashboard</h1>
             <form onSubmit={logIn}>
                 <input type="text" name="email" placeholder="Tu Email"/>
@@ -62,7 +77,7 @@ function LoginPage(){
                 <button type="submit">Enviar</button>
             </form>
         
-        </div>
+        </>
     )
 }
 

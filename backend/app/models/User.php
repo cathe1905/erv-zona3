@@ -92,7 +92,7 @@ class User extends ActiveRecord
             return $user;
 
         } else {
-            echo 'Error en la ejecución de la consulta: ' . static::$db->error;
+            return null;
         }
     }
 

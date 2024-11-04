@@ -208,33 +208,39 @@ class UserController
         $contraseña= $data['contraseña'];
 
          $user= User::datos_auth($email);
+        if($user){
+            if(password_verify($contraseña, $user['contraseña'])){
 
-        if(password_verify($contraseña, $user['contraseña'])){
-
-            $jwtSecret = $_ENV['JWT_SECRET'];
-          
-            // Datos a incluir en el token
-            $payload = [
-                'iss' => 'http://erv-zona3/backend/users/auth', // Emisor del token
-                'aud' => 'http://erv-zona3/backend/users/auth', // Audiencia del token
-                'iat' => time(),              // Tiempo de emisión
-                'exp' => time() + (14400),  // Expiración del token (ej. 1 hora)
-                'data' => [
-                    'email' => $email,           // ID del usuario
-                    'role' => $user['rol'],
-                    'destacamento' => $user['destacamento']        // Rol del usuario
-                ]
-            ];
-            $jwt = JWT::encode($payload, $jwtSecret, 'HS256');
-            http_response_code(200);
-            echo json_encode(([
-                'status' => 'success',
-                'token' => $jwt
-            ]));
-        } else {
+                $jwtSecret = $_ENV['JWT_SECRET'];
+              
+                // Datos a incluir en el token
+                $payload = [
+                    'iss' => 'http://erv-zona3/backend/users/auth', // Emisor del token
+                    'aud' => 'http://erv-zona3/backend/users/auth', // Audiencia del token
+                    'iat' => time(),              // Tiempo de emisión
+                    'exp' => time() + (14400),  // 4 horas
+                    'data' => [
+                        'email' => $email,           // ID del usuario
+                        'role' => $user['rol'],
+                        'destacamento' => $user['destacamento']        // Rol del usuario
+                    ]
+                ];
+                $jwt = JWT::encode($payload, $jwtSecret, 'HS256');
+                http_response_code(200);
+                echo json_encode(([
+                    'status' => 'success',
+                    'token' => $jwt
+                ]));
+            } else {
+                http_response_code(404);
+                echo json_encode(['error' =>'Contraseña incorrecta']);
+            }
+        }else{
             http_response_code(404);
-            echo json_encode(['error' =>'Contraseña incorrecta']);
+                echo json_encode(['error' =>'No esta registrado este email']);
         }
+
+
 
     }
 

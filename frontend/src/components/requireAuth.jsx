@@ -3,14 +3,19 @@ import {jwtDecode} from 'jwt-decode';
 import { Outlet, useNavigate } from "react-router-dom";
 
 const RequireAuth = ({role}) => {
-    const navigate = useNavigate();
     const [isAuthorized, setIsAuthorized] = useState(false);
     const info = localStorage.getItem('token');
-    console.log(info)
+    const navigate = useNavigate();
+
     useEffect(() => {
-        if (info) {
+        if (typeof info === 'string') {
             const token = jwtDecode(info);
-            console.log(token)
+
+            if(token && token.exp && Date.now() >= token.exp * 1000){
+                localStorage.removeItem('token');
+                navigate('/');
+                return; 
+            }
             if (token && token.data.role == role) {
                 setIsAuthorized(true); 
             } else {
@@ -18,10 +23,22 @@ const RequireAuth = ({role}) => {
             }
         } else {
             navigate('/'); 
+
         }
-    }, [info, role, navigate]);
-    console.log(isAuthorized)
+    }, [info, navigate]);
+
     return isAuthorized ? <Outlet></Outlet> : null;
+}
+
+export const getInfoToken =() => {
+    const info = localStorage.getItem('token');
+    if (!info) {
+        navigate('/'); 
+        return null; 
+    }
+    const token = jwtDecode(info);
+    return token || null;
+    
 }
 
 export default RequireAuth

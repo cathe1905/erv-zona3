@@ -88,6 +88,15 @@
             }
             return $destacamentos;
         }
+        public static function allStatisticsZonal(){
+            // se obtiene el conteo de los registros por tablas
+            $query= "SELECT COUNT(*) AS total FROM " . static::$table;
+
+            $result= static::$db->query($query);
+            $statistic= $result->fetch_assoc();
+
+            return $statistic;
+        }
         
     }
 
