@@ -11,31 +11,31 @@ const Menu = () => {
   return (
     <>
       <nav className="row  roboto-regular fs-6 ">
-        <a className="text-decoration-none mb-3 enlace-menu" href="#home">
+        <a className="text-decoration-none mb-3 enlace-menu" href="/dashboard/admin">
           <i className="bi bi-house-door me-2"></i> <span>Home</span>
         </a>
         <a
           className="text-decoration-none  enlace-menu mb-3"
-          href="#exploradores"
+          href="/dashboard/admin/explo"
         >
           <i className="bi bi-people me-2"></i> <span>Exploradores</span>
         </a>
         <a
           className="text-decoration-none  enlace-menu mb-3"
-          href="#destacamentos"
+          href="/dashboard/admin/destacamentos"
         >
           <i className="bi bi-building me-2"></i> <span>Destacamentos</span>
         </a>
         <a
           className="text-decoration-none  enlace-menu mb-3"
-          href="#directiva-zonal"
+          href="/dashboard/admin/directiva"
         >
           <i className="bi bi-briefcase me-2"></i> <span>Directiva Zonal</span>
         </a>
-        <a className="text-decoration-none  enlace-menu mb-3" href="#ascensos">
+        <a className="text-decoration-none  enlace-menu mb-3" href="/dashboard/admin/ascensos">
           <i className="bi bi-star me-2"></i> <span>Ascensos</span>
         </a>
-        <a className="text-decoration-none mb-3 enlace-menu" href="#usuarios">
+        <a className="text-decoration-none mb-3 enlace-menu" href="/dashboard/admin/usuarios">
           <i className="bi bi-person me-2"></i> <span>Usuarios</span>
         </a>
 

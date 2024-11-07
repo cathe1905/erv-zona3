@@ -9,15 +9,16 @@ class ExploController
 
   public static function getExploradores()
   {
-    $destacamento = isset($_GET['destacamento']) ? intval($_GET['destacamento']) : null;
-    $rama = isset($_GET['rama']) ? $_GET['rama'] : null;
-    $query = isset($_GET['query']) && $_GET['query'] !== '' ? $_GET['query'] : '';
-    $ascenso= isset($_GET['ascenso']) ? intval($_GET['ascenso']) : null;
+    $destacamento = isset($_GET['destacamento']) && $_GET['destacamento'] !== 'null' ? intval($_GET['destacamento']) : null;
+    $rama = isset($_GET['rama']) && $_GET['rama'] !== 'null' ? $_GET['rama'] : null;
+    $query = isset($_GET['query']) && $_GET['query'] !== 'null' ? $_GET['query'] : null;
+    $ascenso= isset($_GET['ascenso']) && $_GET['ascenso'] !== 'null' ? intval($_GET['ascenso']) : null;
     $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-    $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 25;
+    $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
 
     $response = Explo::get_exploradores($destacamento, $rama, $ascenso, $query, $page, $limit);
-    echo json_encode($response);
+    $cuenta= Explo::get_exploradores_count($destacamento, $rama, $ascenso, $query);
+    echo json_encode(['exploradores' => $response, 'total' => $cuenta]);
   }
 
   //las funciones que se usan a continuación estan el archivo funciones.php

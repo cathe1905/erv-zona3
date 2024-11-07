@@ -74,7 +74,8 @@ class Explo extends ActiveRecord
             ex.cargo, 
             ex.cedula, 
             ex.telefono, 
-            ex.email, 
+            ex.email,
+            TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) AS edad, 
             CASE
                 WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) BETWEEN 3 AND 5 THEN 'pre-junior'
                 WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) BETWEEN 6 AND 10 THEN 'pionero'
@@ -91,13 +92,14 @@ class Explo extends ActiveRecord
         LEFT JOIN 
         ascensos ON ex.ascenso_id = ascensos.id";
 
-        $inicio= (($limit * $page) - $limit) + 1;
+        $inicio = ($limit * ($page - 1));
+
         // se añade destacamento a la query si es que existe 
-        if ($destacamento) {
+        if ($destacamento != null) {
             $query .= " WHERE destacamentos.id = '" . self::$db->escape_string($destacamento) . "'";
         }
         // si existe un término de busqueda se añade a la query, evaluando también si existe destacamente para saber si usar where o and
-        if($searchTerm != ''){
+        if($searchTerm != null){
             if($destacamento){
                 $query.= " AND ex.nombres LIKE " . "'%" . self::$db->escape_string($searchTerm) . "%'";
             } else{
@@ -105,7 +107,7 @@ class Explo extends ActiveRecord
             }
         }
 
-        if($ascenso){
+        if($ascenso != null){
             if($destacamento || $searchTerm != ''){
                 $query.= " AND ascensos.id =  " . self::$db->escape_string($ascenso);
             } else{
@@ -133,6 +135,63 @@ class Explo extends ActiveRecord
         }
 
         return $exploradores;
+    }
+
+    public static function get_exploradores_count($destacamento, $rama, $ascenso, $searchTerm)
+    {
+        // primera parte de la consulta
+        $query = "SELECT COUNT(*) AS total,
+            CASE
+                WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) BETWEEN 3 AND 5 THEN 'pre-junior'
+                WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) BETWEEN 6 AND 10 THEN 'pionero'
+                WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) BETWEEN 11 AND 17 THEN 'brijer'
+                WHEN TIMESTAMPDIFF(YEAR, ex.fecha_nacimiento, CURDATE()) >= 18 THEN 'oficial'
+                ELSE 'no clasificado'
+            END AS rama
+        FROM 
+            exploradores AS ex
+        INNER JOIN 
+            destacamentos ON ex.destacamento_id = destacamentos.id
+        LEFT JOIN 
+        ascensos ON ex.ascenso_id = ascensos.id";
+
+        // se añade destacamento a la query si es que existe 
+        if ($destacamento) {
+            $query .= " WHERE destacamentos.id = '" . self::$db->escape_string($destacamento) . "'";
+        }
+        // si existe un término de busqueda se añade a la query, evaluando también si existe destacamente para saber si usar where o and
+        if($searchTerm != ''){
+            if($destacamento){
+                $query.= " AND ex.nombres LIKE " . "'%" . self::$db->escape_string($searchTerm) . "%'";
+            } else{
+                $query.= " WHERE ex.nombres LIKE " . "'%" . self::$db->escape_string($searchTerm) . "%'";
+            }
+        }
+
+        if($ascenso){
+            if($destacamento || $searchTerm != ''){
+                $query.= " AND ascensos.id =  " . self::$db->escape_string($ascenso);
+            } else{
+                $query.= " WHERE ascensos.id =  " . self::$db->escape_string($ascenso);
+            }
+        }
+        if($rama != null){
+            $query .= " HAVING rama = '" . self::$db->escape_string($rama) . "'"; 
+            
+        }
+        
+        $result= static::$db->query($query);
+        
+        $cuenta=0;
+
+        if($result){
+            $cuenta= $result->fetch_assoc();
+
+        }else{
+            echo 'Error en la ejecución de la consulta: ' . static::$db->error;
+        }
+
+        return $cuenta['total'];
     }
 
     
