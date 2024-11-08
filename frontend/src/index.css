@@ -181,4 +181,11 @@ body {
 .altura-completa{
   height:100vh;
 }
+.action {
+  cursor: pointer;
+  color: #007bff;
+  font-size: 1rem;      /* Agranda el tamaño del texto */
+  font-weight: bold;      /* Hace los puntos más gruesos */
+}
+
 
