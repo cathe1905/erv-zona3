@@ -2,27 +2,72 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { capitalize } from "../../../../funciones";
 import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
+import { useNavigate } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Swal from 'sweetalert2'
 
 const Destacamentos = () => {
   const [data, setData] = useState(null);
+  const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const [idEliminar, setIdEliminar] = useState(null);
+  const [nombreEliminar, setNombreEliminar]= useState(null);
 
-  useEffect(() => {
-    const getDestacamentos = async () => {
-      try {
-        const result = await fetch("http://erv-zona3/backend/destacamentos");
+  const handleClose = () => {
+    setIdEliminar(null)
+    setNombreEliminar(null)
+    setShow(false)
+  };
+  const handleShow = ({id, nombre}) => {
+    setIdEliminar(id)
+    setNombreEliminar(nombre)
+    setShow(true)
+  };
 
-        if (result.ok) {
-          const respuesta = await result.json();
-          setData(respuesta);
-        }
-      } catch (error) {
-        console.error("Hubo un problema con la solicitud", error);
-        console.log(error);
-        return;
+  const eliminarRegistro= async () =>{
+    try {
+      const id= {id: idEliminar}
+      const result = await fetch("http://erv-zona3/backend/destacamentos/eliminar",{
+        method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify(id)
+      });
+
+      if (result.ok) {
+        Swal.fire({
+          title: 'Exito',
+          text: 'Destacamento eliminado exitosamente',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+      });
+      setShow(false)
+      getDestacamentos();
       }
-    };
+    } catch (error) {
+      console.error("Hubo un problema con la solicitud", error);
+      console.log(error);
+      return;
+    }
+  }
+  const getDestacamentos = async () => {
+    try {
+      const result = await fetch("http://erv-zona3/backend/destacamentos");
+
+      if (result.ok) {
+        const respuesta = await result.json();
+        setData(respuesta);
+      }
+    } catch (error) {
+      console.error("Hubo un problema con la solicitud", error);
+      console.log(error);
+      return;
+    }
+  };
+  useEffect(() => {
+    
     getDestacamentos();
   }, []);
 
@@ -69,17 +114,17 @@ const Destacamentos = () => {
                       as="span"
                       id="dropdown-custom-trigger"
                       className="border p-1 action"
-                      style={{ cursor: "pointer", color: "#007bff" }}
                     >
                       . . .
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item eventKey="1">Editar</Dropdown.Item>
-                      <Dropdown.Item eventKey="2">Eliminar</Dropdown.Item>
+                      <Dropdown.Item onClick={() => navigate(`/dashboard/admin/destacamentos/editar?id=${dest.id}`)} eventKey="1">Editar</Dropdown.Item>
+                      <Dropdown.Item onClick={() => handleShow({ id: dest.id, nombre: dest.nombre })} eventKey="2">Eliminar</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </td>
               </tr>
+              
             ))
           ) : (
             <tr>
@@ -90,8 +135,27 @@ const Destacamentos = () => {
           )}
         </tbody>
       </table>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Eliminar Destacamento</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          ¿Estás seguro(a) que deseas eliminar el destacamento {nombreEliminar}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button onClick={eliminarRegistro} variant="primary">Si</Button>
+        </Modal.Footer>
+      </Modal>
       <div className="border">
-        <a className="text-decoration-none" style={{cursor: 'pointer'}}>Crear Destacamento</a>
+        <a href="/dashboard/admin/destacamentos/crear" className="text-decoration-none" style={{cursor: 'pointer'}}>Crear Destacamento</a>
       </div>
       
     </>
