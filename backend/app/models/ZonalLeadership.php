@@ -3,12 +3,12 @@
 
     class ZonalLeadership extends ActiveRecord{
         public static $table= 'directiva_zonal';
-        public static $columnsDB= ['id', 'nombres', 'apellidos', 'ascenso', 'cargo', 'telefono', 'foto', 'destacamento_id' ];
+        public static $columnsDB= ['id', 'nombres', 'apellidos', 'ascenso_id', 'cargo', 'telefono', 'foto', 'destacamento_id' ];
         
         public $id;
         public $nombres;
         public $apellidos;
-        public $ascenso;
+        public $ascenso_id;
         public $cargo;
         public $telefono;
         public $foto;
@@ -19,7 +19,7 @@
             $this->id = $arg['id'] ?? null;
             $this->nombres = $arg['nombres'] ?? '';
             $this->apellidos = $arg['apellidos'] ?? '';
-            $this->ascenso = $arg['ascenso'] ?? '';
+            $this->ascenso_id = $arg['ascenso_id'] ?? '';
             $this->cargo = $arg['cargo'] ?? '';
             $this->telefono = $arg['telefono'] ?? '';
             $this->foto = $arg['foto'] ?? '';
@@ -36,8 +36,8 @@
                 self::$errors[] = "El campo apellidos es obligatorio";
             }
         
-            if (!$this->ascenso) {
-                self::$errors[] = "El campo ascenso es obligatorio";
+            if (!$this->ascenso_id) {
+                self::$errors[] = "El campo ascenso_id es obligatorio";
             }
         
             if (!$this->cargo) {
@@ -69,12 +69,13 @@
             dz.id, 
             dz.nombres, 
             dz.apellidos, 
-            dz.ascenso, 
             dz.cargo, 
             dz.telefono,
             dz.foto,
-            dt.nombre AS destacamento 
-             FROM directiva_zonal AS dz INNER JOIN destacamentos as dt ON dt.id = dz.destacamento_id";
+            dt.nombre AS destacamento,
+            asce.nombre AS ascenso 
+             FROM directiva_zonal AS dz INNER JOIN destacamentos AS dt ON dt.id = dz.destacamento_id
+             INNER JOIN ascensos AS asce ON asce.id = dz.ascenso_id";
 
             $result= static::$db->query($query);
             $destacamentos= [];

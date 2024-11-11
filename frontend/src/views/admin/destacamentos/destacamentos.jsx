@@ -7,6 +7,21 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
 
+
+export const getDestacamentos = async () => {
+  try {
+    const result = await fetch("http://erv-zona3/backend/destacamentos");
+
+    if (result.ok) {
+      const respuesta = await result.json();
+      return respuesta;
+    }
+  } catch (error) {
+    console.error("Hubo un problema con la solicitud", error);
+    console.log(error);
+    return;
+  }
+};
 const Destacamentos = () => {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
@@ -44,7 +59,8 @@ const Destacamentos = () => {
           confirmButtonText: 'Ok'
       });
       setShow(false)
-      getDestacamentos();
+     const respuesta= await getDestacamentos();
+     setData(respuesta)
       }
     } catch (error) {
       console.error("Hubo un problema con la solicitud", error);
@@ -52,23 +68,14 @@ const Destacamentos = () => {
       return;
     }
   }
-  const getDestacamentos = async () => {
-    try {
-      const result = await fetch("http://erv-zona3/backend/destacamentos");
 
-      if (result.ok) {
-        const respuesta = await result.json();
-        setData(respuesta);
-      }
-    } catch (error) {
-      console.error("Hubo un problema con la solicitud", error);
-      console.log(error);
-      return;
-    }
-  };
   useEffect(() => {
     
-    getDestacamentos();
+    const fetchData = async () => {
+      const result = await getDestacamentos();
+      setData(result);
+    };
+    fetchData();
   }, []);
 
   return (
@@ -163,3 +170,4 @@ const Destacamentos = () => {
 };
 
 export default Destacamentos;
+

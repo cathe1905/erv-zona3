@@ -1,7 +1,8 @@
 <?php
 namespace Controllers;
 use Intervention\Image\ImageManagerStatic as Image;
-define('CARPETA_IMAGENES', $_SERVER['DOCUMENT_ROOT'] . '/backend/imagenes/');
+use Model\User;
+define('CARPETA_IMAGENES', $_SERVER['DOCUMENT_ROOT'] . '/imagenes/');
 
 function debuguear($variable)
 {
@@ -52,20 +53,24 @@ function newRecord($class, $type)
             $imagen= Image::make($image_data);
             $record->setImagen($nombreImagen);
             $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+
+            // Generar la URL pública de la imagen
+            $urlImagen = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/imagenes/' . $nombreImagen;
            }
         }
         //Intentar crear el recurso
         $result = $record->crear();
 
-        if($type= 'usuario'){
-            $record->sendVerificationEmail();
-        }
+        // if($type= 'usuario'){
+        //      $record->sendVerificationEmail();
+        // }
 
         if ($result ) {
             http_response_code(201);
             $response = [
                 'mensaje' => $type . ' creado exitosamente.',
                 'registro' => $record,
+                'imagen_url' => $urlImagen ?? null // URL de la imagen guardada
             ];
             echo json_encode($response);
         } else {
