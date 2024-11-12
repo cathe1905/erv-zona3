@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { jwtDecode}  from "jwt-decode";
-import { capitalize } from "../../../funciones";
+import { capitalize } from "../../funciones";
 import { useNavigate } from "react-router-dom";
 
 const Logout= () => {

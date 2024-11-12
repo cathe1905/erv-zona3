@@ -136,6 +136,7 @@ use function Controllers\debuguear;
             $query = "DELETE FROM "  . static::$table . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
             $resultado = self::$db->query($query);
 
+
             return $resultado;
         }
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { getDestacamentos } from "../destacamentos/destacamentos";
 import { getAscensos } from "../ascensos/ascensos";
-import { capitalize } from "../../../../funciones";
+import { capitalize } from "../../../funciones";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";

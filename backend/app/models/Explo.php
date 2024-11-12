@@ -64,7 +64,7 @@ class Explo extends ActiveRecord
         return self::$errors;
     }
 
-    public static function get_exploradores($destacamento, $rama, $ascenso, $searchTerm, $page, $limit)
+    public static function get_exploradores($destacamento, $rama, $ascenso, $searchTerm, $page, $limit, $all)
     {
         // primera parte de la consulta
         $query = "SELECT
@@ -120,9 +120,12 @@ class Explo extends ActiveRecord
         if ($rama != null) {
             $query .= " HAVING rama = '" . self::$db->escape_string($rama) . "'";
         }
-        // se añade inicio y limite
-        $query .= " LIMIT " . self::$db->escape_string($limit) . " OFFSET " . $inicio;
 
+        if($all === false){
+            // se añade inicio y limite
+            $query .= " LIMIT " . self::$db->escape_string($limit) . " OFFSET " . $inicio;
+        }
+        
         $result = static::$db->query($query);
 
         $exploradores = [];

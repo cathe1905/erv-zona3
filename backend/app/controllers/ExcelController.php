@@ -28,15 +28,16 @@ class ExcelController
         $letras = ['A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
 
         if($categoria == 'exploradores'){
-
+            
             $destacamento = isset($_GET['destacamento']) && $_GET['destacamento'] !== 'null' ? intval($_GET['destacamento']) : null;
             $rama = isset($_GET['rama']) && $_GET['rama'] !== 'null' ? $_GET['rama'] : null;
             $query = isset($_GET['query']) && $_GET['query'] !== 'null' ? $_GET['query'] : null;
             $ascenso= isset($_GET['ascenso']) && $_GET['ascenso'] !== 'null' ? intval($_GET['ascenso']) : null;
             $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
+            $all = ($_GET['all'] ?? 'false') === 'true' || ($_GET['all'] ?? '0') === '1';
 
-            $data = Explo::get_exploradores($destacamento, $rama, $ascenso, $query, $page, $limit);
+            $data = Explo::get_exploradores($destacamento, $rama, $ascenso, $query, $page, $limit, $all);
             $columnas = [
                 'Num', 
                 'Nombre', 

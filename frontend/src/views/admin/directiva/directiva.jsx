@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { capitalize } from "../../../../funciones";
+import { capitalize } from "../../../funciones";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
@@ -70,7 +70,11 @@ const Directiva = () => {
     
     getDirectiva();
   }, []);
-console.log(idEliminar)
+
+  const dowload= () =>{
+    const url = 'http://erv-zona3/backend/excel?categoria=directiva';
+    window.location.href = url; 
+}
   return (
     <>
       <h2>Directiva Zonal</h2>
@@ -147,6 +151,7 @@ console.log(idEliminar)
       <div className="border">
         <a href="/dashboard/admin/directiva/crear" className="text-decoration-none" style={{cursor: 'pointer'}}>Crear miembro</a>
       </div>
+      <button onClick={dowload}>Descargar</button>
       
     </>
   );

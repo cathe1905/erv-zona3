@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { getDestacamentos } from "../destacamentos/destacamentos";
 import { getAscensos } from "../ascensos/ascensos";
-import { capitalize } from "../../../../funciones";
+import { capitalize } from "../../../funciones";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
@@ -122,7 +122,7 @@ const CrearDirectiva = () => {
           <option value="">Seleccione un ascenso</option>
           {ascensos &&
             ascensos.map((ascenso) => (
-              <option value={ascenso.id}>{capitalize(ascenso.nombre)}</option>
+              <option key={ascenso.id} value={ascenso.id}>{capitalize(ascenso.nombre)}</option>
             ))}
         </select>
         <label>
@@ -159,7 +159,7 @@ const CrearDirectiva = () => {
           <option value="">Seleccione un destacamento</option>
           {destacamentos &&
             destacamentos.map((destacamento) => (
-              <option value={destacamento.id}>
+              <option key={destacamento.id} value={destacamento.id}>
                 {capitalize(destacamento.nombre)}
               </option>
             ))}

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PaginationGeneral from "../../../components/Pagination";
-import { capitalize } from "../../../../funciones";
+import { capitalize } from "../../../funciones";
 
 
 const Explo = () => {
@@ -17,6 +17,7 @@ const Explo = () => {
   const [total, setTotal] = useState(null);
   const [destacamentos, setDestacamentos] = useState(null);
   const [ascensos, setAscensos]= useState(null);
+  const [all, setAll]= useState(false);
 
   useEffect(() => {
     const getExploradores = async () => {
@@ -88,10 +89,9 @@ const Explo = () => {
     });
   };
 
-  const dowload= () =>{
-      const url = `http://erv-zona3/backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`;
-
-      window.location.href = url;
+  const dowload= (all) =>{
+      const url = `http://erv-zona3/backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
+      window.location.href = url; 
   }
 
   return (
@@ -206,7 +206,8 @@ const Explo = () => {
         />
       )}
 
-      <button onClick={dowload}>Descargar</button>
+      <button onClick={() => dowload('false')}>Descargar registros en pantalla</button>
+      <button onClick={() => dowload('true')}>Descargar toda la selección: {total}</button>
     </>
   );
 };

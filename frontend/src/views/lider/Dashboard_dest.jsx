@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getInfoToken } from "../../components/requireAuth";
 import Swal from 'sweetalert2'
+import { findRama } from "../../funciones";
 
 const Dashboard_dest = () => {
   const [param, setParam] = useSearchParams();
@@ -42,25 +43,11 @@ const Dashboard_dest = () => {
   }
   }, [token.data.destacamento, destacamento, setParam])
 
-const findRama = (tipo) =>{
-  if (!data || !data.count_by_ramas) {
-    return 0; // o un valor predeterminado como 0
-  }
-  const ramas = data.count_by_ramas;
 
-  for(let i=0 ; i < ramas.length ; i++){
-   if(ramas[i].rama == tipo){
-    return ramas[i].total;
-   }
-  }
-
-  return null
-      
-}
-const prejuniors= findRama('pre-junior');
-const pioneros= findRama('pionero')
-const brijers= findRama('brijer')
-const oficiales= findRama('oficial')
+const prejuniors= findRama('pre-junior', data);
+const pioneros= findRama('pionero', data)
+const brijers= findRama('brijer', data)
+const oficiales= findRama('oficial', data)
 const general= data ? data.general_count : 0
 
   return (

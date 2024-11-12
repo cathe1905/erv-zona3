@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { capitalize } from "../../../../funciones";
+import { capitalize } from "../../../funciones";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
 
 
-export const getDestacamentos = async () => {
+export async function getDestacamentos () {
   try {
     const result = await fetch("http://erv-zona3/backend/destacamentos");
 
@@ -77,6 +77,11 @@ const Destacamentos = () => {
     };
     fetchData();
   }, []);
+
+  const dowload= () =>{
+    const url = 'http://erv-zona3/backend/excel?categoria=destacamentos';
+    window.location.href = url; 
+}
 
   return (
     <>
@@ -164,6 +169,7 @@ const Destacamentos = () => {
       <div className="border">
         <a href="/dashboard/admin/destacamentos/crear" className="text-decoration-none" style={{cursor: 'pointer'}}>Crear Destacamento</a>
       </div>
+      <button onClick={dowload}>Descargar</button>
       
     </>
   );

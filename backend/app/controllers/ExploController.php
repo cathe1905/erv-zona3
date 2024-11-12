@@ -15,8 +15,9 @@ class ExploController
     $ascenso= isset($_GET['ascenso']) && $_GET['ascenso'] !== 'null' ? intval($_GET['ascenso']) : null;
     $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
     $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
+    $all= false;
 
-    $response = Explo::get_exploradores($destacamento, $rama, $ascenso, $query, $page, $limit);
+    $response = Explo::get_exploradores($destacamento, $rama, $ascenso, $query, $page, $limit, $all);
     $cuenta= Explo::get_exploradores_count($destacamento, $rama, $ascenso, $query);
     echo json_encode(['exploradores' => $response, 'total' => $cuenta]);
   }
