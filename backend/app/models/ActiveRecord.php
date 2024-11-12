@@ -64,7 +64,7 @@ use function Controllers\debuguear;
             $query .= join(', ', array_keys($atributos));
             $query .= " ) VALUES ('"; 
             $query .= join("', '", array_values($atributos));
-            $query .= " ') ";
+            $query .= "') ";
 
             // Resultado de la consulta
             $resultado = self::$db->query($query);
@@ -101,7 +101,6 @@ use function Controllers\debuguear;
         }
         public static function find($id) {
             $query = "SELECT * FROM " . static::$table  ." WHERE id = " . $id ;
-    
             $resultado = self::consultarSQL($query);
             return array_shift( $resultado ) ;
         }

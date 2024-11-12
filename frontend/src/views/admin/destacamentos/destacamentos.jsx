@@ -28,6 +28,7 @@ const Destacamentos = () => {
   const [show, setShow] = useState(false);
   const [idEliminar, setIdEliminar] = useState(null);
   const [nombreEliminar, setNombreEliminar]= useState(null);
+  let contador = 1;
 
   const handleClose = () => {
     setIdEliminar(null)
@@ -89,6 +90,7 @@ const Destacamentos = () => {
       <table className="table-bordered">
         <thead>
           <tr>
+            <th>n°</th>
             <th className="p-2">Nombre</th>
             <th>Comandante General</th>
             <th>Comandante Femenino</th>
@@ -108,6 +110,7 @@ const Destacamentos = () => {
           {Array.isArray(data) && data.length > 0 ? (
             data.map((dest) => (
               <tr key={dest.id}>
+                <td>{contador++}</td>
                 <td>{capitalize(dest.nombre)}</td>
                 <td>{capitalize(dest.comandante_general)}</td>
                 <td>{capitalize(dest.comandante_femenino)}</td>

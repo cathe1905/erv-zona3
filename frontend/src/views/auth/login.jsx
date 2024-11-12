@@ -72,8 +72,8 @@ function LoginPage(){
         <>
             <h1>Ingresa a tu dashboard</h1>
             <form onSubmit={logIn}>
-                <input type="text" name="email" placeholder="Tu Email"/>
-                <input type="password" name="contraseña" placeholder="Tu contraseña" autocomplete="current-password"/>
+                <input type="text" name="email" placeholder="Tu Email" autoComplete="username"/>
+                <input type="password" name="contraseña" placeholder="Tu contraseña" autoComplete="current-password"/>
                 <button type="submit">Enviar</button>
             </form>
         

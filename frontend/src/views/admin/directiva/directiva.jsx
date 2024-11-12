@@ -13,6 +13,7 @@ const Directiva = () => {
   const [show, setShow] = useState(false);
   const [idEliminar, setIdEliminar] = useState(null);
   const [nombreEliminar, setNombreEliminar]= useState(null);
+  let contador = 1;
 
   const handleClose = () => {
     setIdEliminar(null)
@@ -81,6 +82,7 @@ const Directiva = () => {
       <table className="table-bordered">
         <thead>
           <tr>
+            <th>n°</th>
             <th>Nombres</th>
             <th>Apellidos</th>
             <th>Ascenso</th>
@@ -95,6 +97,7 @@ const Directiva = () => {
           {Array.isArray(data) && data.length > 0 ? (
             data.map((miembro) => (
               <tr key={miembro.id}>
+                <td>{contador++}</td>
                 <td>{capitalize(miembro.nombres)}</td>
                 <td>{capitalize(miembro.apellidos)}</td>
                 <td>{capitalize(miembro.ascenso)}</td>

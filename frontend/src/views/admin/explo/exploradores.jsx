@@ -17,7 +17,7 @@ const Explo = () => {
   const [total, setTotal] = useState(null);
   const [destacamentos, setDestacamentos] = useState(null);
   const [ascensos, setAscensos]= useState(null);
-  const [all, setAll]= useState(false);
+  let contador = 1;
 
   useEffect(() => {
     const getExploradores = async () => {
@@ -157,6 +157,7 @@ const Explo = () => {
       <table className="table-bordered">
         <thead>
           <tr>
+            <th>n°</th>
             <th className="p-2">Nombres</th>
             <th>Apellidos</th>
             <th>Fecha de Nacimiento</th>
@@ -174,6 +175,7 @@ const Explo = () => {
           {Array.isArray(data) && data.length > 0 ? (
             data.map((explo) => (
               <tr key={explo.id}>
+                <td>{contador++}</td>
                 <td>{capitalize(explo.nombres)}</td>
                 <td>{capitalize(explo.apellidos)}</td>
                 <td>{explo.fecha_nacimiento}</td>
