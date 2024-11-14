@@ -22,6 +22,7 @@ class UserController
         $jsonInput = file_get_contents('php://input');
         // Decodificar el JSON a un array asociativo
         $data = json_decode($jsonInput, true);
+        
 
         if (isset($data['usuario'])) {
             $token = bin2hex(random_bytes(16));
@@ -33,9 +34,9 @@ class UserController
 
 
             $record = new User($data['usuario']);
+            debuguear($record);
 
             $errores= $record->validar();
-            //  = User::getErrores();
 
             if (!empty($errores)) {
                 http_response_code(400);
@@ -186,7 +187,23 @@ class UserController
     }
 
     public static function editUser(){
-        editRecord(User::class, 'usuario');
+
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            editRecord(User::class, 'usuario');
+        }else{
+            $jsonInput = file_get_contents('php://input');
+            $data = json_decode($jsonInput, true);
+            
+            $resultado= User::update($data['usuario']);
+            if ($resultado) {
+                http_response_code(200);
+                echo json_encode(['mensaje' => 'Usuario actualizado exitosamente']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['mensaje' => 'Error al actualizar el usuario']);
+            }
+        }
+        
     }
 
     public static function deleteUser(){
@@ -220,6 +237,9 @@ class UserController
                     'iat' => time(),              // Tiempo de emisión
                     'exp' => time() + (14400),  // 4 horas
                     'data' => [
+                        'id' => $user['id'],
+                        'nombre' => $user['nombre'],
+                        'apellido' => $user['apellido'],
                         'email' => $email,           // ID del usuario
                         'role' => $user['rol'],
                         'destacamento' => $user['destacamento']        // Rol del usuario
@@ -242,6 +262,28 @@ class UserController
 
 
 
+    }
+    public static function getUserEmail(){
+        try{
+            $email = $_GET['email'];
+            if(!$email) {
+                http_response_code(400); 
+                echo json_encode(['error' => 'email inválido']);
+                return;
+            }
+
+            $record = User::find_by_email($email);
+
+            if (!$record) {
+                http_response_code(404); 
+                echo json_encode(['error' => $email . ' no encontrado']);
+                return;
+            }
+            echo json_encode($record);
+        }catch (\Exception $e){
+            http_response_code($e->getCode() ?: 500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
     }
 
 }

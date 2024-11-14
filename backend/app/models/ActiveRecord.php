@@ -14,7 +14,6 @@ use function Controllers\debuguear;
         protected static $errors = [];
 
         protected $id; // Definición de la propiedad id
-        protected $foto; // Definición de la propiedad foto
         
         // Definir la conexión a la BD
         public static function setDB($database) {
@@ -87,7 +86,6 @@ use function Controllers\debuguear;
             $query .=  join(', ', $valores );
             $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
             $query .= " LIMIT 1 "; 
-    
             $resultado = self::$db->query($query);
     
             return $resultado;

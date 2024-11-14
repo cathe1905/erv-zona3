@@ -22,6 +22,7 @@ use Controllers\ExcelController;
 use Controllers\RankController;
 use Controllers\StatisticsController;
 use Controllers\UserController;
+use Controllers\LogController;
 
 $router= new Router();
 
@@ -58,8 +59,12 @@ $router->get('/backend/users/actualizar', [UserController::class, 'editUser']);
 $router->post('/backend/users/actualizar', [UserController::class, 'editUser']);
 $router->post('/backend/users/eliminar', [UserController::class, 'deleteUser']);
 $router->post('/backend/users/auth', [UserController::class, 'authUser']);
+$router->get('/backend/user/email', [UserController::class, 'getUserEmail']);
 
 $router->get('/backend/excel', [ExcelController::class, 'descargarExcel']);
+
+$router->get('/backend/logs', [LogController::class, 'get_logs']);
+$router->post('/backend/logs', [LogController::class, 'save_log']);
 
 $router->comprobarRutas();
 

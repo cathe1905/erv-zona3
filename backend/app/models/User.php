@@ -8,9 +8,11 @@ class User extends ActiveRecord
 {
     // Base DE DATOS
     protected static $table = 'usuarios';
-    protected static $columnsDB = ['id', 'email', 'contraseña', 'token', 'verificado', 'destacamento_id', 'rol'];
+    protected static $columnsDB = ['id', 'nombre', 'apellido', 'email','contraseña', 'token', 'verificado', 'destacamento_id', 'rol'];
 
     public $id;
+    public $nombre;
+    public $apellido;
     public $email;
     public $contraseña;
     public $destacamento_id;
@@ -21,6 +23,8 @@ class User extends ActiveRecord
     public function __construct($arg = [])
     {
         $this->id = $arg['id'] ?? null;
+        $this->nombre = $arg['nombre'] ?? '';
+        $this->apellido = $arg['apellido'] ?? '';
         $this->email = $arg['email'] ?? '';
         $this->contraseña = $arg['contraseña'] ?? '';
         $this->destacamento_id = $arg['destacamento_id'] ?? '';
@@ -41,6 +45,12 @@ class User extends ActiveRecord
             }
         }
         
+        if (!$this->nombre) {
+            self::$errors[] = 'El campo nombre es obligatorio';
+        }
+        if (!$this->apellido) {
+            self::$errors[] = 'El campo apellido es obligatorio';
+        }
         if (!$this->contraseña) {
             self::$errors[] = 'El campo contraseña es obligatorio';
         }
@@ -58,7 +68,7 @@ class User extends ActiveRecord
 
     public static function all()
     {
-        $query =  "SELECT usuarios.id, usuarios.email, destacamentos.nombre AS destacamento, CASE
+        $query =  "SELECT usuarios.id, usuarios.nombre, usuarios.apellido, usuarios.email, destacamentos.nombre AS destacamento, CASE
             WHEN rol = 1 THEN 'Administrador'
             WHEN rol= 2 THEN 'Usuario'
             ELSE 'No clasificado'
@@ -84,7 +94,7 @@ class User extends ActiveRecord
         $query= 'SELECT usuarios.*, destacamentos.nombre AS destacamento
         FROM usuarios 
         INNER JOIN destacamentos on usuarios.destacamento_id = destacamentos.id
-        WHERE usuarios.email = ' . "'" . $email . "'";
+        WHERE usuarios.email = ' . "'" . self::$db->escape_string($email) . "'";
 
         $result= static::$db->query($query);
         if ($result) {
@@ -96,7 +106,39 @@ class User extends ActiveRecord
         }
     }
 
-    
+    public static function sanitizarUpdate($atributos){
+        $sanitizado = [];
+        foreach($atributos as $key => $value ) {
+            if($key=== 'id') continue;
+            $sanitizado[$key] = self::$db->escape_string($value);
+        }
+        return $sanitizado;
+    }
+
+    public static function update($campos) {
+        // Sanitizar los datos
+        $atributos = self::sanitizarUpdate($campos);
+        $id= $campos['id'];
+        $valores = [];
+        foreach($atributos as $key => $value) {
+            $valores[] = "{$key} = '{$value}'";
+        }
+
+        $query = "UPDATE " . static::$table ." SET ";
+        $query .=  join(', ', $valores );
+        $query .= " WHERE id = '" . self::$db->escape_string($id) . "' ";
+        $query .= " LIMIT 1"; 
+
+        $resultado = self::$db->query($query);
+
+        return $resultado;
+    }
+
+    public static function find_by_email($email) {
+        $query = "SELECT id FROM " . static::$table . " WHERE email = '" . self::$db->escape_string($email) . "'";
+        $resultado = self::$db->query($query);
+        return $resultado->fetch_assoc();
+    }
 
     
 }

@@ -161,8 +161,8 @@ function editRecord($class, $type){
                 $imagen->save(CARPETA_IMAGENES . $nombreImagen);
                }
             }
-            // Guardar la nueva instancia en lugar de la original
-            $result = $record->actualizar(); // O cualquier método que uses para guardar
+          
+            $result = $record->actualizar();
             if ($result) {
                 http_response_code(200);
                 echo json_encode(['mensaje' => $type .' actualizado exitosamente']);
