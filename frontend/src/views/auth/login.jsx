@@ -26,11 +26,12 @@ function LoginPage(){
                 },
                 body: JSON.stringify(datos)
             });
-
+            
             if(respuesta.ok){
 
                 setLoged(true);
                 const data = await respuesta.json();
+                
                 localStorage.setItem('token', data.token);
 
                 const data_decode= jwtDecode(data.token);
@@ -72,7 +73,7 @@ function LoginPage(){
         <>
             <h1>Ingresa a tu dashboard</h1>
             <form onSubmit={logIn}>
-                <input type="text" name="email" placeholder="Tu Email" autoComplete="username"/>
+                <input type="email" name="email" placeholder="Tu Email" autoComplete="username"/>
                 <input type="password" name="contraseña" placeholder="Tu contraseña" autoComplete="current-password"/>
                 <button type="submit">Enviar</button>
             </form>

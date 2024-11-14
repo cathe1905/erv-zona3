@@ -19,7 +19,6 @@ const EditarAscenso =() =>{
                 const query= await fetch(`http://erv-zona3/backend/ascensos/actualizar?id=${id}`)
                 if(query.ok){
                     const result= await query.json();
-                    console.log(result)
                     setData({
                         ...data,
                         ...result
