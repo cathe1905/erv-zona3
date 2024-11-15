@@ -173,9 +173,9 @@ const Explo = () => {
         </thead>
         <tbody>
           {Array.isArray(data) && data.length > 0 ? (
-            data.map((explo) => (
+            data.map((explo, index) => (
               <tr key={explo.id}>
-                <td>{contador++}</td>
+                <td>{(page - 1) * limit + index + 1}</td>
                 <td>{capitalize(explo.nombres)}</td>
                 <td>{capitalize(explo.apellidos)}</td>
                 <td>{explo.fecha_nacimiento}</td>

@@ -1,3 +1,5 @@
+import Spinner from 'react-bootstrap/Spinner';
+
 export function capitalize(str) {
   if (!str || str.charAt(0) === str.charAt(0).toUpperCase()) {
     return str;
@@ -20,5 +22,11 @@ export const findRama = (tipo, data) => {
 
   return 0;
 };
+
+export function GrowExample() {
+  return <Spinner animation="grow" />;
+}
+
+export default GrowExample;
 
 

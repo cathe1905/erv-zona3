@@ -38,6 +38,9 @@ const Menu = () => {
         <a className="text-decoration-none mb-3 enlace-menu" href="/dashboard/admin/usuarios">
           <i className="bi bi-person me-2"></i> <span>Usuarios</span>
         </a>
+        <a className="text-decoration-none mb-3 enlace-menu" href="/dashboard/admin/logs">
+          <i className="bi bi-person me-2"></i> <span>Registro de Actividades de Administradores</span>
+        </a>
 
         <a type="button" onClick={Logout}
           className="text-decoration-none roboto-regular fs-6 my-5 enlace-menu"

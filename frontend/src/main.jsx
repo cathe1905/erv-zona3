@@ -23,6 +23,7 @@ import EditarDirectiva from "./views/admin/directiva/editar_directivo.jsx";
 import Usuarios from "./views/admin/usuarios/usuarios.jsx";
 import CrearUsuario from "./views/admin/usuarios/crear_usuario.jsx";
 import EditarUsuario from "./views/admin/usuarios/editar_usuario.jsx";
+import Logs from "./views/admin/logs.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
@@ -48,6 +49,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="/dashboard/admin/usuarios" element={<Usuarios />} />
             <Route path="/dashboard/admin/usuarios/crear" element={<CrearUsuario />} />
             <Route path="/dashboard/admin/usuarios/editar" element={<EditarUsuario />} />
+            <Route path="/dashboard/admin/logs" element={<Logs />} />
           </Route>
         </Route>
 
