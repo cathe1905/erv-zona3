@@ -12,7 +12,7 @@ const Dashboard_dest = () => {
 
 
   const getStadisticas = async () => {
-    if (!token) return; // Asegúrate de que el token esté presente
+    if (!token) return; 
       try {
         const respuesta = await fetch(`http://erv-zona3/backend/?destacamento=${token.data.destacamento}`);
         if (respuesta.ok) {
@@ -29,7 +29,7 @@ const Dashboard_dest = () => {
 
   useEffect(() =>{
     if (token.data.destacamento !== destacamento) {
-      if (destacamento !== token.data.destacamento) { // Verifica si no está ya seteado
+      if (destacamento !== token.data.destacamento) { 
           Swal.fire({
               title: 'Error!',
               text: 'No tienes acceso a otro destacamento!',

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getDestacamentos } from "../destacamentos/destacamentos";
 import { capitalize } from "../../../funciones";
 import { useSearchParams } from "react-router-dom";
-import { getDestacamento } from "../../lider/LayoutDest";
+import { getUserSession } from "../../lider/LayoutDest";
 
 export const find_names_by_ids = (key, value, obj) => {
   if (key == "destacamento_id") {
@@ -76,7 +76,7 @@ const EditarUsuario = () => {
       }
     };
     getUserById();
-    const dataUserSession = getDestacamento();
+    const dataUserSession = getUserSession();
     setIdUserSession(dataUserSession.id);
   }, []);
 

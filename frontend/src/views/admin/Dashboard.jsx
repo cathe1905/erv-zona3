@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { findRama } from '../../funciones';
+import Number from '../../components/Animation';
 
 const Dashboard = () => {
   const [data, setData] = useState(null); 
@@ -25,12 +26,12 @@ const Dashboard = () => {
     getEstadisticas();
   }, []); 
 
-  const prejuniors= findRama('pre-junior', data);
-  const pioneros= findRama('pionero', data)
-  const brijers= findRama('brijer', data)
-  const oficiales= findRama('oficial', data)
-  const zona= data ? data.zonal_count : 0
-  const general= data ? data.general_count : 0
+  const prejuniors= parseInt(findRama('pre-junior', data), 10);
+  const pioneros= parseInt(findRama('pionero', data), 10);
+  const brijers= parseInt(findRama('brijer', data), 10);
+  const oficiales= parseInt(findRama('oficial', data), 10);
+  const zona= data ? parseInt(data.zonal_count, 10) : 0
+  const general= data ? parseInt(data.general_count, 10) : 0
 
   if (loading) {
     return <div>Cargando...</div>; 
@@ -45,7 +46,7 @@ const Dashboard = () => {
           </div>
           <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
             <p className="col-12 m-1">Estadística general</p>
-            <p className="col-12 m-1 fs-4">{general}</p>
+            <Number n={general}/>
           </div>
         </aside>
 
@@ -55,7 +56,7 @@ const Dashboard = () => {
           </div>
           <div className="col-9 row d-flex flex-column align-items-center p-3 pe-2 text-dark">
             <p className="col-12 m-1">Pre-juniors y Pre-joyas</p>
-            <p className="col-12 m-1 fs-4">{prejuniors}</p>
+            <Number n={prejuniors}/>
           </div>
         </aside>
 
@@ -65,7 +66,7 @@ const Dashboard = () => {
           </div>
           <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
             <p className="col-12 m-1">Junior y Joyas</p>
-            <p className="col-12 m-1 fs-4 color-verde">{pioneros}</p>
+            <Number n={pioneros}/>
           </div>
         </aside>
 
@@ -75,7 +76,7 @@ const Dashboard = () => {
           </div>
           <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
             <p className="col-12 m-1">Brijers</p>
-            <p className="col-12 m-1 fs-4">{brijers}</p>
+            <Number n={brijers}/>
           </div>
         </aside>
 
@@ -85,7 +86,7 @@ const Dashboard = () => {
           </div>
           <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
             <p className="col-12 m-1">Oficiales</p>
-            <p className="col-12 m-1 fs-4">{oficiales}</p>
+            <Number n={oficiales}/>
           </div>
         </aside>
 
@@ -95,7 +96,7 @@ const Dashboard = () => {
           </div>
           <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
             <p className="col-12 m-1">Directiva Zonal</p>
-            <p className="col-12 m-1 fs-4">{zona}</p>
+            <Number n={zona}/>
           </div>
         </aside>
       </div>

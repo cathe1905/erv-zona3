@@ -19,7 +19,11 @@
         }
     
         public function validar() {
-            // El backend valida que los campos obligatorios no estén vacíos.
+            if($this->id === null){
+                if($this-> find_field_record(self::$table, 'nombre', $this->nombre)){
+                    self::$errors[] = "Este ascenso ya esta registrado";
+                }
+            }
             if (!$this->nombre) {
                 self::$errors[] = "El campo nombre es obligatorio";
             }

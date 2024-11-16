@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
+import GrowExample from "../../../funciones";
 
 const Directiva = () => {
   const [data, setData] = useState(null);
@@ -14,6 +15,8 @@ const Directiva = () => {
   const [idEliminar, setIdEliminar] = useState(null);
   const [nombreEliminar, setNombreEliminar]= useState(null);
   let contador = 1;
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleClose = () => {
     setIdEliminar(null)
@@ -60,6 +63,11 @@ const Directiva = () => {
       if (result.ok) {
         const respuesta = await result.json();
         setData(respuesta);
+        setIsLoading(false)
+        setError(null); 
+      }else{
+        setError("Error al cargar los datos.");
+        setIsLoading(false)
       }
     } catch (error) {
       console.error("Hubo un problema con la solicitud", error);
@@ -79,6 +87,7 @@ const Directiva = () => {
   return (
     <>
       <h2>Directiva Zonal</h2>
+      {error && <p className="error-message">{error}</p>}
       <table className="table-bordered">
         <thead>
           <tr>
@@ -94,7 +103,13 @@ const Directiva = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(data) && data.length > 0 ? (
+        {isLoading ? (
+                <tr>
+                <td colSpan="11" className="text-center">
+                  {GrowExample()}
+                </td>
+              </tr>
+          ): Array.isArray(data) && data.length > 0 ? (
             data.map((miembro) => (
               <tr key={miembro.id}>
                 <td>{contador++}</td>

@@ -3,12 +3,12 @@ import { useState } from "react";
 import { capitalize } from "../../../funciones";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Swal from 'sweetalert2'
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Swal from "sweetalert2";
+import GrowExample from "../../../funciones";
 
-
-export async function getDestacamentos () {
+export async function getDestacamentos() {
   try {
     const result = await fetch("http://erv-zona3/backend/destacamentos");
 
@@ -21,72 +21,91 @@ export async function getDestacamentos () {
     console.log(error);
     return;
   }
-};
+}
 const Destacamentos = () => {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [idEliminar, setIdEliminar] = useState(null);
-  const [nombreEliminar, setNombreEliminar]= useState(null);
+  const [nombreEliminar, setNombreEliminar] = useState(null);
   let contador = 1;
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleClose = () => {
-    setIdEliminar(null)
-    setNombreEliminar(null)
-    setShow(false)
+    setIdEliminar(null);
+    setNombreEliminar(null);
+    setShow(false);
   };
-  const handleShow = ({id, nombre}) => {
-    setIdEliminar(id)
-    setNombreEliminar(nombre)
-    setShow(true)
+  const handleShow = ({ id, nombre }) => {
+    setIdEliminar(id);
+    setNombreEliminar(nombre);
+    setShow(true);
   };
 
-  const eliminarRegistro= async () =>{
+  const eliminarRegistro = async () => {
     try {
-      const id= {id: idEliminar}
-      const result = await fetch("http://erv-zona3/backend/destacamentos/eliminar",{
-        method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify(id)
-      });
+      const id = { id: idEliminar };
+      const result = await fetch(
+        "http://erv-zona3/backend/destacamentos/eliminar",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(id),
+        }
+      );
 
       if (result.ok) {
         Swal.fire({
-          title: 'Exito',
-          text: 'Destacamento eliminado exitosamente',
-          icon: 'success',
-          confirmButtonText: 'Ok'
-      });
-      setShow(false)
-     const respuesta= await getDestacamentos();
-     setData(respuesta)
+          title: "Exito",
+          text: "Destacamento eliminado exitosamente",
+          icon: "success",
+          confirmButtonText: "Ok",
+        });
+        setShow(false);
+        const respuesta = await getDestacamentos();
+        setData(respuesta);
       }
     } catch (error) {
       console.error("Hubo un problema con la solicitud", error);
       console.log(error);
       return;
     }
-  }
+  };
 
   useEffect(() => {
-    
     const fetchData = async () => {
-      const result = await getDestacamentos();
-      setData(result);
+      try {
+        const result = await getDestacamentos();
+        if(result){
+          setData(result);
+          setIsLoading(false)
+          setError(null); 
+        }else{
+          setError("Error al cargar los datos.");
+          setIsLoading(false)
+        }
+        
+      } catch (error) {
+        console.error("Hubo un problema con la solicitud", error);
+        console.log(error);
+        return;
+      }
     };
     fetchData();
   }, []);
 
-  const dowload= () =>{
-    const url = 'http://erv-zona3/backend/excel?categoria=destacamentos';
-    window.location.href = url; 
-}
+  const dowload = () => {
+    const url = "http://erv-zona3/backend/excel?categoria=destacamentos";
+    window.location.href = url;
+  };
 
   return (
     <>
       <h2>Destacamentos</h2>
+      {error && <p className="error-message">{error}</p>}
       <table className="table-bordered">
         <thead>
           <tr>
@@ -107,7 +126,13 @@ const Destacamentos = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(data) && data.length > 0 ? (
+          {isLoading ? (
+                <tr>
+                <td colSpan="11" className="text-center">
+                  {GrowExample()}
+                </td>
+              </tr>
+          ): Array.isArray(data) && data.length > 0 ? (
             data.map((dest) => (
               <tr key={dest.id}>
                 <td>{contador++}</td>
@@ -133,13 +158,28 @@ const Destacamentos = () => {
                       . . .
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => navigate(`/dashboard/admin/destacamentos/editar?id=${dest.id}`)} eventKey="1">Editar</Dropdown.Item>
-                      <Dropdown.Item onClick={() => handleShow({ id: dest.id, nombre: dest.nombre })} eventKey="2">Eliminar</Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() =>
+                          navigate(
+                            `/dashboard/admin/destacamentos/editar?id=${dest.id}`
+                          )
+                        }
+                        eventKey="1"
+                      >
+                        Editar
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() =>
+                          handleShow({ id: dest.id, nombre: dest.nombre })
+                        }
+                        eventKey="2"
+                      >
+                        Eliminar
+                      </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </td>
               </tr>
-              
             ))
           ) : (
             <tr>
@@ -166,17 +206,23 @@ const Destacamentos = () => {
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button onClick={eliminarRegistro} variant="primary">Si</Button>
+          <Button onClick={eliminarRegistro} variant="primary">
+            Si
+          </Button>
         </Modal.Footer>
       </Modal>
       <div className="border">
-        <a href="/dashboard/admin/destacamentos/crear" className="text-decoration-none" style={{cursor: 'pointer'}}>Crear Destacamento</a>
+        <a
+          href="/dashboard/admin/destacamentos/crear"
+          className="text-decoration-none"
+          style={{ cursor: "pointer" }}
+        >
+          Crear Destacamento
+        </a>
       </div>
       <button onClick={dowload}>Descargar</button>
-      
     </>
   );
 };
 
 export default Destacamentos;
-

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { capitalize } from "../../funciones";
 import PaginationGeneral from "../../components/Pagination";
 import { useSearchParams } from "react-router-dom";
-
 import GrowExample from "../../funciones";
 
 
@@ -102,14 +101,13 @@ const Logs = () => {
         </thead>
         <tbody>
   {isLoading ? (
-    // Mostrar el spinner mientras se cargan los datos
     <tr>
       <td colSpan="11" className="text-center">
         {GrowExample()}
       </td>
     </tr>
   ) : data && data.length > 0 ? (
-    // Mostrar los registros si existen
+
     data.map((log, index) => (
       <tr key={log.id}>
         <td>{(page - 1) * limit + index + 1}</td>
@@ -121,7 +119,7 @@ const Logs = () => {
       </tr>
     ))
   ) : (
-    // Mostrar el mensaje si no hay datos
+
     <tr>
       <td colSpan="11" className="text-center">
         No se encontraron registros

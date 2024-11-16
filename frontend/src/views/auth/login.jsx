@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
-import { getDestacamento } from "../lider/LayoutDest";
+import { getUserSession } from "../lider/LayoutDest";
 import Swal from 'sweetalert2'
 
 function LoginPage(){
@@ -63,9 +63,15 @@ function LoginPage(){
     }
 
     useEffect(() =>{
-        const user= getDestacamento();
+        const user= getUserSession();
         if(user){
-            navigate(`/dashboard/dest?destacamento=${user.destacamento}`);
+            if(user.role == 1){
+                navigate('/dashboard/admin')
+            }else if((user.role == 2)){
+                navigate(`/dashboard/dest?destacamento=${user.destacamento}`);
+            } 
+        }else{
+            console.log('no hay token')
         }
     },[navigate])
 

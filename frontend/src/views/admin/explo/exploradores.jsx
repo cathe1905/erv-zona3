@@ -3,21 +3,22 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PaginationGeneral from "../../../components/Pagination";
 import { capitalize } from "../../../funciones";
-
+import GrowExample from "../../../funciones";
 
 const Explo = () => {
   const [params, setParams] = useSearchParams();
-  const destacamento = params.get("destacamento") || null;
-  const rama = params.get("rama") || null;
-  const query = params.get("query") || null;
-  const ascenso = params.get("ascenso") || null;
+  const destacamento = params.get("destacamento") || "";
+  const rama = params.get("rama") || "";
+  const query = params.get("query") || "";
+  const ascenso = params.get("ascenso") || "";
   const page = parseInt(params.get("page") || "1", 10);
   const limit = parseInt(params.get("limit") || "10", 10);
   const [data, setData] = useState(null);
   const [total, setTotal] = useState(null);
   const [destacamentos, setDestacamentos] = useState(null);
   const [ascensos, setAscensos]= useState(null);
-  let contador = 1;
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getExploradores = async () => {
@@ -28,10 +29,15 @@ const Explo = () => {
 
         if (result.ok) {
           const respuesta = await result.json();
+          setIsLoading(false)
           setData(respuesta.exploradores);
           setTotal(respuesta.total);
+        }else{
+          setIsLoading(false)
+          setError("Error al cargar los datos.");
         }
       } catch (error) {
+        
         console.error("Hubo un problema con la solicitud", error);
         console.log(error);
         return;
@@ -89,6 +95,18 @@ const Explo = () => {
     });
   };
 
+  const handleAllFilters= () =>{
+    setParams({
+      ...Object.fromEntries(params),
+      destacamento: "",
+      rama: "",
+      query: "",
+      ascenso: "",
+      limit:10,
+      page: 1,
+    });
+  }
+
   const dowload= (all) =>{
       const url = `http://erv-zona3/backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
       window.location.href = url; 
@@ -97,12 +115,13 @@ const Explo = () => {
   return (
     <>
     <h2>Exploradores</h2>
+    {error && <p className="error-message">{error}</p>}
       <div>
-        <select
+        <select value={destacamento}
           className="my-2"
           onChange={(e) => handleFilterChange("destacamento", e.target.value)}
         >
-          <option value={"null"}>Todos los destacamentos</option>
+          <option value="">Todos los destacamentos</option>
           {destacamentos &&
             destacamentos.map((dest) => (
               <option key={dest.id} value={dest.id}>
@@ -111,7 +130,7 @@ const Explo = () => {
             ))}
         </select>
 
-        <select onChange={(e) => handleFilterChange("limit", e.target.value)}>
+        <select onChange={(e) => handleFilterChange("limit", e.target.value)} value={limit}>
           <option value="10">10</option>
           <option value="25">25</option>
           <option value="50">50</option>
@@ -122,15 +141,15 @@ const Explo = () => {
         <select
           name="rama"
           onChange={(e) => handleFilterChange("rama", e.target.value)}
+          value={rama}
         >
-          <option value="null">Todas las ramas</option>
+          <option value="">Todas las ramas</option>
           <option value="pre-junior">Pre-junior y Pre-Joyas</option>
           <option value="pionero">Pioneros</option>
           <option value="brijer">Brijers</option>
           <option value="oficial">Oficiales</option>
         </select>
 
-        <form>
           <label>
             <input
               type="text"
@@ -141,18 +160,19 @@ const Explo = () => {
                   e.target.value.trim() === "" ? null : e.target.value
                 )
               }
+              value={query}
             />
           </label>
-        </form>
 
-        <select onChange={(e) => handleFilterChange("ascenso", e.target.value)}>
-        <option value={"null"}>Todos los ascensos</option>
+        <select onChange={(e) => handleFilterChange("ascenso", e.target.value)} value={ascenso}>
+        <option value="">Todos los ascensos</option>
           {ascensos && 
             ascensos.map(asc =>(
               <option key={asc.id} value={asc.id}>{capitalize(asc.nombre)}</option>
             ))
           }
         </select>
+        <button onClick={handleAllFilters}>Limpiar filtros</button>
       </div>
       <table className="table-bordered">
         <thead>
@@ -172,7 +192,13 @@ const Explo = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(data) && data.length > 0 ? (
+        {isLoading ? (
+              <tr>
+              <td colSpan="11" className="text-center">
+                {GrowExample()}
+              </td>
+            </tr>
+        ) : Array.isArray(data) && data.length > 0 ? (
             data.map((explo, index) => (
               <tr key={explo.id}>
                 <td>{(page - 1) * limit + index + 1}</td>

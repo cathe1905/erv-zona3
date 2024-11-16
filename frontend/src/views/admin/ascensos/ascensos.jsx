@@ -5,6 +5,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Swal from "sweetalert2";
+import GrowExample from "../../../funciones";
 
 export async function getAscensos() {
   try {
@@ -27,6 +28,8 @@ const Ascensos = () => {
   const [idEliminar, setIdEliminar] = useState(null);
   const [nombreEliminar, setNombreEliminar] = useState(null);
   const [show, setShow] = useState(false);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleClose = () => {
     setIdEliminar(null);
@@ -66,16 +69,33 @@ const Ascensos = () => {
       console.log(error);
     }
   };
+
   async function getData() {
-    const respuesta = await getAscensos();
-    setData(respuesta);
+    try {
+      const respuesta = await getAscensos();
+      if(respuesta){
+        setData(respuesta);
+        setIsLoading(false)
+        setError(null); 
+      }else{
+        setError("Error al cargar los datos.");
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.error("Hubo un problema con la solicitud", error);
+      console.log(error);
+      return;
+    }
   }
+
   useEffect(() => {
     getData();
   }, []);
+
   return (
     <>
       <h2>Ascensos</h2>
+      {error && <p className="error-message">{error}</p>}
       <table>
         <thead>
           <tr>
@@ -86,7 +106,13 @@ const Ascensos = () => {
           </tr>
         </thead>
         <tbody>
-          {data ? (
+          {isLoading ? (
+            <tr>
+            <td colSpan="11" className="text-center">
+              {GrowExample()}
+            </td>
+          </tr>
+          ): data && data.length > 0 ?(
             data.map((ascenso) => (
               <tr key={ascenso.id}>
                 <td>{contador++}</td>

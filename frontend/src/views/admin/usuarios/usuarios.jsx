@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Swal from "sweetalert2";
-import { getDestacamento } from "../../lider/LayoutDest";
+import { getUserSession } from "../../lider/LayoutDest";
+import GrowExample from "../../../funciones";
 
 const Usuarios = () => {
   const [data, setData] = useState(null);
@@ -18,6 +19,8 @@ const Usuarios = () => {
   const [show, setShow] = useState(false);
   const [sent, setSent] = useState(false);
   const [idUserSession, setIdUserSession] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const dowload = () => {
     const url = "http://erv-zona3/backend/excel?categoria=usuarios";
@@ -25,16 +28,16 @@ const Usuarios = () => {
   };
 
   const handleClose = () => {
-    setIdEliminar(null)
-    setNombreEliminar(null)
-    setApellidoEliminar(null)
-    setShow(false)
+    setIdEliminar(null);
+    setNombreEliminar(null);
+    setApellidoEliminar(null);
+    setShow(false);
   };
-  const handleShow = ({id, nombre, apellido}) => {
-    setIdEliminar(id)
-    setNombreEliminar(nombre)
-    setApellidoEliminar(apellido)
-    setShow(true)
+  const handleShow = ({ id, nombre, apellido }) => {
+    setIdEliminar(id);
+    setNombreEliminar(nombre);
+    setApellidoEliminar(apellido);
+    setShow(true);
   };
   const getUsers = async () => {
     try {
@@ -42,6 +45,11 @@ const Usuarios = () => {
       if (query.ok) {
         const result = await query.json();
         setData(result);
+        setIsLoading(false);
+        setError(null);
+      } else {
+        setError("Error al cargar los datos.");
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -50,29 +58,29 @@ const Usuarios = () => {
 
   useEffect(() => {
     getUsers();
-    const dataUserSession = getDestacamento();
+    const dataUserSession = getUserSession();
     setIdUserSession(dataUserSession.id);
-  },[]);
+  }, []);
 
   useEffect(() => {
     if (sent === true) {
-      const log_data_enviar= {
+      const log_data_enviar = {
         log: {
           admin_id: idUserSession,
           action: "Eliminar usuario",
           target_id: idEliminar,
-          details: `Se elimino al usuario: ${nombreEliminar} ${apellidoEliminar} del destacamento`
-        }
-      }
-      const save_log= async () =>{
-        try{
-          const query= await fetch('http://erv-zona3/backend/logs',{
+          details: `Se elimino al usuario: ${nombreEliminar} ${apellidoEliminar} del destacamento`,
+        },
+      };
+      const save_log = async () => {
+        try {
+          const query = await fetch("http://erv-zona3/backend/logs", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(log_data_enviar),
-          })
+          });
           if (query.ok) {
             Swal.fire({
               title: "Exito",
@@ -86,13 +94,12 @@ const Usuarios = () => {
         } catch (error) {
           console.log(error);
         }
-      }
+      };
       save_log();
     }
   }, [sent]);
 
-
-  const eliminarRegistro= async () =>{
+  const eliminarRegistro = async () => {
     const id = { id: idEliminar };
     try {
       const query = await fetch("http://erv-zona3/backend/users/eliminar", {
@@ -104,32 +111,37 @@ const Usuarios = () => {
       });
       if (query.ok) {
         setSent(true);
-        
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <>
       <h2>Usuarios</h2>
-      {data ? (
-        <>
-        <table>
-          <thead>
+      {error && <p className="error-message">{error}</p>}
+      <table>
+        <thead>
+          <tr>
+            <th>n°</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Destacamento</th>
+            <th>Rol</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {isLoading ? (
             <tr>
-              <th>n°</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Email</th>
-              <th>Destacamento</th>
-              <th>Rol</th>
-              <th>Acción</th>
+              <td colSpan="11" className="text-center">
+                {GrowExample()}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {data.map((user) => (
+          ) : Array.isArray(data) && data.length > 0 ? (
+            data.map((user) => (
               <tr key={user.id}>
                 <td>{contador++}</td>
                 <td>{user.nombre}</td>
@@ -159,7 +171,11 @@ const Usuarios = () => {
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() =>
-                          handleShow({ id: user.id, nombre: user.nombre, apellido: user.apellido })
+                          handleShow({
+                            id: user.id,
+                            nombre: user.nombre,
+                            apellido: user.apellido,
+                          })
                         }
                         eventKey="2"
                       >
@@ -169,11 +185,17 @@ const Usuarios = () => {
                   </Dropdown>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      
-             <Modal
+            ))
+          ):(
+            <tr>
+            <td colSpan="11" className="text-center">
+              No se encontraron registros
+            </td>
+          </tr>
+          )}
+        </tbody>
+      </table>
+      <Modal
         show={show}
         onHide={handleClose}
         backdrop="static"
@@ -183,7 +205,8 @@ const Usuarios = () => {
           <Modal.Title>Eliminar Ascenso</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          ¿Estás seguro(a) que deseas eliminar el usuario: {nombreEliminar} {apellidoEliminar}?
+          ¿Estás seguro(a) que deseas eliminar el usuario: {nombreEliminar}{" "}
+          {apellidoEliminar}?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -198,10 +221,6 @@ const Usuarios = () => {
         Crear Usuario
       </button>
       <button onClick={dowload}>Descargar</button>
-        </>
-      ) : (
-        <h4>No se encontraron registros</h4>
-      )}
     </>
   );
 };

@@ -10,7 +10,7 @@ const Logout= () => {
   location.href = '/';
 }
 
-export const getDestacamento= () => {
+export const getUserSession= () => {
   const token = localStorage.getItem('token');
   if (!token) {
       return null;
@@ -71,7 +71,7 @@ const LayoutDest = () => {
   const navigate = useNavigate();
 
   useEffect(() =>{
-    const data= getDestacamento();
+    const data= getUserSession();
     if(!data){
       navigate("/");
     }else{

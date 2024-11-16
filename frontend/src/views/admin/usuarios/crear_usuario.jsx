@@ -3,7 +3,7 @@ import Swal from 'sweetalert2'
 import { useNavigate } from "react-router-dom"
 import { getDestacamentos } from "../destacamentos/destacamentos"
 import { capitalize } from "../../../funciones"
-import { getDestacamento } from "../../lider/LayoutDest";
+import { getUserSession } from "../../lider/LayoutDest";
 import { find_names_by_ids } from "./editar_usuario"
 
 const CrearUsuario =() =>{
@@ -33,7 +33,7 @@ const CrearUsuario =() =>{
           };
           fetchDestacamentos();
 
-          const dataUserSession = getDestacamento();
+          const dataUserSession = getUserSession();
           setIdUserSession(dataUserSession.id);
     },[])
 
