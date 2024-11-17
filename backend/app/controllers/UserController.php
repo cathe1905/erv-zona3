@@ -22,7 +22,7 @@ class UserController
         $jsonInput = file_get_contents('php://input');
         // Decodificar el JSON a un array asociativo
         $data = json_decode($jsonInput, true);
-        
+
 
         if (isset($data['usuario'])) {
             $token = bin2hex(random_bytes(16));
@@ -36,7 +36,7 @@ class UserController
             $record = new User($data['usuario']);
             debuguear($record);
 
-            $errores= $record->validar();
+            $errores = $record->validar();
 
             if (!empty($errores)) {
                 http_response_code(400);
@@ -47,7 +47,7 @@ class UserController
                 echo json_encode($response);
                 return;
             }
-            
+
             //Intentar crear el recurso
             $result = $record->crear();
             //CUANDO TENGA DOMINIO IMPLEMENTAR EL ENVIO DE CORREOS
@@ -62,7 +62,7 @@ class UserController
             } else {
                 http_response_code(500);
                 $response = [
-                    'mensaje' => 'Error al crear usuario o enviar el correo. Intente nuevamente más tarde.' 
+                    'mensaje' => 'Error al crear usuario o enviar el correo. Intente nuevamente más tarde.'
                 ];
                 echo json_encode($response);
             }
@@ -77,12 +77,12 @@ class UserController
         $mail = new PHPMailer();
         // Configuración del servidor SMTP, CAMBIAR CREDENCIALES CUANDO TENGA DOMINIO
 
-        $mail->isSMTP();                                           
-        $mail->Host       = 'sandbox.smtp.mailtrap.io';                    
-        $mail->SMTPAuth   = true;                                
-        $mail->Username   = '22ef6e034d610b';              
-        $mail->Password   = 'c20ad2d3e5444b';            
-        $mail->SMTPSecure = 'tls';      
+        $mail->isSMTP();
+        $mail->Host       = 'sandbox.smtp.mailtrap.io';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = '22ef6e034d610b';
+        $mail->Password   = 'c20ad2d3e5444b';
+        $mail->SMTPSecure = 'tls';
         $mail->Port       = 2525;
 
         $body = "
@@ -143,7 +143,7 @@ class UserController
         $mail->AddAddress($correo, 'Querido Líder o comandante');
         $mail->AddReplyTo('catherinr24@gmail.com', 'Catherin Romero');
         $mail->isHTML(TRUE);
-        $mail->CharSet = 'UTF-8'; 
+        $mail->CharSet = 'UTF-8';
         $mail->MsgHTML($body);
 
         //envío el mensaje, comprobando si se envió correctamente
@@ -154,28 +154,29 @@ class UserController
         }
     }
 
-    public static function verificationUser(){
+    public static function verificationUser()
+    {
 
-        $token= $_GET['token'];
+        $token = $_GET['token'];
 
-        if(!$token){
-            http_response_code(400); 
+        if (!$token) {
+            http_response_code(400);
             echo json_encode(['error' => 'token inválido']);
             return;
         }
 
-        $usuario= User::find_field_record('usuarios', 'token', $token );
-        
-        
-        if(!$usuario){
-            http_response_code(404); 
+        $usuario = User::find_field_record('usuarios', 'token', $token);
+
+
+        if (!$usuario) {
+            http_response_code(404);
             echo json_encode(['error' => 'No se pudo realizar la verificación, por favor asegúrate de crear el registro primero']);
             return;
-        } 
+        }
         $usuario['verificado'] = 1;
-        $usuario_act= new User($usuario);
+        $usuario_act = new User($usuario);
         $result = $usuario_act->actualizar();
-        
+
         if ($result) {
             http_response_code(200);
             echo json_encode(['mensaje' => 'El usuario se ha verificado  exitosamente']);
@@ -183,18 +184,18 @@ class UserController
             http_response_code(500);
             echo json_encode(['mensaje' => 'Error al verificar el usuario']);
         }
-
     }
 
-    public static function editUser(){
+    public static function editUser()
+    {
 
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             editRecord(User::class, 'usuario');
-        }else{
+        } else {
             $jsonInput = file_get_contents('php://input');
             $data = json_decode($jsonInput, true);
-            
-            $resultado= User::update($data['usuario']);
+
+            $resultado = User::update($data['usuario']);
             if ($resultado) {
                 http_response_code(200);
                 echo json_encode(['mensaje' => 'Usuario actualizado exitosamente']);
@@ -203,33 +204,34 @@ class UserController
                 echo json_encode(['mensaje' => 'Error al actualizar el usuario']);
             }
         }
-        
     }
 
-    public static function deleteUser(){
+    public static function deleteUser()
+    {
         deleteRecord(User::class, 'usuario');
     }
 
-    public static function authUser(){
+    public static function authUser()
+    {
         header('Content-Type: application/json; charset=utf-8'); // Establecer la cabecera
         $jsonInput = file_get_contents('php://input');
-        $data = json_decode($jsonInput, true); 
+        $data = json_decode($jsonInput, true);
 
-        if(!isset($data['email']) || !isset($data['contraseña'])){
+        if (!isset($data['email']) || !isset($data['contraseña'])) {
             http_response_code(404);
-            echo json_encode(['error' =>' Email o contraseña no encontrado']);
+            echo json_encode(['error' => ' Email o contraseña no encontrado']);
             return;
         }
 
-        $email= $data['email'] ;
-        $contraseña= $data['contraseña'];
+        $email = $data['email'];
+        $contraseña = $data['contraseña'];
 
-         $user= User::datos_auth($email);
-        if($user){
-            if(password_verify($contraseña, $user['contraseña'])){
+        $user = User::datos_auth($email);
+        if ($user) {
+            if (password_verify($contraseña, $user['contraseña'])) {
 
                 $jwtSecret = $_ENV['JWT_SECRET'];
-              
+
                 // Datos a incluir en el token
                 $payload = [
                     'iss' => 'http://erv-zona3/backend/users/auth', // Emisor del token
@@ -253,21 +255,82 @@ class UserController
                 ]));
             } else {
                 http_response_code(404);
-                echo json_encode(['error' =>'Contraseña incorrecta']);
+                echo json_encode(['error' => 'Contraseña incorrecta']);
             }
-        }else{
+        } else {
             http_response_code(404);
-                echo json_encode(['error' =>'No esta registrado este email']);
+            echo json_encode(['error' => 'No esta registrado este email']);
+        }
+    }
+
+    public static function refreshToken()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        $jsonInput = file_get_contents('php://input');
+        $data = json_decode($jsonInput, true);
+
+        if (!isset($data['refresh_token'])) {
+            echo json_encode(['error' => 'Refresh token missing']);
+            http_response_code(400);
+            return;
         }
 
+        $refreshToken = $data['refresh_token'];
+        if (!is_string($refreshToken) || empty($refreshToken)) {
+            echo json_encode(['error' => 'Invalid refresh token format']);
+            http_response_code(400); // Bad Request
+            return;
+        }
+        $jwtSecret = $_ENV['JWT_SECRET'];
 
 
+        try {
+            // Decodificar el refresh token
+            $decoded = JWT::decode($refreshToken, new Key($jwtSecret, 'HS256'));
+
+            $newAccessToken = self::generateAccessToken($decoded->data);
+
+            echo json_encode([
+                'access_token' => $newAccessToken
+            ]);
+            http_response_code(200);
+
+        } catch (\Exception $e) {
+
+            echo json_encode(['error' => $e . 'Invalid refresh token']);
+            http_response_code(401); 
+        }
     }
-    public static function getUserEmail(){
-        try{
+    private static function generateAccessToken($userData)
+    {
+        // debuguear($userData);
+        // exit;
+        $jwtSecret = $_ENV['JWT_SECRET'];
+
+        $payload = [
+            'iss' => 'http://erv-zona3/backend/users/auth', 
+            'aud' => 'http://erv-zona3/backend/users/auth', 
+            'iat' => time(),              
+            'exp' => time() + (14400),  
+            'data' => [
+                'id' => $userData->id,
+                'nombre' => $userData->nombre,
+                'apellido' => $userData->apellido,
+                'email' => $userData->email,           
+                'role' => $userData->role,
+                'destacamento' => $userData->destacamento       
+            ]
+        ];
+        $jwt = JWT::encode($payload, $jwtSecret, 'HS256');
+        return $jwt;
+    }
+
+    public static function getUserEmail()
+    {
+        try {
             $email = $_GET['email'];
-            if(!$email) {
-                http_response_code(400); 
+            if (!$email) {
+                http_response_code(400);
                 echo json_encode(['error' => 'email inválido']);
                 return;
             }
@@ -275,15 +338,14 @@ class UserController
             $record = User::find_by_email($email);
 
             if (!$record) {
-                http_response_code(404); 
+                http_response_code(404);
                 echo json_encode(['error' => $email . ' no encontrado']);
                 return;
             }
             echo json_encode($record);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             http_response_code($e->getCode() ?: 500);
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
-
 }

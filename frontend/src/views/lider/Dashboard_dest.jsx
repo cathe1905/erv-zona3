@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getInfoToken } from "../../components/requireAuth";
+import { getUserSession } from "./LayoutDest";
 import Swal from 'sweetalert2'
 import { findRama } from "../../funciones";
 
@@ -8,7 +8,7 @@ const Dashboard_dest = () => {
   const [param, setParam] = useSearchParams();
   const [data, setData] = useState(null);
   const destacamento = param.get('destacamento');
-  const token= getInfoToken();
+  const token= getUserSession();
 
 
   const getStadisticas = async () => {
