@@ -63,16 +63,20 @@ function LoginPage(){
     }
 
     useEffect(() =>{
-        const user= getUserSession();
-        if(user){
-            if(user.role == 1){
-                navigate('/dashboard/admin')
-            }else if((user.role == 2)){
-                navigate(`/dashboard/dest?destacamento=${user.destacamento}`);
-            } 
-        }else{
-            console.log('no hay token')
+        const evaluateUser= async () =>{
+                const user= await getUserSession();
+            if(user){
+                if(user.role == 1){
+                    navigate('/dashboard/admin')
+                }else if((user.role == 2)){
+                    navigate(`/dashboard/dest?destacamento=${user.destacamento}`);
+                } 
+            }else{
+                console.log('no hay token')
+            }
         }
+        evaluateUser();
+        
     },[navigate])
 
     return (

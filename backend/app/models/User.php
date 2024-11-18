@@ -91,7 +91,7 @@ class User extends ActiveRecord
     }
 
     public static function datos_auth($email){
-        $query= 'SELECT usuarios.*, destacamentos.nombre AS destacamento
+        $query= 'SELECT usuarios.*, destacamentos.nombre AS destacamento, destacamentos.id AS destacamento_id
         FROM usuarios 
         INNER JOIN destacamentos on usuarios.destacamento_id = destacamentos.id
         WHERE usuarios.email = ' . "'" . self::$db->escape_string($email) . "'";

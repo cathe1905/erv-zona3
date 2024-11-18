@@ -244,7 +244,8 @@ class UserController
                         'apellido' => $user['apellido'],
                         'email' => $email,           // ID del usuario
                         'role' => $user['rol'],
-                        'destacamento' => $user['destacamento']        // Rol del usuario
+                        'destacamento' => $user['destacamento'],
+                        'destacamento_id' => $user['destacamento_id'] 
                     ]
                 ];
                 $jwt = JWT::encode($payload, $jwtSecret, 'HS256');
@@ -303,8 +304,6 @@ class UserController
     }
     private static function generateAccessToken($userData)
     {
-        // debuguear($userData);
-        // exit;
         $jwtSecret = $_ENV['JWT_SECRET'];
 
         $payload = [
@@ -347,5 +346,33 @@ class UserController
             http_response_code($e->getCode() ?: 500);
             echo json_encode(['error' => $e->getMessage()]);
         }
+    }
+
+    public static function passwordReset(){
+        header('Content-Type: application/json; charset=utf-8');
+        $jsonInput = file_get_contents('php://input');
+        $data = json_decode($jsonInput, true);
+
+        try{
+            $email= $data['email'];
+            if (!$email) {
+                http_response_code(400);
+                echo json_encode(['error' => 'email inválido']);
+                return;
+            }
+    
+            $record = User::find_by_email($email);
+    
+            if($record){
+                
+            }
+    
+        }catch (\Exception $e) {
+
+            echo json_encode(['error' => $e . 'Invalid refresh token']);
+            http_response_code(401); 
+        }
+       
+
     }
 }

@@ -61,6 +61,7 @@ $router->post('/backend/users/eliminar', [UserController::class, 'deleteUser']);
 $router->post('/backend/users/auth', [UserController::class, 'authUser']);
 $router->post('/backend/users/refresh', [UserController::class, 'refreshToken']);
 $router->get('/backend/user/email', [UserController::class, 'getUserEmail']);
+$router->post('/backend/password-reset/request', [UserController::class, 'passwordReset']);
 
 $router->get('/backend/excel', [ExcelController::class, 'descargarExcel']);
 

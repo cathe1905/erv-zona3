@@ -157,7 +157,7 @@ const Explo = () => {
               onChange={(e) =>
                 handleFilterChange(
                   "query",
-                  e.target.value.trim() === "" ? null : e.target.value
+                  e.target.value.trim() === "" ? "" : e.target.value
                 )
               }
               value={query}

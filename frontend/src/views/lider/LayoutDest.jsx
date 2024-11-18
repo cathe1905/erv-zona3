@@ -25,16 +25,16 @@ export const getUserSession= () => {
     
 }
 
-const Menu = () => {
+const Menu = ({destacamento}) => {
   return (
     <>
       <nav className="row  roboto-regular fs-6 ">
-        <a className="text-decoration-none mb-3 enlace-menu" href="#home">
+        <a className="text-decoration-none mb-3 enlace-menu" href={`/dashboard/dest?destacamento=${destacamento.destacamento}`}>
           <i className="bi bi-house-door me-2"></i> <span>Home</span>
         </a>
         <a
           className="text-decoration-none  enlace-menu mb-3"
-          href="#exploradores"
+          href="/dashboard/dest/explo"
         >
           <i className="bi bi-people me-2"></i> <span>Exploradores</span>
         </a>
@@ -89,7 +89,7 @@ const LayoutDest = () => {
       <div className="d-none d-md-flex">
         <div className="col-md-2 bg-white p-md-5 altura-completa">
           <h1 className="titulo_principal color-morado mb-md-4">Dashboard</h1>
-          <Menu />
+          <Menu destacamento={destacamento} />
         </div>
         <div className="col-md-10 p-md-4">
           <div className="d-flex flex-row justify-content-between mx-md-3 my-md-4">
@@ -143,7 +143,7 @@ const LayoutDest = () => {
             </button>
           </Offcanvas.Header>
           <Offcanvas.Body>
-            <Menu />
+            <Menu destacamento={destacamento}  />
           </Offcanvas.Body>
         </Offcanvas>
         <div className="py-1">

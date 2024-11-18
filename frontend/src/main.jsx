@@ -27,6 +27,8 @@ import Logs from "./views/admin/logs.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
+export const UserContext = React.createContext();
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
     <BrowserRouter>

@@ -1,54 +1,76 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getUserSession } from "./LayoutDest";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import { findRama } from "../../funciones";
+import Number from "../../components/Animation";
 
 const Dashboard_dest = () => {
   const [param, setParam] = useSearchParams();
   const [data, setData] = useState(null);
-  const destacamento = param.get('destacamento');
-  const token= getUserSession();
+  const destacamento = param.get("destacamento") || "";
+  const [user, setUser]= useState(null)
+  const hasUpdatedParam = useRef(false);
 
+  useEffect(() =>{
+    const evaluateUser= async () =>{
+        const user= await getUserSession();
+        if(user){
+          console.log(user)
+           setUser(user);
+        }
+    }
+    evaluateUser();
+  }, [])
 
   const getStadisticas = async () => {
-    if (!token) return; 
+    if (!user) {
+      console.error("Token ausente o erróneo");
+      return;
+    }
+    if(user){
       try {
-        const respuesta = await fetch(`http://erv-zona3/backend/?destacamento=${token.data.destacamento}`);
+        const respuesta = await fetch(
+          `http://erv-zona3/backend/?destacamento=${user.destacamento}`
+         
+        );
+        console.log(`http://erv-zona3/backend/?destacamento=${user.destacamento}`)
         if (respuesta.ok) {
-          const estadisticas=await respuesta.json();
+          const estadisticas = await respuesta.json();
           setData(estadisticas);
         }
-        
       } catch (error) {
         console.error("Hubo un problema con la solicitud", error);
         console.log(error);
         return;
       }
+    }
+   
   };
 
-  useEffect(() =>{
-    if (token.data.destacamento !== destacamento) {
-      if (destacamento !== token.data.destacamento) { 
-          Swal.fire({
-              title: 'Error!',
-              text: 'No tienes acceso a otro destacamento!',
-              icon: 'error',
-              confirmButtonText: 'ok'
-          });
-          setParam({ destacamento: token.data.destacamento });
+  useEffect(() => {
+    if (user && user.destacamento){
+      if (user.destacamento.trim() !== destacamento.trim()) {
+        Swal.fire({
+          title: "Error!",
+          text: "No tienes acceso a otro destacamento!",
+          icon: "error",
+          confirmButtonText: "ok",
+        });
+        setParam({ destacamento: user.destacamento });
+        hasUpdatedParam.current = true;
+      } else {
+        getStadisticas();
       }
-  } else {
-      getStadisticas();
-  }
-  }, [token.data.destacamento, destacamento, setParam])
+    }
 
+  }, [user, destacamento]);
 
-const prejuniors= findRama('pre-junior', data);
-const pioneros= findRama('pionero', data)
-const brijers= findRama('brijer', data)
-const oficiales= findRama('oficial', data)
-const general= data ? data.general_count : 0
+  const prejuniors = parseInt(findRama('pre-junior', data), 10);
+  const pioneros = parseInt(findRama('pionero', data), 10);
+  const brijers = parseInt(findRama('brijer', data), 10);
+  const oficiales = parseInt(findRama('oficial', data), 10);
+  const general = data ? parseInt(data.general_count, 10) : 0;
 
   return (
     <main>
@@ -59,7 +81,7 @@ const general= data ? data.general_count : 0
           </div>
           <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
             <p className="col-12 m-1 ">Estadística general</p>
-            <p className="col-12 m-1 fs-4">{general}</p>
+            <Number n={general}/>
           </div>
         </aside>
 
@@ -67,10 +89,10 @@ const general= data ? data.general_count : 0
           <div className="col-3 d-flex justify-content-center align-items-center  rounded-start">
             <i className="bi bi-reddit fs-1 text-white rounded-circle px-3 py-2 fondo-morado-claro"></i>
           </div>
-          
+
           <div className="col-9 row d-flex flex-column align-items-center p-3 pe-2 text-dark">
             <p className="col-12 m-1 ">Pre-juniors y Pre-joyas</p>
-            <p className="col-12 m-1 fs-4 ">{prejuniors ? prejuniors : 0 }</p>
+            <Number n={prejuniors}/>
           </div>
         </aside>
 
@@ -80,7 +102,7 @@ const general= data ? data.general_count : 0
           </div>
           <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
             <p className="col-12 m-1 ">Junior y Joyas</p>
-            <p className="col-12 m-1 fs-4 color-verde"> {pioneros ? pioneros : 0 }</p>
+            <Number n={pioneros}/>
           </div>
         </aside>
 
@@ -90,7 +112,7 @@ const general= data ? data.general_count : 0
           </div>
           <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
             <p className="col-12 m-1 ">Brijers</p>
-            <p className="col-12 m-1 fs-4 ">{brijers ? brijers : 0 }</p>
+            <Number n={brijers}/>
           </div>
         </aside>
 
@@ -100,7 +122,7 @@ const general= data ? data.general_count : 0
           </div>
           <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
             <p className="col-12 m-1 ">Oficiales</p>
-            <p className="col-12 m-1 fs-4 ">{oficiales ? oficiales : 0 } </p>
+            <Number n={oficiales}/>
           </div>
         </aside>
       </div>
