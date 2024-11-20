@@ -27,9 +27,7 @@ const refreshToken= async(data) =>{
 }
 const RequireAuth = ({role}) => {
     const [isAuthorized, setIsAuthorized] = useState(false);
-    // const info = localStorage.getItem('token');
     const navigate = useNavigate();
-    // const[token, setToken] = useState(null);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -66,17 +64,5 @@ const RequireAuth = ({role}) => {
 
     return isAuthorized ? <Outlet /> : null;
 };
-
-
-// export const getInfoToken =() => {
-//     const info = localStorage.getItem('token');
-//     if (!info) {
-//         navigate('/'); 
-//         return null; 
-//     }
-//     const token = jwtDecode(info);
-//     return token || null;
-    
-// }
 
 export default RequireAuth

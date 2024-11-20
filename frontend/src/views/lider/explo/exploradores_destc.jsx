@@ -1,10 +1,13 @@
-import { useEffect } from "react";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams  } from "react-router-dom";
 import PaginationGeneral from "../../../components/Pagination";
 import { capitalize } from "../../../funciones";
 import GrowExample from "../../../funciones";
 import { getUserSession } from "../LayoutDest";
+import Dropdown from "react-bootstrap/Dropdown";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Swal from "sweetalert2";
 
 
 const Explo_dest = () => {
@@ -20,39 +23,54 @@ const Explo_dest = () => {
     const [ascensos, setAscensos]= useState(null);
     const [data, setData] = useState(null);
     const [total, setTotal] = useState(null);
+    const [idEliminar, setIdEliminar] = useState(null);
+    const [nombreEliminar, setNombreEliminar] = useState(null);
+    const [show, setShow] = useState(false);
+    const navigate = useNavigate();
+
+    const handleClose = () => {
+      setIdEliminar(null);
+      setNombreEliminar(null);
+      setShow(false);
+    };
+    const handleShow = ({ id, nombre }) => {
+      setIdEliminar(id);
+      setNombreEliminar(nombre);
+      setShow(true);
+    };
 
     useEffect(() =>{
-        const evaluateUser= async () =>{
-            const user= await getUserSession();
-            if(user){
-               setDestacamento(user.destacamento_id);
+            const userData= getUserSession();
+            if(userData){
+               setDestacamento(userData.destacamento_id);
             }
-        }
-        evaluateUser();
       }, [])
 
-    useEffect(() => {
-        const getExploradores = async () => {
-          try {
-            const result = await fetch(
-              `http://erv-zona3/backend/explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
-            );
-            if (result.ok) {
-              const respuesta = await result.json();
-              setIsLoading(false)
-              setData(respuesta.exploradores);
-              setTotal(respuesta.total);
-            }else{
-              setIsLoading(false)
-              setError("Error al cargar los datos.");
-            }
-          } catch (error) {
-            
-            console.error("Hubo un problema con la solicitud", error);
-            console.log(error);
-            return;
+      const getExploradores = async () => {
+        if (!destacamento) return; 
+        try {
+          const result = await fetch(
+            `http://erv-zona3/backend/explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
+          );
+          if (result.ok) {
+            const respuesta = await result.json();
+            setIsLoading(false)
+            setData(respuesta.exploradores);
+            setTotal(respuesta.total);
+          }else{
+            setIsLoading(false)
+            setError("Error al cargar los datos.");
           }
-        };
+        } catch (error) {
+          
+          console.error("Hubo un problema con la solicitud", error);
+          console.log(error);
+          return;
+        }
+      };
+
+    useEffect(() => {
+        
         getExploradores();
       }, [rama, query, ascenso, page, limit, destacamento]);
 
@@ -99,6 +117,31 @@ const Explo_dest = () => {
           page: 1,
         });
       }
+
+      const eliminarRegistro = async () => {
+        const id = { id: idEliminar };
+        try {
+          const query = await fetch("http://erv-zona3/backend/explo/eliminar", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(id),
+          });
+          if (query.ok) {
+            Swal.fire({
+              title: "Exito",
+              text: "Explorador eliminado exitosamente",
+              icon: "success",
+              confirmButtonText: "Ok",
+            });
+            setShow(false);
+            getExploradores();
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
     
       const dowload= (all) =>{
           const url = `http://erv-zona3/backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
@@ -108,7 +151,7 @@ const Explo_dest = () => {
     return (
        <>
         <h2>Exploradores</h2>
-    {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-message">{error}</p>}
       <div>
 
         <select onChange={(e) => handleFilterChange("limit", e.target.value)} value={limit}>
@@ -170,6 +213,7 @@ const Explo_dest = () => {
             <th>Teléfono</th>
             <th>Email</th>
             <th>Destacamento</th>
+            <th>Acción</th>
           </tr>
         </thead>
         <tbody>
@@ -194,6 +238,37 @@ const Explo_dest = () => {
                 <td>{explo.telefono}</td>
                 <td>{explo.email}</td>
                 <td>{capitalize(explo.destacamento)}</td>
+                <td>
+                  <Dropdown drop="start">
+                    <Dropdown.Toggle
+                      as="span"
+                      id="dropdown-custom-trigger"
+                      className="border p-1 action"
+                    >
+                      . . .
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        onClick={() =>
+                          navigate(
+                            `/dashboard/dest/explo/editar?id=${explo.id}`
+                          )
+                        }
+                        eventKey="1"
+                      >
+                        Editar
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() =>
+                          handleShow({ id: explo.id, nombre: capitalize(explo.nombres) + ' ' + capitalize(explo.apellidos)})
+                        }
+                        eventKey="2"
+                      >
+                        Eliminar
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </td>
               </tr>
             ))
           ) : (
@@ -206,6 +281,28 @@ const Explo_dest = () => {
         </tbody>
       </table>
 
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Eliminar explorador</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          ¿Estás seguro(a) que deseas eliminar a: {nombreEliminar}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button onClick={eliminarRegistro} variant="primary">
+            Si
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       {total > 0 && (
         <PaginationGeneral
           total={total}
@@ -216,7 +313,14 @@ const Explo_dest = () => {
       )}
 
       <button onClick={() => dowload('false')}>Descargar registros en pantalla</button>
-      <button onClick={() => dowload('true')}>Descargar toda la selección: {total}</button>
+      {total > 10 && (
+        <button onClick={() => dowload('true')}>Descargar toda la selección: {total}</button>
+      )}
+
+      <button onClick={() => navigate("/dashboard/dest/explo/crear")}>
+        Crear nuevo explorador
+      </button>
+      
     
        </>
     )

@@ -34,7 +34,8 @@ const Menu = ({destacamento}) => {
         </a>
         <a
           className="text-decoration-none  enlace-menu mb-3"
-          href="/dashboard/dest/explo"
+          href={`/dashboard/dest/explo?destacamento=${destacamento.destacamento}`}
+          
         >
           <i className="bi bi-people me-2"></i> <span>Exploradores</span>
         </a>

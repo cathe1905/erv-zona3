@@ -16,7 +16,6 @@ const Dashboard_dest = () => {
     const evaluateUser= async () =>{
         const user= await getUserSession();
         if(user){
-          console.log(user)
            setUser(user);
         }
     }
@@ -34,7 +33,6 @@ const Dashboard_dest = () => {
           `http://erv-zona3/backend/?destacamento=${user.destacamento}`
          
         );
-        console.log(`http://erv-zona3/backend/?destacamento=${user.destacamento}`)
         if (respuesta.ok) {
           const estadisticas = await respuesta.json();
           setData(estadisticas);
