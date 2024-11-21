@@ -56,11 +56,11 @@ const CrearAscenso =() =>{
     return (
         <>
         <form onSubmit={handleSubmit}>
-            <label>Nombre
-                <input type="text" required value={data.nombre} name="nombre" onChange={handleOnchange}/>
+            <label htmlFor="nombre">Nombre
+                <input id="nombre" type="text" required value={data.nombre} name="nombre" onChange={handleOnchange}/>
             </label>
-            <label>Rama
-            <select name="rama" required onChange={handleOnchange}>
+            <label htmlFor="rama">Rama
+            <select id="rama" name="rama" required onChange={handleOnchange}>
                 <option value="">Selecciona una rama</option>
                 <option value="pre-junior">Pre-junior y Pre-joya</option>
                 <option value="pionero">Junior y Joya</option>

@@ -64,48 +64,48 @@ const CrearDestacamento =() =>{
     return (
         <>
         <form onSubmit={handleSubmit}>
-            <label>Destacamento
-                <input type="text" name="nombre" value={data.nombre} onChange={handleChange} placeholder="Nombre del destacamento" required/>
+            <label htmlFor="nombre">Destacamento
+                <input id="nombre" type="text" name="nombre" value={data.nombre} onChange={handleChange} placeholder="Nombre del destacamento" required/>
             </label>
 
-            <label>Comandante General
-                <input type="text" name="comandante_general" value={data.comandante_general} onChange={handleChange} placeholder="Nombre y apellido" required/>
+            <label htmlFor="comandante_general">Comandante General
+                <input id="comandante_general" type="text" name="comandante_general" value={data.comandante_general} onChange={handleChange} placeholder="Nombre y apellido" required/>
             </label>
 
-            <label>Comandante Femenino
-                <input type="text" name="comandante_femenino" value={data.comandante_femenino} onChange={handleChange} placeholder="Nombre y apellido" required/>
+            <label htmlFor="comandante_femenino">Comandante Femenino
+                <input id="comandante_femenino" type="text" name="comandante_femenino" value={data.comandante_femenino} onChange={handleChange} placeholder="Nombre y apellido" required/>
             </label>
 
-            <label>Comandante Masculino
-                <input type="text" name="comandante_masculino" value={data.comandante_masculino} onChange={handleChange} placeholder="Nombre y apellido" required/>
+            <label htmlFor="comandante_masculino">Comandante Masculino
+                <input id="comandante_masculino" type="text" name="comandante_masculino" value={data.comandante_masculino} onChange={handleChange} placeholder="Nombre y apellido" required/>
             </label>
 
-            <label>Pastor
-                <input type="text" name="pastor" value={data.pastor} onChange={handleChange} placeholder="Nombre y apellido" required/>
+            <label htmlFor="pastor">Pastor
+                <input id="pastor" type="text" name="pastor" value={data.pastor} onChange={handleChange} placeholder="Nombre y apellido" required/>
             </label>
 
-            <label>Instructor Pionero
-                <input type="text" name="inst_pionero" value={data.inst_pionero} onChange={handleChange} placeholder="Nombre y apellido" required/>  
+            <label htmlFor="inst_pionero">Instructor Pionero
+                <input id="inst_pionero" type="text" name="inst_pionero" value={data.inst_pionero} onChange={handleChange} placeholder="Nombre y apellido" required/>  
             </label>
 
-            <label>Instructor Brijer
-                <input type="text" name="inst_brijer" value={data.inst_brijer} onChange={handleChange} placeholder="Nombre y apellido" required/>  
+            <label htmlFor="inst_brijer">Instructor Brijer
+                <input id="inst_brijer" type="text" name="inst_brijer" value={data.inst_brijer} onChange={handleChange} placeholder="Nombre y apellido" required/>  
             </label>
 
-            <label>Instructor BES
-                <input type="text" name="inst_bes" value={data.inst_bes} onChange={handleChange} placeholder="Nombre y apellido" required/>  
+            <label htmlFor="inst_bes">Instructor BES
+                <input id="inst_bes" type="text" name="inst_bes" value={data.inst_bes} onChange={handleChange} placeholder="Nombre y apellido" required/>  
             </label>
 
-            <label>Secretaria
-                <input type="text" name="secretaria" value={data.secretaria} onChange={handleChange} placeholder="Nombre y apellido" required/>  
+            <label htmlFor="secretaria">Secretaria
+                <input id="secretaria" type="text" name="secretaria" value={data.secretaria} onChange={handleChange} placeholder="Nombre y apellido" required/>  
             </label>
 
-            <label>Tesorero
-                <input type="text" name="tesorero" value={data.tesorero} onChange={handleChange} placeholder="Nombre y apellido" required/>  
+            <label htmlFor="tesorero">Tesorero
+                <input id="tesorero" type="text" name="tesorero" value={data.tesorero} onChange={handleChange} placeholder="Nombre y apellido" required/>  
             </label>
 
-            <label>Capellán
-                <input type="text" name="capellan" value={data.capellan} onChange={handleChange} placeholder="Nombre y apellido" required/>  
+            <label htmlFor="capellan">Capellán
+                <input id="capellan" type="text" name="capellan" value={data.capellan} onChange={handleChange} placeholder="Nombre y apellido" required/>  
             </label>
 
             <button type="submit">Guardar Destacamento</button>

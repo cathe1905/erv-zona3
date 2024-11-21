@@ -3,10 +3,7 @@ import { useEffect } from "react";
 import { getDestacamentos } from "../destacamentos/destacamentos";
 import { getAscensos } from "../ascensos/ascensos";
 import { capitalize } from "../../../funciones";
-import {
-  errorGeneralQuery,
-  errorSpecificQuery
-} from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 
 const CrearDirectiva = () => {
@@ -61,15 +58,15 @@ const CrearDirectiva = () => {
       });
 
       if (result.ok) {
-        exitSpecificQuery('Directivo guardado exitosamente')
+        exitSpecificQuery("Directivo guardado exitosamente");
         navigate("/dashboard/admin/directiva");
-      }else{
+      } else {
         const resultado = await result.json();
-        const mensaje= resultado.error || "Error al procesar la solicitud.";
-        errorSpecificQuery(mensaje)
+        const mensaje = resultado.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       errorGeneralQuery();
     }
   };
@@ -99,8 +96,9 @@ const CrearDirectiva = () => {
     <>
       <h2>Crear nuevo miembro</h2>
       <form onSubmit={handleSubmit}>
-        <label>
+        <label htmlFor="nombres">
           <input
+            id="nombres"
             type="text"
             name="nombres"
             value={data.nombres}
@@ -110,8 +108,9 @@ const CrearDirectiva = () => {
           />
         </label>
 
-        <label>
+        <label htmlFor="apellidos">
           <input
+            id="apellidos"
             type="text"
             name="apellidos"
             value={data.apellidos}
@@ -120,17 +119,27 @@ const CrearDirectiva = () => {
             required
           />
         </label>
-        <select name="ascenso_id" onChange={handleChange} required>
-          <option value="">Seleccione un ascenso</option>
-          {ascensos &&
-            ascensos.map((ascenso) => (
-              <option key={ascenso.id} value={ascenso.id}>
-                {capitalize(ascenso.nombre)}
-              </option>
-            ))}
-        </select>
-        <label>
+
+        <label htmlFor="ascenso_id">
+          <select
+            id="ascenso_id"
+            name="ascenso_id"
+            onChange={handleChange}
+            required
+          >
+            <option value="">Seleccione un ascenso</option>
+            {ascensos &&
+              ascensos.map((ascenso) => (
+                <option key={ascenso.id} value={ascenso.id}>
+                  {capitalize(ascenso.nombre)}
+                </option>
+              ))}
+          </select>
+        </label>
+
+        <label htmlFor="cargo">
           <input
+            id="cargo"
             type="text"
             name="cargo"
             value={data.cargo}
@@ -139,8 +148,10 @@ const CrearDirectiva = () => {
             required
           />
         </label>
-        <label>
+
+        <label htmlFor="telefono">
           <input
+            id="telefono"
             type="text"
             name="telefono"
             value={data.telefono}
@@ -149,9 +160,11 @@ const CrearDirectiva = () => {
             required
           />
         </label>
-        <label>
+
+        <label htmlFor="foto">
           Selecciona una Foto
           <input
+            id="foto"
             type="file"
             accept="image/*"
             name="foto"
@@ -159,15 +172,24 @@ const CrearDirectiva = () => {
             required
           />
         </label>
-        <select name="destacamento_id" onChange={handleChange} required>
-          <option value="">Seleccione un destacamento</option>
-          {destacamentos &&
-            destacamentos.map((destacamento) => (
-              <option key={destacamento.id} value={destacamento.id}>
-                {capitalize(destacamento.nombre)}
-              </option>
-            ))}
-        </select>
+
+        <label htmlFor="destacamento_id">
+          <select
+            id="destacamento_id"
+            name="destacamento_id"
+            onChange={handleChange}
+            required
+          >
+            <option value="">Seleccione un destacamento</option>
+            {destacamentos &&
+              destacamentos.map((destacamento) => (
+                <option key={destacamento.id} value={destacamento.id}>
+                  {capitalize(destacamento.nombre)}
+                </option>
+              ))}
+          </select>
+        </label>
+
         <button type="submit">Guardar Directivo</button>
       </form>
     </>

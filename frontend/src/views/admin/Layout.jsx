@@ -97,7 +97,7 @@ const Layout = () => {
             <div className="d-flex justify-content-center align-items-center">
               <i className="bi bi-person me-2 fs-4 rounded-circle bg-secondary px-2"></i>
               <div>
-                <p className="my-md-0 p-0 fw-bold letra_muy_pequeña">{admin ? capitalize(admin.nombre) + capitalize(admin.apellido)  : 'Administrador'}</p>
+                <p className="my-md-0 p-0 fw-bold letra_muy_pequeña">{admin ? capitalize(admin.nombre) + " " + capitalize(admin.apellido)  : 'Administrador'}</p>
                 <p className="my-md-0 letra_muy_pequeña">{admin ? admin.email  : ''}</p>
               </div>
             </div>

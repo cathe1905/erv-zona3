@@ -208,9 +208,9 @@ const EditarUsuario = () => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <label>
+      <label htmlFor="nombre">
           Nombre
-          <input
+          <input id="nombre"
             type="text"
             autoComplete="username"
             required
@@ -220,9 +220,9 @@ const EditarUsuario = () => {
             onChange={handleOnchange}
           />
         </label>
-        <label>
+        <label htmlFor="apellido">
           Apellido
-          <input
+          <input id="apellido"
             type="text"
             autoComplete="username"
             required
@@ -232,9 +232,9 @@ const EditarUsuario = () => {
             onChange={handleOnchange}
           />
         </label>
-        <label>
+        <label htmlFor="email">
           Email
-          <input
+          <input id="email"
             type="email"
             autoComplete="username"
             required
@@ -244,9 +244,10 @@ const EditarUsuario = () => {
             onChange={handleOnchange}
           />
         </label>
-        <label>
+        <label htmlFor="destacamento_id">
           Destacamento
           <select
+            id="destacamento_id"
             name="destacamento_id"
             required
             onChange={handleOnchange}
@@ -261,9 +262,9 @@ const EditarUsuario = () => {
               ))}
           </select>
         </label>
-        <label>
+        <label htmlFor="rol">
           Rol
-          <select
+          <select id="rol"
             name="rol"
             required
             onChange={handleOnchange}
