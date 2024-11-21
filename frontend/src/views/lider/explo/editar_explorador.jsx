@@ -1,6 +1,6 @@
 import { getAscensos } from "../../admin/ascensos/ascensos"
 import { useEffect, useState } from "react";
-import Swal from 'sweetalert2'
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery } from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import { getUserSession } from "../LayoutDest";
 import { useSearchParams } from "react-router-dom"
@@ -42,36 +42,28 @@ const EditarExplorador =() =>{
                         ...data,
                         ...result
                     })
+                }else{
+                  const result = await query.json();
+                  const mensaje= result.error || "Error al procesar la solicitud.";
+                  errorSpecificQuery(mensaje) 
                 }
             }catch(error){
                 console.log(error)
+                errorGeneralQuery();
             }
             
         }
         getExploById();
     },[])
 
-    //   useEffect(() => {
-    //     setData((prevData) => ({
-    //         ...prevData,
-    //         destacamento_id: idDestacamento,
-    //     }));
-    // }, [idDestacamento]);
-
       useEffect(() => {
         async function getdataAscensos() {
-            try {
               const respuesta = await getAscensos();
               if(respuesta){
                 setAscensos(respuesta);
               }else{
                 setError("Error al cargar los ascensos");
               }
-            } catch (error) {
-              console.error("Hubo un problema con la solicitud", error);
-              console.log(error);
-              return;
-            }
           }
           getdataAscensos();
       }, []);
@@ -82,44 +74,37 @@ const EditarExplorador =() =>{
             explorador: {...data}
         }
         console.log(data)
-        for(let item in data){
-            //estos campos no son obligatorios
-            if(item !== 'cargo' && item !== 'cedula' && item !== 'email'){
+      for(let item in data){
+          //estos campos no son obligatorios
+          if(item !== 'cargo' && item !== 'cedula' && item !== 'email'){
 
-                if(data[item] == ""){
-                    console.log(data[item])
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Algún campo obligatorio esta vacío',
-                        icon: 'error',
-                        confirmButtonText: 'Revisar'
-                    });
-                    return;
-                }
-            }
-           
-        }
-        try{
-            const respuesta= await fetch("http://erv-zona3/backend/explo/actualizar", {
-                method: "POST",
-                headers:{
-                    'Content-Type' : 'application/json'
-                },
-                body: JSON.stringify(data_enviar)
-            })
+              if(data[item] == ""){
+                  errorSpecificQuery('Algún campo obligatorio esta vacío')
+                  return;
+              }
+          }
+      }
+    try{
+        const respuesta= await fetch("http://erv-zona3/backend/explo/actualizar", {
+            method: "POST",
+            headers:{
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify(data_enviar)
+        })
 
-            if(respuesta.ok){
-                Swal.fire({
-                    title: 'Exito',
-                    text: 'Explorador modificado exitosamente',
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
-                });
-                navigate(`/dashboard/dest/explo?destacamento=${destacamento}`)
-            }
-        }catch(error){
-            console.log(error)
+        if(respuesta.ok){
+            exitSpecificQuery('Explorador actualizado exitosamente')
+            navigate(`/dashboard/dest/explo?destacamento=${destacamento}`)
+        }else{
+          const result = await respuesta.json();
+          const mensaje= result.error || "Error al procesar la solicitud.";
+          errorSpecificQuery(mensaje)
         }
+      }catch(error){
+          console.log(error)
+          errorGeneralQuery();
+      }
        
     }
     const handleOnchange= (e) =>{

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import { getUserSession } from "../lider/LayoutDest";
-import Swal from 'sweetalert2'
+import { errorGeneralQuery, errorSpecificQuery } from "../../funciones";
 
 function LoginPage(){
     const [loged, setLoged] = useState(false);
@@ -46,19 +46,13 @@ function LoginPage(){
                 
             }else {
                 setError('Error al iniciar sesión');
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Contraseña o email incorrectos',
-                    icon: 'error',
-                    confirmButtonText: 'ok'
-                });
+                errorSpecificQuery("Contraseña o email incorrectos")
                 return;
-                
             }
         } catch(error){
             console.error('Hubo un problema con la solicitud', error)
             setError('Hubo un problema con la solicitud');
-            console.log(error)
+            errorGeneralQuery();
         }
     }
 

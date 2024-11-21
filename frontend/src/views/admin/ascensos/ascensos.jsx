@@ -4,21 +4,24 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Swal from "sweetalert2";
 import GrowExample from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, errorSpecificQuery } from "../../../funciones";
 
 export async function getAscensos() {
   try {
     const result = await fetch("http://erv-zona3/backend/ascensos");
-
     if (result.ok) {
       const respuesta = await result.json();
       return respuesta;
+    }else{
+      const respuesta = await result.json();
+      const mensaje= respuesta.error || "Error al procesar la solicitud.";
+      errorSpecificQuery(mensaje)
     }
   } catch (error) {
     console.error("Hubo un problema con la solicitud", error);
     console.log(error);
-    return;
+    errorGeneralQuery();
   }
 }
 const Ascensos = () => {
@@ -56,22 +59,21 @@ const Ascensos = () => {
         body: JSON.stringify(id),
       });
       if (query.ok) {
-        Swal.fire({
-          title: "Exito",
-          text: "Ascenso eliminado exitosamente",
-          icon: "success",
-          confirmButtonText: "Ok",
-        });
+        exitSpecificQuery("Ascenso eliminado exitosamente")
         setShow(false);
         getData();
+      }else{
+        const respuesta = await result.json();
+        const mensaje= respuesta.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje)
       }
     } catch (error) {
       console.log(error);
+      errorGeneralQuery();
     }
   };
 
   async function getData() {
-    try {
       const respuesta = await getAscensos();
       if(respuesta){
         setData(respuesta);
@@ -81,12 +83,8 @@ const Ascensos = () => {
         setError("Error al cargar los datos.");
         setIsLoading(false)
       }
-    } catch (error) {
-      console.error("Hubo un problema con la solicitud", error);
-      console.log(error);
-      return;
-    }
-  }
+    } 
+  
 
   useEffect(() => {
     getData();

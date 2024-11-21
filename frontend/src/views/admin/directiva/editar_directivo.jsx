@@ -50,12 +50,7 @@ const EditarDirectiva =() =>{
 
         for (let item in data) {
         if (data[item] === "") {
-            Swal.fire({
-            title: "Error!",
-            text: "Todos los campos son obligatorios",
-            icon: "error",
-            confirmButtonText: "Revisar",
-            });
+            errorSpecificQuery("Todos los campos son obligatorios");
             return;
         }
         }
@@ -69,17 +64,16 @@ const EditarDirectiva =() =>{
         });
 
         if (result.ok) {
-        Swal.fire({
-            title: "Exito",
-            text: "Directivo zonal editado exitosamente",
-            icon: "success",
-            confirmButtonText: "Ok",
-        });
-        navigate("/dashboard/admin/directiva");
+          exitSpecificQuery('Directivo actualizado exitosamente')
+          navigate("/dashboard/admin/directiva");
+        }else{
+          const resultado = await result.json();
+          const mensaje= resultado.error || "Error al procesar la solicitud.";
+          errorSpecificQuery(mensaje)
         }
         }catch(error){
             console.error(error);
-            console.log('Error al editar del miembro a editar')
+            errorGeneralQuery();
         }
     
     }
@@ -101,10 +95,14 @@ const EditarDirectiva =() =>{
                         ...data,
                         ...respuesta
                     }))
+                }else{
+                  const resultado = await result.json();
+                  const mensaje= resultado.error || "Error al procesar la solicitud.";
+                  errorSpecificQuery(mensaje)
                 }
             }catch(error){
                 console.error(error);
-                console.log('Error en la consulta del miembro a editar')
+                errorGeneralQuery();
             }
         
         }
@@ -122,7 +120,7 @@ const EditarDirectiva =() =>{
         };
         fetch_ascensos();
     }, [id]);
-  console.log(data)
+
   return (
     <>
     <h2>Editar miembro</h2>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { findRama } from '../../funciones';
 import Number from '../../components/Animation';
+import { errorSpecificQuery, errorGeneralQuery } from "../../funciones";
 
 const Dashboard = () => {
   const [data, setData] = useState(null); 
@@ -13,9 +14,14 @@ const Dashboard = () => {
       if (respuesta.ok) {
         const estadisticas = await respuesta.json();
         setData(estadisticas); 
+      }else{
+        const result = await respuesta.json();
+        const mensaje= result.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje)
       }
     } catch (error) {
       console.error('Hubo un problema con la solicitud', error);
+      errorGeneralQuery();
     } finally {
       setLoading(false); 
     }

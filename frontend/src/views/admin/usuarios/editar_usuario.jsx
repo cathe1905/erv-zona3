@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { getDestacamentos } from "../destacamentos/destacamentos";
 import { capitalize } from "../../../funciones";
@@ -70,9 +70,14 @@ const EditarUsuario = () => {
             rol: result.rol,
             destacamento_id: result.destacamento_id,
           });
+        }else{
+          const result = await query.json();
+          const mensaje= result.error || "Error al procesar la solicitud.";
+          errorSpecificQuery(mensaje)
         }
       } catch (error) {
         console.log(error);
+        errorGeneralQuery();
       }
     };
     getUserById();
@@ -95,23 +100,21 @@ const EditarUsuario = () => {
             body: JSON.stringify(log_data_enviar),
           })
           if (query.ok) {
-            Swal.fire({
-              title: "Exito",
-              text: "Usuario editado exitosamente",
-              icon: "success",
-              confirmButtonText: "Ok",
-            });
+            exitSpecificQuery('Usuario actualizado exitosamente')
             navigate("/dashboard/admin/usuarios");
+          }else{
+            const result = await query.json();
+            const mensaje= result.error || "Error al procesar la solicitud.";
+            errorSpecificQuery(mensaje)
           }
         } catch (error) {
           console.log(error);
+          errorGeneralQuery();
         }
       }
       save_log();
     }
   }, [log]);
-
-
 
   const evaluacionCambios = () => {
     let cambiosNuevos = {};
@@ -165,12 +168,7 @@ const EditarUsuario = () => {
 
     for (let item in data) {
       if (data[item] === "") {
-        Swal.fire({
-          title: "Error!",
-          text: "Todos los campos son obligatorios",
-          icon: "error",
-          confirmButtonText: "Revisar",
-        });
+        errorSpecificQuery('Todos los campos son obligatorios')
         return;
       }
     }
@@ -188,9 +186,14 @@ const EditarUsuario = () => {
 
       if (respuesta.ok) {
         evaluacionCambios();
+      }else{
+        const result = await respuesta.json();
+        const mensaje= result.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje)
       }
     } catch (error) {
       console.log(error);
+      errorGeneralQuery();
     }
   };
   const handleOnchange = (e) => {

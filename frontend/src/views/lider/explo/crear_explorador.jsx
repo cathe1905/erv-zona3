@@ -1,6 +1,6 @@
 import { getAscensos } from "../../admin/ascensos/ascensos"
 import { useEffect, useState } from "react";
-import Swal from 'sweetalert2'
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery } from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import { getUserSession } from "../LayoutDest";
 
@@ -40,18 +40,12 @@ const CrearExplorador =() =>{
 
       useEffect(() => {
         async function getdataAscensos() {
-            try {
               const respuesta = await getAscensos();
               if(respuesta){
                 setAscensos(respuesta);
               }else{
                 setError("Error al cargar los ascensos");
               }
-            } catch (error) {
-              console.error("Hubo un problema con la solicitud", error);
-              console.log(error);
-              return;
-            }
           }
           getdataAscensos();
       }, []);
@@ -67,13 +61,7 @@ const CrearExplorador =() =>{
             if(item !== 'cargo' && item !== 'cedula' && item !== 'email'){
 
                 if(data[item] == ""){
-                    console.log(data[item])
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Algún campo obligatorio esta vacío',
-                        icon: 'error',
-                        confirmButtonText: 'Revisar'
-                    });
+                    errorSpecificQuery('Algún campo obligatorio esta vacío')
                     return;
                 }
             }
@@ -89,16 +77,16 @@ const CrearExplorador =() =>{
             })
 
             if(respuesta.ok){
-                Swal.fire({
-                    title: 'Exito',
-                    text: 'Explorador guardado exitosamente',
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
-                });
+                exitSpecificQuery('Explorador creado exitosamente')
                 navigate(`/dashboard/dest/explo?destacamento=${destacamento}`)
+            }else{
+              const result = await respuesta.json();
+                const mensaje= result.error || "Error al procesar la solicitud.";
+                errorSpecificQuery(mensaje)
             }
         }catch(error){
             console.log(error)
+            errorGeneralQuery();
         }
        
     }

@@ -1,4 +1,5 @@
 import Spinner from 'react-bootstrap/Spinner';
+import Swal from 'sweetalert2'
 
 export function capitalize(str) {
   if (!str || str.charAt(0) === str.charAt(0).toUpperCase()) {
@@ -25,6 +26,33 @@ export const findRama = (tipo, data) => {
 
 export function GrowExample() {
   return <Spinner animation="grow" />;
+}
+
+export function errorGeneralQuery(){
+  return Swal.fire({
+    title: "Error inesperado",
+    text: "No se pudo conectar con el servidor. Por favor, intenta más tarde.",
+    icon: "error",
+    confirmButtonText: "Ok",
+  });
+}
+
+export function errorSpecificQuery(mensaje){
+  return Swal.fire({
+    title: "Error",
+    text: mensaje,
+    icon: "error",
+    confirmButtonText: "Ok",
+  });
+}
+
+export function exitSpecificQuery(mensaje){
+  Swal.fire({
+    title: "Exito",
+    text: mensaje,
+    icon: "success",
+    confirmButtonText: "Ok",
+  });
 }
 
 export default GrowExample;

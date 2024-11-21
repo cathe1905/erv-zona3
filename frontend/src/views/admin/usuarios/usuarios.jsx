@@ -5,7 +5,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Swal from "sweetalert2";
+import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
 import { getUserSession } from "../../lider/LayoutDest";
 import GrowExample from "../../../funciones";
 
@@ -82,17 +82,17 @@ const Usuarios = () => {
             body: JSON.stringify(log_data_enviar),
           });
           if (query.ok) {
-            Swal.fire({
-              title: "Exito",
-              text: "Usuario eliminado exitosamente",
-              icon: "success",
-              confirmButtonText: "Ok",
-            });
+            exitSpecificQuery("Usuario eliminado exitosamente")
             setShow(false);
             getUsers();
+          }else{
+            const respuesta = await query.json();
+            const mensaje= respuesta.error || "Error al procesar la solicitud.";
+            errorSpecificQuery(mensaje)
           }
         } catch (error) {
           console.log(error);
+          errorGeneralQuery();
         }
       };
       save_log();
@@ -111,9 +111,14 @@ const Usuarios = () => {
       });
       if (query.ok) {
         setSent(true);
+      }else{
+        const respuesta = await query.json();
+        const mensaje= respuesta.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje)
       }
     } catch (error) {
       console.log(error);
+      errorGeneralQuery();
     }
   };
 

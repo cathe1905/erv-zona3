@@ -5,7 +5,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Swal from 'sweetalert2'
+import { errorGeneralQuery, errorSpecificQuery, errorSpecificQuery } from "../../../funciones";
 import GrowExample from "../../../funciones";
 
 const Directiva = () => {
@@ -41,19 +41,17 @@ const Directiva = () => {
       });
 
       if (result.ok) {
-        Swal.fire({
-          title: 'Exito',
-          text: 'Directivo eliminado exitosamente',
-          icon: 'success',
-          confirmButtonText: 'Ok'
-      });
-      setShow(false)
-      getDirectiva();
+        exitSpecificQuery("Directivo eliminado exitosamente")
+        setShow(false)
+        getDirectiva();
+      }else{
+        const respuesta = await result.json();
+        const mensaje= respuesta.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje)
       }
     } catch (error) {
-      console.error("Hubo un problema con la solicitud", error);
+      errorGeneralQuery();
       console.log(error);
-      return;
     }
   }
   const getDirectiva = async () => {
@@ -68,11 +66,14 @@ const Directiva = () => {
       }else{
         setError("Error al cargar los datos.");
         setIsLoading(false)
+        const respuesta = await result.json();
+        const mensaje= respuesta.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje)
       }
     } catch (error) {
       console.error("Hubo un problema con la solicitud", error);
       console.log(error);
-      return;
+      errorGeneralQuery();
     }
   };
   useEffect(() => {

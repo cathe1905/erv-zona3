@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { capitalize } from "../../../funciones";
+import { capitalize, errorGeneralQuery, errorSpecificQuery, exitSpecificQuery} from "../../../funciones";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Swal from "sweetalert2";
 import GrowExample from "../../../funciones";
 
 export async function getDestacamentos() {
@@ -15,11 +14,15 @@ export async function getDestacamentos() {
     if (result.ok) {
       const respuesta = await result.json();
       return respuesta;
+    }else{
+      const respuesta = await result.json();
+      const mensaje= respuesta.error || "Error al procesar la solicitud.";
+      errorSpecificQuery(mensaje)
     }
   } catch (error) {
     console.error("Hubo un problema con la solicitud", error);
     console.log(error);
-    return;
+    errorGeneralQuery();
   }
 }
 const Destacamentos = () => {
@@ -58,26 +61,24 @@ const Destacamentos = () => {
       );
 
       if (result.ok) {
-        Swal.fire({
-          title: "Exito",
-          text: "Destacamento eliminado exitosamente",
-          icon: "success",
-          confirmButtonText: "Ok",
-        });
+        exitSpecificQuery("Destacamento eliminado exitosamente")
         setShow(false);
         const respuesta = await getDestacamentos();
         setData(respuesta);
+      }else{
+        const respuesta = await result.json();
+        const mensaje= respuesta.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje)
       }
     } catch (error) {
       console.error("Hubo un problema con la solicitud", error);
       console.log(error);
-      return;
+      errorGeneralQuery();
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
         const result = await getDestacamentos();
         if(result){
           setData(result);
@@ -87,12 +88,6 @@ const Destacamentos = () => {
           setError("Error al cargar los datos.");
           setIsLoading(false)
         }
-        
-      } catch (error) {
-        console.error("Hubo un problema con la solicitud", error);
-        console.log(error);
-        return;
-      }
     };
     fetchData();
   }, []);

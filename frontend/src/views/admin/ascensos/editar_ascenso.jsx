@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Swal from 'sweetalert2'
+import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
@@ -23,9 +23,14 @@ const EditarAscenso =() =>{
                         ...data,
                         ...result
                     })
+                }else{
+                    const result = await query.json();
+                    const mensaje= result.error || "Error al procesar la solicitud.";
+                    errorSpecificQuery(mensaje)
                 }
             }catch(error){
                 console.log(error)
+                errorGeneralQuery();
             }
             
         }
@@ -40,16 +45,11 @@ const EditarAscenso =() =>{
         
         for(let item in data){
             if(data[item] === ""){
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Todos los campos son obligatorios',
-                    icon: 'error',
-                    confirmButtonText: 'Revisar'
-                });
+                errorSpecificQuery('Todos los campos son obligatorios')
                 return;
             }
         }
-        console.log(data_enviar)
+
         try{
             const respuesta= await fetch("http://erv-zona3/backend/ascensos/actualizar", {
                 method: "POST",
@@ -60,22 +60,21 @@ const EditarAscenso =() =>{
             })
 
             if(respuesta.ok){
-                Swal.fire({
-                    title: 'Exito',
-                    text: 'Ascenso editado exitosamente',
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
-                });
+                exitSpecificQuery('Ascenso actualizado exitosamente')
                 navigate('/dashboard/admin/ascensos')
+            }else{
+                const result = await respuesta.json();
+                const mensaje= result.error || "Error al procesar la solicitud.";
+                errorSpecificQuery(mensaje)
             }
         }catch(error){
             console.log(error)
+            errorGeneralQuery();
         }
        
     }
     const handleOnchange= (e) =>{
         const{name, value}= e.target
-
         setData({
             ...data,
             [name] : value

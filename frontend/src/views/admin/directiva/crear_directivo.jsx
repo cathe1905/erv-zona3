@@ -3,7 +3,11 @@ import { useEffect } from "react";
 import { getDestacamentos } from "../destacamentos/destacamentos";
 import { getAscensos } from "../ascensos/ascensos";
 import { capitalize } from "../../../funciones";
-import Swal from "sweetalert2";
+import {
+  errorGeneralQuery,
+  errorSpecificQuery,
+  errorSpecificQuery,
+} from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 
 const CrearDirectiva = () => {
@@ -26,13 +30,13 @@ const CrearDirectiva = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64Image = reader.result; 
+        const base64Image = reader.result;
         setData({
           ...data,
           foto: base64Image,
         });
       };
-      reader.readAsDataURL(file); 
+      reader.readAsDataURL(file);
     }
   };
 
@@ -44,58 +48,57 @@ const CrearDirectiva = () => {
 
     for (let item in data) {
       if (data[item] === "") {
-        Swal.fire({
-          title: "Error!",
-          text: "Todos los campos son obligatorios",
-          icon: "error",
-          confirmButtonText: "Revisar",
-        });
+        errorSpecificQuery("Todos los campos son obligatorios");
         return;
       }
     }
-    const result = await fetch("http://erv-zona3/backend/directiva", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data_enviar),
+    try {
+      const result = await fetch("http://erv-zona3/backend/directiva", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data_enviar),
+      });
+
+      if (result.ok) {
+        exitSpecificQuery('Directivo guardado exitosamente')
+        navigate("/dashboard/admin/directiva");
+      }else{
+        const resultado = await result.json();
+        const mensaje= resultado.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje)
+      }
+    } catch (error) {
+      console.log(error)
+      errorGeneralQuery();
+    }
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,
     });
+  };
 
-    if (result.ok) {
-      Swal.fire({
-        title: "Exito",
-        text: "Directivo zonal guardado exitosamente",
-        icon: "success",
-        confirmButtonText: "Ok",
-      });
-      navigate("/dashboard/admin/directiva");
-    }
-    }
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setData({
-        ...data,
-        [name]: value,
-      });
+  useEffect(() => {
+    const fetch_destacamento = async () => {
+      const result = await getDestacamentos();
+      setDestacamentos(result);
     };
+    fetch_destacamento();
 
-    useEffect(() => {
-      const fetch_destacamento = async () => {
-        const result = await getDestacamentos();
-        setDestacamentos(result);
-      };
-      fetch_destacamento();
+    const fetch_ascensos = async () => {
+      const result = await getAscensos();
+      setAscensos(result);
+    };
+    fetch_ascensos();
+  }, []);
 
-      const fetch_ascensos = async () => {
-        const result = await getAscensos();
-        setAscensos(result);
-      };
-      fetch_ascensos();
-    }, []);
-  
   return (
     <>
-    <h2>Crear nuevo miembro</h2>
+      <h2>Crear nuevo miembro</h2>
       <form onSubmit={handleSubmit}>
         <label>
           <input
@@ -122,7 +125,9 @@ const CrearDirectiva = () => {
           <option value="">Seleccione un ascenso</option>
           {ascensos &&
             ascensos.map((ascenso) => (
-              <option key={ascenso.id} value={ascenso.id}>{capitalize(ascenso.nombre)}</option>
+              <option key={ascenso.id} value={ascenso.id}>
+                {capitalize(ascenso.nombre)}
+              </option>
             ))}
         </select>
         <label>

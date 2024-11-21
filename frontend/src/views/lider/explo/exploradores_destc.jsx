@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams  } from "react-router-dom";
 import PaginationGeneral from "../../../components/Pagination";
-import { capitalize } from "../../../funciones";
+import { capitalize, errorGeneralQuery, errorSpecificQuery, exitSpecificQuery } from "../../../funciones";
 import GrowExample from "../../../funciones";
 import { getUserSession } from "../LayoutDest";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Swal from "sweetalert2";
-
 
 const Explo_dest = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -60,11 +58,15 @@ const Explo_dest = () => {
           }else{
             setIsLoading(false)
             setError("Error al cargar los datos.");
+            const respuesta = await result.json();
+            const mensaje= respuesta.error || "Error al procesar la solicitud.";
+            errorSpecificQuery(mensaje)
           }
         } catch (error) {
           
           console.error("Hubo un problema con la solicitud", error);
           console.log(error);
+          errorGeneralQuery();
           return;
         }
       };
@@ -81,11 +83,14 @@ const Explo_dest = () => {
             if (result.ok) {
               const respuesta = await result.json();
               setAscensos(respuesta);
+            }else{
+              const respuesta = await result.json();
+              const mensaje= respuesta.error || "Error al procesar la solicitud.";
+              errorSpecificQuery(mensaje)
             }
           } catch (error) {
             console.error("Hubo un problema con la solicitud", error);
-            console.log(error);
-            return;
+            errorGeneralQuery();
           }
         };
         getAscensos();
@@ -129,17 +134,17 @@ const Explo_dest = () => {
             body: JSON.stringify(id),
           });
           if (query.ok) {
-            Swal.fire({
-              title: "Exito",
-              text: "Explorador eliminado exitosamente",
-              icon: "success",
-              confirmButtonText: "Ok",
-            });
+            exitSpecificQuery("Explorador eliminado exitosamente")
             setShow(false);
             getExploradores();
+          }else{
+            const respuesta = await result.json();
+            const mensaje= respuesta.error || "Error al procesar la solicitud.";
+            errorSpecificQuery(mensaje)
           }
         } catch (error) {
           console.log(error);
+          errorGeneralQuery();
         }
       };
     

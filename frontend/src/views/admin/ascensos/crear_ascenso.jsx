@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Swal from 'sweetalert2'
+import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 
 const CrearAscenso =() =>{
@@ -17,12 +17,7 @@ const CrearAscenso =() =>{
         
         for(let item in data){
             if(data[item] === ""){
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Todos los campos son obligatorios',
-                    icon: 'error',
-                    confirmButtonText: 'Revisar'
-                });
+                errorSpecificQuery('Todos los campos son obligatorios')
                 return;
             }
         }
@@ -36,16 +31,16 @@ const CrearAscenso =() =>{
             })
 
             if(respuesta.ok){
-                Swal.fire({
-                    title: 'Exito',
-                    text: 'Ascenso guardado exitosamente',
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
-                });
+                exitSpecificQuery('Ascenso creado exitosamente')
                 navigate('/dashboard/admin/ascensos')
+            } else{
+                const result = await respuesta.json();
+                const mensaje= result.error || "Error al procesar la solicitud.";
+                errorSpecificQuery(mensaje)
             }
         }catch(error){
             console.log(error)
+            errorGeneralQuery();
         }
        
     }

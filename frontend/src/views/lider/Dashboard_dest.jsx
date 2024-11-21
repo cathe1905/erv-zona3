@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getUserSession } from "./LayoutDest";
-import Swal from "sweetalert2";
+import { errorSpecificQuery, errorGeneralQuery } from "../../funciones";
 import { findRama } from "../../funciones";
 import Number from "../../components/Animation";
 
@@ -36,10 +36,14 @@ const Dashboard_dest = () => {
         if (respuesta.ok) {
           const estadisticas = await respuesta.json();
           setData(estadisticas);
+        }else{
+          const result = await respuesta.json();
+          const mensaje= result.error || "Error al procesar la solicitud.";
+          errorSpecificQuery(mensaje)
         }
       } catch (error) {
         console.error("Hubo un problema con la solicitud", error);
-        console.log(error);
+        errorGeneralQuery();
         return;
       }
     }
@@ -49,12 +53,7 @@ const Dashboard_dest = () => {
   useEffect(() => {
     if (user && user.destacamento){
       if (user.destacamento.trim() !== destacamento.trim()) {
-        Swal.fire({
-          title: "Error!",
-          text: "No tienes acceso a otro destacamento!",
-          icon: "error",
-          confirmButtonText: "ok",
-        });
+        errorSpecificQuery("No tienes acceso a otro destacamento!")
         setParam({ destacamento: user.destacamento });
         hasUpdatedParam.current = true;
       } else {

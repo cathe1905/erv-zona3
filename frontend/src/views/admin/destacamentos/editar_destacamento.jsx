@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useEffect } from "react"
-import Swal from 'sweetalert2'
+import { capitalize, errorGeneralQuery, errorSpecificQuery, exitSpecificQuery} from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import { useSearchParams } from "react-router-dom"
 
@@ -31,18 +31,21 @@ const EditarDestacamento = () =>{
                 if (respuesta.ok) {
                     const result = await respuesta.json();
     
-                    // Actualizar el estado 'data' con los valores de 'result'
                     setData(prevData => ({
                         ...prevData,
-                        ...result // Sobreescribir solo las propiedades necesarias
+                        ...result 
                     }));
+                }else{
+                    const result = await respuesta.json();
+                    const mensaje= result.error || "Error al procesar la solicitud.";
+                    errorSpecificQuery(mensaje)
                 }
             } catch (error) {
                 console.error("Error al obtener datos:", error);
+                errorGeneralQuery();
             }
         };
     
-        // Llamar a la función
         fetchData();
     }, [id])
 
@@ -54,34 +57,31 @@ const EditarDestacamento = () =>{
 
         for(let item in data){
             if(data[item] === ""){
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Todos los campos son obligatorios',
-                    icon: 'error',
-                    confirmButtonText: 'Revisar'
-                });
+                errorSpecificQuery('Todos los campos son obligatorios')
                 return;
             }
         }
-
-        const respuesta= await fetch('http://erv-zona3/backend/destacamentos/actualizar', {
-            method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify(datosParaEnviar)
-        });
-        if(respuesta.ok){
-            Swal.fire({
-                title: 'Exito',
-                text: 'Destacamento editado exitosamente',
-                icon: 'success',
-                confirmButtonText: 'Ok'
+        try {
+            const respuesta= await fetch('http://erv-zona3/backend/destacamentos/actualizar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify(datosParaEnviar)
             });
-            navigate('/dashboard/admin/destacamentos')
+            if(respuesta.ok){
+                exitSpecificQuery('Destacamento actualizado exitosamente')
+                navigate('/dashboard/admin/destacamentos')
+            }else{
+                const result = await respuesta.json();
+                const mensaje= result.error || "Error al procesar la solicitud.";
+                errorSpecificQuery(mensaje)
+            } 
+        } catch (error) {
+            console.log(error)
+            errorGeneralQuery();
         }
-
-
+        
     }
     const handleChange= (e) =>{
         const{name, value} = e.target;
