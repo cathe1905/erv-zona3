@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getUserSession } from "./LayoutDest";
-import { errorSpecificQuery, errorGeneralQuery } from "../../funciones";
+import { errorSpecificQuery, errorGeneralQuery, capitalize } from "../../funciones";
 import { findRama } from "../../funciones";
 import Number from "../../components/Animation";
+import BarChart from "../../components/BarChart";
 
 const Dashboard_dest = () => {
   const [param, setParam] = useSearchParams();
@@ -69,6 +70,21 @@ const Dashboard_dest = () => {
   const oficiales = parseInt(findRama('oficial', data), 10);
   const general = data ? parseInt(data.general_count, 10) : 0;
 
+  const data_grafica= [prejuniors, pioneros, brijers, oficiales]
+
+  const dataExplo = {
+    labels: ["Pre-Juniors y Pre-Joyas", "Juniors y Joyas", "Brijers", "Oficiales"], 
+    datasets: [
+      {
+        label: user ? capitalize(user.destacamento) : "",
+        data: data_grafica, 
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"], 
+        borderColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"], 
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
     <main>
       <div className="roboto-medium row container-fluid d-flex justify-content-center bg-white rounded-2 px-md-0 pt-md-4 pb-md-5 ms-1 ms-md-0 mt-3 mt-md-0">
@@ -123,6 +139,9 @@ const Dashboard_dest = () => {
           </div>
         </aside>
       </div>
+      <>
+      <BarChart data={dataExplo} />
+      </>
     </main>
   );
 };

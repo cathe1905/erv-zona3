@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { findRama } from '../../funciones';
 import Number from '../../components/Animation';
 import { errorSpecificQuery, errorGeneralQuery } from "../../funciones";
+import BarChart from '../../components/BarChart';
 
 const Dashboard = () => {
   const [data, setData] = useState(null); 
@@ -38,6 +39,20 @@ const Dashboard = () => {
   const oficiales= parseInt(findRama('oficial', data), 10);
   const zona= data ? parseInt(data.zonal_count, 10) : 0
   const general= data ? parseInt(data.general_count, 10) : 0
+  const data_grafica= [prejuniors, pioneros, brijers, oficiales]
+
+  const dataExplo = {
+    labels: ["Pre-Juniors y Pre-Joyas", "Juniors y Joyas", "Brijers", "Oficiales"], 
+    datasets: [
+      {
+        label: "Zona 3",
+        data: data_grafica, // Números de miembros en cada grupo
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"], // Colores de las barras
+        borderColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"], // Borde de las barras
+        borderWidth: 1,
+      },
+    ],
+  };
 
   if (loading) {
     return <div>Cargando...</div>; 
@@ -106,7 +121,11 @@ const Dashboard = () => {
           </div>
         </aside>
       </div>
+      <>
+      <BarChart data={dataExplo} />
+      </>
     </main>
+    
   );
 };
 

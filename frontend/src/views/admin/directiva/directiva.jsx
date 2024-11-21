@@ -5,7 +5,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { errorGeneralQuery, errorSpecificQuery, errorSpecificQuery } from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery} from "../../../funciones";
 import GrowExample from "../../../funciones";
 
 const Directiva = () => {

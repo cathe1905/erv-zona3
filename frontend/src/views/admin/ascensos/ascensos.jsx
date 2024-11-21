@@ -5,7 +5,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import GrowExample from "../../../funciones";
-import { errorGeneralQuery, errorSpecificQuery, errorSpecificQuery } from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery} from "../../../funciones";
 
 export async function getAscensos() {
   try {

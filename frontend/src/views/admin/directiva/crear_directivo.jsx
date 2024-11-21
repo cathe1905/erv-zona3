@@ -5,8 +5,7 @@ import { getAscensos } from "../ascensos/ascensos";
 import { capitalize } from "../../../funciones";
 import {
   errorGeneralQuery,
-  errorSpecificQuery,
-  errorSpecificQuery,
+  errorSpecificQuery
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 
