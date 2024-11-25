@@ -71,6 +71,7 @@ const Layout = () => {
   return (
     <>
       {/* Dashboard tamaño desktop */}
+      
       <div className="d-none d-md-flex">
         <div className="col-md-2 fondo-menu altura-completa">
           <h1 className="titulo_principal color-morado mb-md-4">Dashboard</h1>
