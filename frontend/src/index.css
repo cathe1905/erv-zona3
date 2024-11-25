@@ -1,6 +1,5 @@
 body {
   overflow-x: hidden;
-  background-color: #dad7d7f6;
 }
 .roboto-thin {
   font-family: "Roboto", sans-serif;
@@ -36,42 +35,6 @@ body {
   font-family: "Roboto", sans-serif;
   font-weight: 900;
   font-style: normal;
-}
-
-.roboto-thin-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 100;
-  font-style: italic;
-}
-
-.roboto-light-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.roboto-regular-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.roboto-medium-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.roboto-bold-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.roboto-black-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 900;
-  font-style: italic;
 }
 
 .titulo_principal {
@@ -116,7 +79,10 @@ body {
   background-color: #e09363;
 }
 .fondo-azul{
-  border: 1px solid #3d8cf4;
+  background-color: #008bbe;
+}
+.fondo-azul-info{
+  background-color: #037ca9;
 }
 .fondo-azul-claro{
   background-color: #71a0dd;
@@ -147,31 +113,18 @@ body {
   font-size: 12px;
 }
 
-
-
-.offcanvas-background {
-  background: linear-gradient(
-    rgba(0, 0, 0, 0.9),  /* Negro oscuro semitransparente */
-    rgba(0, 0, 0, 0.9) 
-  ), 
-  url('/a2cfddcaf6b449286a4b0c1a2eae08bb.jpg');  /* URL de la imagen de fondo */
-
-  background-size: cover;  /* Asegura que la imagen de fondo cubra todo el contenedor */
-  background-position: center center;  /* Centra la imagen de fondo en el contenedor */
-  padding: 20px;  /* Añade un poco de padding para dar espacio al contenido */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Sombra para resaltar el contenido */
-  color:#ffffff;
+.fondo-menu{
+background-color: #333945
 }
-
 .enlace-menu{
-  color: black;
-  padding: .2rem;
+  display: block; /* Ocupará el ancho completo del contenedor */
+  padding: 0.2rem 0.5rem ; /* Ajusta el espacio interno */
+  margin: 0; /* Elimina márgenes innecesarios */
+  border-radius: 0.2rem; /* Aplica esquinas redondeadas */
 }
 .enlace-menu:hover{
-  background-color: rgb(84, 50, 196);
+  background-color: #008bbe;
   color: white;
-  border-radius: .5rem;
-  padding: .2rem;
 }
 
 .ancho{

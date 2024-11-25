@@ -13,40 +13,40 @@ const Logout= () => {
 const Menu = () => {
   return (
     <>
-      <nav className="row  roboto-regular fs-6 ">
-        <a className="text-decoration-none mb-3 enlace-menu" href="/dashboard/admin">
+      <nav className="row d-flex flex-column roboto-regular fs-8 text-white mx-md-2">
+        <a className="text-decoration-none mb-3 enlace-menu text-white" href="/dashboard/admin">
           <i className="bi bi-house-door me-2"></i> <span>Home</span>
         </a>
         <a
-          className="text-decoration-none  enlace-menu mb-3"
+          className="text-decoration-none text-white enlace-menu mb-3"
           href="/dashboard/admin/explo"
         >
           <i className="bi bi-people me-2"></i> <span>Exploradores</span>
         </a>
         <a
-          className="text-decoration-none  enlace-menu mb-3"
+          className="text-decoration-none text-white enlace-menu mb-3"
           href="/dashboard/admin/destacamentos"
         >
           <i className="bi bi-building me-2"></i> <span>Destacamentos</span>
         </a>
         <a
-          className="text-decoration-none  enlace-menu mb-3"
+          className="text-decoration-none text-white enlace-menu mb-3"
           href="/dashboard/admin/directiva"
         >
           <i className="bi bi-briefcase me-2"></i> <span>Directiva Zonal</span>
         </a>
-        <a className="text-decoration-none  enlace-menu mb-3" href="/dashboard/admin/ascensos">
+        <a className="text-decoration-none text-white enlace-menu mb-3" href="/dashboard/admin/ascensos">
           <i className="bi bi-star me-2"></i> <span>Ascensos</span>
         </a>
-        <a className="text-decoration-none mb-3 enlace-menu" href="/dashboard/admin/usuarios">
+        <a className="text-decoration-none mb-3 text-white enlace-menu" href="/dashboard/admin/usuarios">
           <i className="bi bi-person me-2"></i> <span>Usuarios</span>
         </a>
-        <a className="text-decoration-none mb-3 enlace-menu" href="/dashboard/admin/logs">
-          <i className="bi bi-person me-2"></i> <span>Registro de Actividades de Administradores</span>
+        <a className="text-decoration-none mb-3 text-white enlace-menu" href="/dashboard/admin/logs">
+        <i className="bi bi-search me-2"></i> <span>Registro de Actividades de Administradores</span>
         </a>
 
         <a type="button" onClick={Logout}
-          className="text-decoration-none roboto-regular fs-6 my-5 enlace-menu"
+          className="text-decoration-none text-white roboto-regular fs-6 mt-5 enlace-menu"
         >
           <i className="bi bi-box-arrow-right me-2"></i>
           <span>Cerrar sesión</span>
@@ -55,22 +55,7 @@ const Menu = () => {
     </>
   );
 };
-const Footer = () => {
-  return (
-    <>
-      <hr className="mt-5" />
-      <footer className="letra_muy_pequeña text-center roboto-medium ">
-        <p className="m-0">Desarrollado por: Catherin Romero</p>
-        <a
-          className="text-decoration-none text-danger"
-          href=" https://personal-portfolio-eta-ashy.vercel.app/"
-        >
-          Portafolios y contacto
-        </a>
-      </footer>
-    </>
-  );
-};
+
 const Layout = () => {
   const [show, setShow] = useState(false);
   const [admin, setAdmin] = useState(null);
@@ -87,7 +72,7 @@ const Layout = () => {
     <>
       {/* Dashboard tamaño desktop */}
       <div className="d-none d-md-flex">
-        <div className="col-md-2 bg-white p-md-5 altura-completa">
+        <div className="col-md-2 fondo-menu altura-completa">
           <h1 className="titulo_principal color-morado mb-md-4">Dashboard</h1>
           <Menu />
         </div>
@@ -103,37 +88,39 @@ const Layout = () => {
             </div>
           </div>
           <Outlet></Outlet>
-          <Footer></Footer>
         </div>
         
       </div>
 
       {/* Dashboard tamaño mobile */}
       <div className=" d-block d-md-none">
-        <div className="row fondo-morado py-3 px-3 m-0 text-white d-flex align-items-center">
+        <div className="row fondo-menu py-3 px-3 m-0 text-white d-flex align-items-center">
           <div className="col-2">
             <a className="d-md-none text" onClick={handleShow}>
               <i className="bi bi-list-nested text-white fw-bolder display-2"></i>
             </a>
           </div>
-          <div className="col-10 text-end">
-            <h2 className="titulo_principal_mobile ">Exploradores del Rey</h2>
-            <h2 className="titulo_principal_mobile">Zona 3</h2>
-          </div>
+          <div className="col-10 d-flex justify-content-end align-items-center">
+              <i className="bi bi-person me-2 fs-4 rounded-circle bg-secondary px-2"></i>
+              <div>
+                <p className="my-0 p-0 fw-bold letra_muy_pequeña">{admin ? capitalize(admin.nombre) + " " + capitalize(admin.apellido)  : 'Administrador'}</p>
+                <p className="my-0 letra_muy_pequeña">{admin ? admin.email  : ''}</p>
+              </div>
+            </div>
         </div>
 
         <Offcanvas
-          className="d-md-none p-3"
+          className="d-md-none p-3 fondo-menu"
           show={show}
           onHide={handleClose}
           responsive="md"
         >
           <Offcanvas.Header className="row justify-content-between">
-            <Offcanvas.Title className="color-morado titulo_secundario col-4 fs-4">
+            <Offcanvas.Title className="text-white titulo_secundario col-4 fs-4">
               Admin
             </Offcanvas.Title>
             <button
-              className="col-3 fs-4 color-morado"
+              className="col-3 fs-4 text-white text-end"
               type="button"
               style={{ background: "none", border: "none" }} 
               onClick={handleClose}
@@ -148,7 +135,6 @@ const Layout = () => {
         </Offcanvas>
         <div className="py-1">
           <Outlet></Outlet>
-          <Footer></Footer>
         </div>
       </div>
     </>
