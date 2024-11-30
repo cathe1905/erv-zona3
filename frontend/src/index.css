@@ -41,7 +41,7 @@ body {
   font-family: "Noto Serif", serif;
   font-optical-sizing: auto;
   font-weight: 700;
-  font-style: normal;
+  font-style: italic;
   font-variation-settings:
     "wdth" 100;
     font-size: 1.5rem;
@@ -54,27 +54,20 @@ body {
   font-style: italic;
   font-variation-settings:
     "wdth" 100;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
 }
-.fondo-verde{
-  border: 1px solid #0C3B2E;
-  
-}
+
 .color-morado{
   color: rgb(84, 50, 196);
 }
+.fondo-morado-oscuro{
+  background-color: rgb(88, 60, 180);
+}
+
 .fondo-morado{
-  background-color: rgb(84, 50, 196);
+  background-color: #8452f8;
 }
-.borde-morado{
-  border: 1px solid rgb(118, 81, 244);
-}
-.fondo-morado-claro{
-  background-color: #9d83da;
-}
-.fondo-naranja{
-  border: 1px solid #f78b48 ;
-}
+
 .fondo-naranja-claro{
   background-color: #e09363;
 }
@@ -88,16 +81,29 @@ body {
   background-color: #71a0dd;
 }
 
-.fondo-rojo{
-  border: 1px solid #f86262;
+
+.fondo_verde{
+  background-color: #158344;
 }
-.fondo-rojo-claro{
-  background-color: #e09393
+.fondo_verde_oscuro{
+  background-color: #167539;
 }
 
-.color-verde-claro{
-  background-color: #477467;
+.fondo_amarillo{
+  background-color: #f8a500;
 }
+.fonde_amarillo_oscuro{
+  background-color: #e6a503;
+}
+.fondo_salmon{
+  background-color: #f85542;
+}
+.fondo_salmon_oscuro{
+  background-color: #de4e39;
+}
+
+
+
 
 .titulo_secundario {
   font-family: "Open Sans", sans-serif;
@@ -110,17 +116,17 @@ body {
 }
 
 .letra_muy_pequeña{
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .fondo-menu{
 background-color: #333945
 }
 .enlace-menu{
-  display: block; /* Ocupará el ancho completo del contenedor */
-  padding: 0.2rem 0.5rem ; /* Ajusta el espacio interno */
-  margin: 0; /* Elimina márgenes innecesarios */
-  border-radius: 0.2rem; /* Aplica esquinas redondeadas */
+  display: block; 
+  padding: 0.2rem 0.5rem ; 
+  margin: 0; 
+  border-radius: 0.2rem;
 }
 .enlace-menu:hover{
   background-color: #008bbe;
@@ -132,13 +138,24 @@ background-color: #333945
 }
 
 .altura-completa{
-  height:100vh;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  height: 100vh; /* Ocupa toda la altura del viewport */
+  overflow-y: auto; /* Permite desplazamiento dentro del menú si hay muchos elementos */
+  /* z-index: 1; Asegúrate de que esté sobre el contenido */
+
 }
 .action {
   cursor: pointer;
   color: #007bff;
-  font-size: 1rem;      /* Agranda el tamaño del texto */
-  font-weight: bold;      /* Hace los puntos más gruesos */
+  font-size: 1rem;      
+  font-weight: bold;      
+}
+.margen{
+  margin-left: 16.66667%; /* Ajusta este valor para evitar superposición con el menú */
+  max-height: 100vh; /* Limita la altura total */
+  overflow-y: auto; /* Permite el scroll en el contenido principal */
 }
 
 
