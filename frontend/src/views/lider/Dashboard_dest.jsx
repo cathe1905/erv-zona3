@@ -104,55 +104,75 @@ const Dashboard_dest = () => {
       ) : (
         <>
           <div className="roboto-medium row container-fluid d-flex justify-content-center bg-white rounded-2 px-md-0 pt-md-4 pb-md-5 ms-1 ms-md-0 mt-3 mt-md-0">
-            <aside className="row fondo-azul col-12 col-md-4 rounded mx-2 my-3 ancho">
-              <div className="col-4 d-flex justify-content-center align-items-center   ">
-                <i className="bi bi-person-lines-fill fs-1 dis text-white rounded-circle px-3 py-2 fondo-azul-claro"></i>
-              </div>
-              <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
-                <p className="col-12 m-1 ">Estadística general</p>
+          <aside className="row fondo-azul col-12 col-md-4 rounded mx-2 my-3 p-0 ancho ">
+              <div className="col-8 row d-flex flex-column align-items-center text-dark text-white py-1 px-2">
                 <Number n={general} />
+                <p className="col-12 m-1">Estadística general</p>
               </div>
+              <a
+                href="/dashboard/dest/explo"
+                className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo-azul-info m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
+              >
+                <p className="mb-0 me-2">Mas información</p>
+                <i class="bi bi-arrow-right-square"></i>
+              </a>
             </aside>
 
-            <aside className="row borde-morado col-12 col-md-4 rounded mx-2 my-3 ancho">
-              <div className="col-3 d-flex justify-content-center align-items-center  rounded-start">
-                <i className="bi bi-reddit fs-1 text-white rounded-circle px-3 py-2 fondo-morado-claro"></i>
-              </div>
-
-              <div className="col-9 row d-flex flex-column align-items-center p-3 pe-2 text-dark">
-                <p className="col-12 m-1 ">Pre-juniors y Pre-joyas</p>
+            <aside className="row fondo_verde col-12 col-md-4 rounded mx-2 my-3 p-0 ancho ">
+              <div className="col-8 row d-flex flex-column align-items-center text-dark text-white py-1 px-2">
                 <Number n={prejuniors} />
+                <p className="col-12 m-1">Pre-junior y Pre-joyas</p>
               </div>
+              <a
+                href="/dashboard/dest/explo"
+                className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo_verde_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
+              >
+                <p className="mb-0 me-2">Mas información</p>
+                <i class="bi bi-arrow-right-square"></i>
+              </a>
             </aside>
 
-            <aside className="row fondo-verde col-12 col-md-4 rounded mx-2 my-3 ancho">
-              <div className="col-4 d-flex justify-content-center align-items-center  rounded-start">
-                <i className="bi bi-star fs-1 text-white rounded-circle px-3 py-2 color-verde-claro"></i>
-              </div>
-              <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
-                <p className="col-12 m-1 ">Junior y Joyas</p>
+            <aside className="row fondo_amarillo col-12 col-md-4 rounded mx-2 my-3 p-0 ancho ">
+              <div className="col-8 row d-flex flex-column align-items-center text-dark text-white py-1 px-2">
                 <Number n={pioneros} />
+                <p className="col-12 m-1">Junior y Joyas</p>
               </div>
+              <a
+                href="/dashboard/admin/explo"
+                className="text-decoration-none d-flex justify-content-center align-items-center text-white fonde_amarillo_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
+              >
+                <p className="mb-0 me-2">Mas información</p>
+                <i class="bi bi-arrow-right-square"></i>
+              </a>
             </aside>
 
-            <aside className="row fondo-rojo col-12 col-md-4 rounded mx-2 my-3 ancho">
-              <div className="col-4 d-flex justify-content-center align-items-center rounded-start">
-                <i className="bi bi-person-badge fs-1 text-white rounded-circle px-3 py-2 fondo-rojo-claro"></i>
-              </div>
-              <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
-                <p className="col-12 m-1 ">Brijers</p>
+            <aside className="row fondo_salmon col-12 col-md-4 rounded mx-2 my-3 p-0 ancho ">
+              <div className="col-8 row d-flex flex-column align-items-center text-dark text-white py-1 px-2">
                 <Number n={brijers} />
+                <p className="col-12 m-1">Brijers</p>
               </div>
+              <a
+                href="/dashboard/dest/explo"
+                className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo_salmon_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
+              >
+                <p className="mb-0 me-2">Mas información</p>
+                <i class="bi bi-arrow-right-square"></i>
+              </a>
             </aside>
-
-            <aside className="row fondo-naranja col-12 col-md-4 rounded mx-2 my-3 ancho">
-              <div className="col-4 d-flex justify-content-center align-items-center  rounded-start">
-                <i className="bi bi-shield-fill fs-1 text-white rounded-circle px-3 py-2 fondo-naranja-claro"></i>
-              </div>
-              <div className="col-8 row d-flex flex-column align-items-center p-3 text-dark">
-                <p className="col-12 m-1 ">Oficiales</p>
+            
+           
+            <aside className="row fondo-morado col-12 col-md-4 rounded mx-2 my-3 p-0 ancho ">
+              <div className="col-8 row d-flex flex-column align-items-center text-dark text-white py-1 px-2">
                 <Number n={oficiales} />
+                <p className="col-12 m-1">Oficiales</p>
               </div>
+              <a
+                href="/dashboard/dest/explo"
+                className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo-morado-oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
+              >
+                <p className="mb-0 me-2">Mas información</p>
+                <i class="bi bi-arrow-right-square"></i>
+              </a>
             </aside>
           </div>
           <BarChart data={dataExplo} />

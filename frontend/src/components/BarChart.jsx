@@ -43,9 +43,12 @@ const BarChart = ({data}) => {
   };
 
   return (
-    <div style={{ width: "600px", margin: "0 auto" }}>
+    <div className="overflow-auto">
+      <div style={{ width: "600px", margin: "0 auto"}}>
       <Bar data={data} options={options} />
     </div>
+    </div>
+    
   );
 };
 

@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import PaginationGeneral from "../../../components/Pagination";
 import { capitalize } from "../../../funciones";
 import GrowExample from "../../../funciones";
+import { Table } from 'react-bootstrap';
 
 const Explo = () => {
   const [params, setParams] = useSearchParams();
@@ -113,131 +114,164 @@ const Explo = () => {
   }
 
   return (
-    <>
-    <h2>Exploradores</h2>
-    {error && <p className="error-message">{error}</p>}
-      <div>
-        <select value={destacamento}
-          className="my-2"
-          onChange={(e) => handleFilterChange("destacamento", e.target.value)}
-        >
-          <option value="">Todos los destacamentos</option>
-          {destacamentos &&
-            destacamentos.map((dest) => (
-              <option key={dest.id} value={dest.id}>
-                {capitalize(dest.nombre)}
-              </option>
-            ))}
-        </select>
+    <div className="container-fluid letra_muy_pequeña">
+      <div className="bg-light rounded p-3 mb-3">
+        <div className="row g-3">
+          <div className="col-md-4 col-lg-3">
+            <select
+              className="form-select letra_muy_pequeña"
+              value={destacamento}
+              onChange={(e) => handleFilterChange('destacamento', e.target.value)}
+            >
+              <option value="">Todos los Destacamentos</option>
+              {destacamentos &&
+                destacamentos.map((dest) => (
+                  <option key={dest.id} value={dest.id}>
+                    {capitalize(dest.nombre)}
+                  </option>
+                ))}
+            </select>
+          </div>
 
-        <select onChange={(e) => handleFilterChange("limit", e.target.value)} value={limit}>
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="75">75</option>
-          <option value="100">100</option>
-        </select>
+          <div className="col-md-4 col-lg-2">
+            <select
+              className="form-select letra_muy_pequeña"
+              value={rama}
+              onChange={(e) => handleFilterChange('rama', e.target.value)}
+            >
+              <option value="">Todas las ramas</option>
+              <option value="pre-junior">Pre-junior y Pre-Joyas</option>
+              <option value="pionero">Pioneros</option>
+              <option value="brijer">Brijers</option>
+              <option value="oficial">Oficiales</option>
+            </select>
+          </div>
 
-        <select
-          name="rama"
-          onChange={(e) => handleFilterChange("rama", e.target.value)}
-          value={rama}
-        >
-          <option value="">Todas las ramas</option>
-          <option value="pre-junior">Pre-junior y Pre-Joyas</option>
-          <option value="pionero">Pioneros</option>
-          <option value="brijer">Brijers</option>
-          <option value="oficial">Oficiales</option>
-        </select>
+          <div className="col-md-4 col-lg-1">
+            <select
+              className="form-select letra_muy_pequeña"
+              value={limit}
+              onChange={(e) => handleFilterChange('limit', e.target.value)}
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="75">75</option>
+              <option value="100">100</option>
+            </select>
+          </div>
 
-          <label>
+          <div className="col-md-4 col-lg-2">
             <input
               type="text"
+              className="form-control letra_muy_pequeña"
               placeholder="Buscar por un nombre"
               onChange={(e) =>
-                handleFilterChange(
-                  "query",
-                  e.target.value.trim() === "" ? "" : e.target.value
-                )
+                handleFilterChange('query', e.target.value.trim() === '' ? '' : e.target.value)
               }
               value={query}
             />
-          </label>
+          </div>
 
-        <select onChange={(e) => handleFilterChange("ascenso", e.target.value)} value={ascenso}>
-        <option value="">Todos los ascensos</option>
-          {ascensos && 
-            ascensos.map(asc =>(
-              <option key={asc.id} value={asc.id}>{capitalize(asc.nombre)}</option>
-            ))
-          }
-        </select>
-        <button onClick={handleAllFilters}>Limpiar filtros</button>
+          <div className="col-md-4 col-lg-2">
+            <select
+              className="form-select letra_muy_pequeña"
+              value={ascenso}
+              onChange={(e) => handleFilterChange('ascenso', e.target.value)}
+            >
+              <option value="">Todos los ascensos</option>
+              {ascensos &&
+                ascensos.map((asc) => (
+                  <option key={asc.id} value={asc.id}>
+                    {capitalize(asc.nombre)}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          <div className="col-md-4 col-lg-2">
+            <button className="btn btn-outline-secondary w-100 letra_muy_pequeña" onClick={handleAllFilters}>
+              Limpiar filtros
+            </button>
+          </div>
+        </div>
       </div>
-      <table className="table-bordered">
-        <thead>
-          <tr>
-            <th>n°</th>
-            <th className="p-2">Nombres</th>
-            <th>Apellidos</th>
-            <th>Fecha de Nacimiento</th>
-            <th>Edad</th>
-            <th>Rama</th>
-            <th>Ascenso</th>
-            <th>Cargo</th>
-            <th>Cédula</th>
-            <th>Teléfono</th>
-            <th>Email</th>
-            <th>Destacamento</th>
-          </tr>
-        </thead>
-        <tbody>
-        {isLoading ? (
-              <tr>
-              <td colSpan="11" className="text-center">
-                {GrowExample()}
-              </td>
-            </tr>
-        ) : Array.isArray(data) && data.length > 0 ? (
-            data.map((explo, index) => (
-              <tr key={explo.id}>
-                <td>{(page - 1) * limit + index + 1}</td>
-                <td>{capitalize(explo.nombres)}</td>
-                <td>{capitalize(explo.apellidos)}</td>
-                <td>{explo.fecha_nacimiento}</td>
-                <td>{explo.edad}</td>
-                <td>{capitalize(explo.rama)}</td>
-                <td>{explo.ascenso}</td>
-                <td>{explo.cargo}</td>
-                <td>{explo.cedula}</td>
-                <td>{explo.telefono}</td>
-                <td>{explo.email}</td>
-                <td>{capitalize(explo.destacamento)}</td>
-              </tr>
-            ))
-          ) : (
+
+      <div className="table-responsive">
+        <Table bordered hover>
+          <thead>
             <tr>
-              <td colSpan="11" className="text-center">
-                No se encontraron registros
-              </td>
+              <th>#</th>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Fecha de Nacimiento</th>
+              <th>Edad</th>
+              <th>Rama</th>
+              <th>Ascenso</th>
+              <th>Cargo</th>
+              <th>Cédula</th>
+              <th>Teléfono</th>
+              <th>Email</th>
+              <th>Destacamento</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {isLoading ? (
+              <tr>
+                <td colSpan="12" className="text-center">
+                  {GrowExample()}
+                </td>
+              </tr>
+            ) : Array.isArray(data) && data.length > 0 ? (
+              data.map((explo, index) => (
+                <tr key={explo.id}>
+                  <td>{(page - 1) * limit + index + 1}</td>
+                  <td>{capitalize(explo.nombres)}</td>
+                  <td>{capitalize(explo.apellidos)}</td>
+                  <td>{explo.fecha_nacimiento}</td>
+                  <td>{explo.edad}</td>
+                  <td>{capitalize(explo.rama)}</td>
+                  <td>{explo.ascenso}</td>
+                  <td>{explo.cargo}</td>
+                  <td>{explo.cedula}</td>
+                  <td>{explo.telefono}</td>
+                  <td>{explo.email}</td>
+                  <td>{capitalize(explo.destacamento)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="12" className="text-center">
+                  No se encontraron registros
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+      </div>
 
       {total > 0 && (
-        <PaginationGeneral
-          total={total}
-          current_page={page}
-          limit={limit}
-          onSelectPage={handlePage}
-        />
+        <div className="d-flex justify-content-end">
+          <PaginationGeneral
+            total={total}
+            current_page={page}
+            limit={limit}
+            onSelectPage={handlePage}
+          />
+        </div>
       )}
 
-      <button onClick={() => dowload('false')}>Descargar registros en pantalla</button>
-      <button onClick={() => dowload('true')}>Descargar toda la selección: {total}</button>
-    </>
+      <div className="d-flex justify-content-end gap-2">
+        <button className="btn btn-outline-primary letra_muy_pequeña" onClick={() => dowload('false')}>
+          Descargar registros en pantalla
+        </button>
+        <button className="btn btn-primary letra_muy_pequeña" onClick={() => dowload('true')}>
+          Descargar toda la selección: {total}
+        </button>
+      </div>
+    </div>
   );
-};
+}
+
 
 export default Explo;
