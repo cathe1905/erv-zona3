@@ -42,9 +42,8 @@ body {
   font-optical-sizing: auto;
   font-weight: 700;
   font-style: italic;
-  font-variation-settings:
-    "wdth" 100;
-    font-size: 1.5rem;
+  font-variation-settings: "wdth" 100;
+  font-size: 1.5rem;
 }
 
 .titulo_principal_mobile {
@@ -52,110 +51,120 @@ body {
   font-optical-sizing: auto;
   font-weight: 800;
   font-style: italic;
-  font-variation-settings:
-    "wdth" 100;
-    font-size: 1.3rem;
+  font-variation-settings: "wdth" 100;
+  font-size: 1.3rem;
 }
 
-.color-morado{
+.color-morado {
   color: rgb(84, 50, 196);
 }
-.fondo-morado-oscuro{
+.fondo-morado-oscuro {
   background-color: rgb(88, 60, 180);
 }
 
-.fondo-morado{
+.fondo-morado {
   background-color: #8452f8;
 }
 
-.fondo-naranja-claro{
+.fondo-naranja-claro {
   background-color: #e09363;
 }
-.fondo-azul{
+.fondo-azul {
   background-color: #008bbe;
 }
-.fondo-azul-info{
+.fondo-azul-info {
   background-color: #037ca9;
 }
-.fondo-azul-claro{
+.fondo-azul-claro {
   background-color: #71a0dd;
 }
 
-
-.fondo_verde{
+.fondo_verde {
   background-color: #158344;
 }
-.fondo_verde_oscuro{
+.fondo_verde_oscuro {
   background-color: #167539;
 }
 
-.fondo_amarillo{
+.fondo_amarillo {
   background-color: #f8a500;
 }
-.fonde_amarillo_oscuro{
+.fonde_amarillo_oscuro {
   background-color: #e6a503;
 }
-.fondo_salmon{
+.fondo_salmon {
   background-color: #f85542;
 }
-.fondo_salmon_oscuro{
+.fondo_salmon_oscuro {
   background-color: #de4e39;
 }
-
-
-
 
 .titulo_secundario {
   font-family: "Open Sans", sans-serif;
   font-optical-sizing: auto;
   font-weight: 700;
   font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
- 
+  font-variation-settings: "wdth" 100;
 }
 
-.letra_muy_pequeña{
+.letra_muy_pequeña {
   font-size: 14px;
 }
 
-.fondo-menu{
-background-color: #333945
+.fondo-menu {
+  background-color: #333945;
 }
-.enlace-menu{
-  display: block; 
-  padding: 0.2rem 0.5rem ; 
-  margin: 0; 
+.enlace-menu {
+  display: block;
+  padding: 0.2rem 0.5rem;
+  margin: 0;
   border-radius: 0.2rem;
 }
-.enlace-menu:hover{
+.enlace-menu:hover {
   background-color: #008bbe;
   color: white;
 }
 
-.ancho{
+.ancho {
   max-width: 320px;
 }
 
-.altura-completa{
-  position: fixed; 
+.altura-completa {
+  position: fixed;
   top: 0;
   left: 0;
-  height: 100vh; /* Ocupa toda la altura del viewport */
-  overflow-y: auto; /* Permite desplazamiento dentro del menú si hay muchos elementos */
-  /* z-index: 1; Asegúrate de que esté sobre el contenido */
-
+  height: 100vh;
+  overflow-y: auto; 
 }
 .action {
   cursor: pointer;
   color: #007bff;
-  font-size: 1rem;      
-  font-weight: bold;      
+  font-size: 1rem;
+  font-weight: bold;
 }
-.margen{
-  margin-left: 16.66667%; /* Ajusta este valor para evitar superposición con el menú */
-  max-height: 100vh; /* Limita la altura total */
-  overflow-y: auto; /* Permite el scroll en el contenido principal */
+.margen {
+  margin-left: 16.66667%; 
+  max-height: 100vh; 
+  overflow-y: auto; 
 }
 
+.fondo-login {
+  background-image: url("/paisaje.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+}
+
+.sombra{
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
+  max-width: 600px;
+  padding: 20px;
+}
+
+.sombra2{
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
+}
 

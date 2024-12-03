@@ -77,7 +77,7 @@ const Dashboard = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo-azul-info m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
 
@@ -91,7 +91,7 @@ const Dashboard = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo_verde_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
 
@@ -105,7 +105,7 @@ const Dashboard = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fonde_amarillo_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
 
@@ -119,7 +119,7 @@ const Dashboard = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo_salmon_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
             
@@ -134,7 +134,7 @@ const Dashboard = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo-morado-oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
             
@@ -149,7 +149,7 @@ const Dashboard = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo_verde_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
           </div>

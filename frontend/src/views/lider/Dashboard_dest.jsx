@@ -103,7 +103,7 @@ const Dashboard_dest = () => {
         </div>
       ) : (
         <>
-          <div className="roboto-medium row container-fluid d-flex justify-content-center bg-white rounded-2 px-md-0 pt-md-4 pb-md-5 ms-1 ms-md-0 mt-3 mt-md-0">
+          <div className="roboto-medium row container-fluid d-flex justify-content-center  bg-white rounded-2 px-md-0  ms-1 ms-md-0 mt-1 mt-md-0">
           <aside className="row fondo-azul col-12 col-md-4 rounded mx-2 my-3 p-0 ancho ">
               <div className="col-8 row d-flex flex-column align-items-center text-dark text-white py-1 px-2">
                 <Number n={general} />
@@ -114,7 +114,7 @@ const Dashboard_dest = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo-azul-info m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
 
@@ -128,7 +128,7 @@ const Dashboard_dest = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo_verde_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
 
@@ -142,7 +142,7 @@ const Dashboard_dest = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fonde_amarillo_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
 
@@ -156,7 +156,7 @@ const Dashboard_dest = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo_salmon_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
             
@@ -171,7 +171,7 @@ const Dashboard_dest = () => {
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo-morado-oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
-                <i class="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
               </a>
             </aside>
           </div>
