@@ -3,8 +3,10 @@ import { useEffect } from "react";
 import { getDestacamentos } from "../destacamentos/destacamentos";
 import { getAscensos } from "../ascensos/ascensos";
 import { capitalize } from "../../../funciones";
-import { errorGeneralQuery, errorSpecificQuery } from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
 
 const CrearDirectiva = () => {
   const navigate = useNavigate();
@@ -94,105 +96,156 @@ const CrearDirectiva = () => {
 
   return (
     <>
-      <h2>Crear nuevo miembro</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="nombres">
-          <input
-            id="nombres"
-            type="text"
-            name="nombres"
-            value={data.nombres}
-            onChange={handleChange}
-            placeholder="Nombres"
-            required
-          />
-        </label>
-
-        <label htmlFor="apellidos">
-          <input
-            id="apellidos"
-            type="text"
-            name="apellidos"
-            value={data.apellidos}
-            onChange={handleChange}
-            placeholder="Apellidos"
-            required
-          />
-        </label>
-
-        <label htmlFor="ascenso_id">
-          <select
-            id="ascenso_id"
-            name="ascenso_id"
-            onChange={handleChange}
-            required
+    <form 
+        onSubmit={handleSubmit} 
+        className="container mt-4 p-4 rounded shadow-sm bg-light"
+        style={{ maxWidth: '600px' }} 
+    >
+      <h2 className="text-center mb-4">Crear nuevo miembro</h2>
+  
+      <div className="row gy-3">
+        <div className="col-12">
+          <FloatingLabel 
+            controlId="floatingNombres"
+            label="Nombres"
+            className="mb-3"
           >
-            <option value="">Seleccione un ascenso</option>
-            {ascensos &&
-              ascensos.map((ascenso) => (
-                <option key={ascenso.id} value={ascenso.id}>
-                  {capitalize(ascenso.nombre)}
-                </option>
-              ))}
-          </select>
-        </label>
-
-        <label htmlFor="cargo">
-          <input
-            id="cargo"
-            type="text"
-            name="cargo"
-            value={data.cargo}
-            onChange={handleChange}
-            placeholder="Cargo"
-            required
-          />
-        </label>
-
-        <label htmlFor="telefono">
-          <input
-            id="telefono"
-            type="text"
-            name="telefono"
-            value={data.telefono}
-            onChange={handleChange}
-            placeholder="Teléfono"
-            required
-          />
-        </label>
-
-        <label htmlFor="foto">
-          Selecciona una Foto
-          <input
-            id="foto"
-            type="file"
-            accept="image/*"
-            name="foto"
-            onChange={handleFileChange}
-            required
-          />
-        </label>
-
-        <label htmlFor="destacamento_id">
-          <select
-            id="destacamento_id"
-            name="destacamento_id"
-            onChange={handleChange}
-            required
+            <Form.Control 
+              type="text" 
+              name="nombres" 
+              value={data.nombres} 
+              onChange={handleChange} 
+              placeholder="Nombres" 
+              required 
+            />
+          </FloatingLabel>
+        </div>
+  
+        <div className="col-12">
+          <FloatingLabel 
+            controlId="floatingApellidos"
+            label="Apellidos"
+            className="mb-3"
           >
-            <option value="">Seleccione un destacamento</option>
-            {destacamentos &&
-              destacamentos.map((destacamento) => (
-                <option key={destacamento.id} value={destacamento.id}>
-                  {capitalize(destacamento.nombre)}
-                </option>
-              ))}
-          </select>
-        </label>
-
-        <button type="submit">Guardar Directivo</button>
-      </form>
-    </>
+            <Form.Control 
+              type="text" 
+              name="apellidos" 
+              value={data.apellidos} 
+              onChange={handleChange} 
+              placeholder="Apellidos" 
+              required 
+            />
+          </FloatingLabel>
+        </div>
+  
+        <div className="col-12">
+          <FloatingLabel 
+            controlId="floatingAscenso"
+            label="Ascenso"
+            className="mb-3"
+          >
+            <Form.Control 
+              as="select" 
+              name="ascenso_id"
+              value={data.ascenso_id}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Seleccione un ascenso</option>
+              {ascensos &&
+                ascensos.map((ascenso) => (
+                  <option key={ascenso.id} value={ascenso.id}>
+                    {capitalize(ascenso.nombre)}
+                  </option>
+                ))}
+            </Form.Control>
+          </FloatingLabel>
+        </div>
+  
+        <div className="col-12">
+          <FloatingLabel 
+            controlId="floatingCargo"
+            label="Cargo"
+            className="mb-3"
+          >
+            <Form.Control 
+              type="text" 
+              name="cargo" 
+              value={data.cargo} 
+              onChange={handleChange} 
+              placeholder="Cargo" 
+              required 
+            />
+          </FloatingLabel>
+        </div>
+  
+        <div className="col-12">
+          <FloatingLabel 
+            controlId="floatingTelefono"
+            label="Teléfono"
+            className="mb-3"
+          >
+            <Form.Control 
+              type="text" 
+              name="telefono" 
+              value={data.telefono} 
+              onChange={handleChange} 
+              placeholder="Teléfono" 
+              required 
+            />
+          </FloatingLabel>
+        </div>
+  
+        <div className="col-12">
+          <label htmlFor="foto" className="mb-3">
+            Selecciona una Foto
+            <input
+              id="foto"
+              type="file"
+              accept="image/*"
+              name="foto"
+              onChange={handleFileChange}
+              required
+              className="form-control"
+            />
+          </label>
+        </div>
+  
+        <div className="col-12">
+          <FloatingLabel 
+            controlId="floatingDestacamento"
+            label="Destacamento"
+            className="mb-3"
+          >
+            <Form.Control 
+              as="select" 
+              name="destacamento_id" 
+              value={data.destacamento_id} 
+              onChange={handleChange} 
+              required
+            >
+              <option value="">Seleccione un destacamento</option>
+              {destacamentos &&
+                destacamentos.map((destacamento) => (
+                  <option key={destacamento.id} value={destacamento.id}>
+                    {capitalize(destacamento.nombre)}
+                  </option>
+                ))}
+            </Form.Control>
+          </FloatingLabel>
+        </div>
+  
+        <div className="col-12">
+          <div className="d-grid">
+            <button type="submit" className="btn btn-success">
+              Guardar Directivo
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </>
+  
   );
 };
 
