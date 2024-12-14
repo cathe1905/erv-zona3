@@ -138,10 +138,19 @@ body {
 }
 .action {
   cursor: pointer;
-  color: #007bff;
-  font-size: 1rem;
   font-weight: bold;
+  border: none; 
+  background: none; 
+  padding: 0; 
+  color: inherit; 
+  font-size: 1.2rem; 
 }
+
+.action:focus {
+  outline: none; 
+  box-shadow: none; 
+}
+
 .margen {
   margin-left: 16.66667%; 
   max-height: 100vh; 

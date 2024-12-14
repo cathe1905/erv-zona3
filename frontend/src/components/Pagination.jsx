@@ -62,7 +62,7 @@ const PaginationGeneral = ({total, current_page, limit, onSelectPage}) => {
       <Pagination.First onClick={() => onSelectPage(1)} disabled={current_page == 1}  />
       <Pagination.Prev disabled={current_page == 1} onClick={() => onSelectPage(current_page > 1 ? current_page - 1 : 1)} />
       {items}
-      <Pagination.Next disabled={current_page == total_pages} />
+      <Pagination.Next disabled={current_page == total_pages} onClick={() => onSelectPage(current_page < total_pages ? current_page + 1: total_pages)} />
       <Pagination.Last disabled={current_page == total_pages} onClick={() => onSelectPage(current_page < total_pages ? current_page + 1 : total_pages)} />
     </Pagination>
     </>

@@ -199,7 +199,7 @@ const Explo = () => {
 
       <div className="table-responsive">
         <Table bordered hover>
-          <thead>
+          <thead className="table-light">
             <tr>
               <th>#</th>
               <th>Nombres</th>
