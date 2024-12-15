@@ -5,7 +5,11 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
+import {
+  exitSpecificQuery,
+  errorSpecificQuery,
+  errorGeneralQuery,
+} from "../../../funciones";
 import { getUserSession } from "../../lider/LayoutDest";
 import GrowExample from "../../../funciones";
 
@@ -82,17 +86,20 @@ const Usuarios = () => {
             body: JSON.stringify(log_data_enviar),
           });
           if (query.ok) {
-            exitSpecificQuery("Usuario eliminado exitosamente")
+            exitSpecificQuery("Usuario eliminado exitosamente");
             setShow(false);
             getUsers();
-          }else{
+          } else {
             const respuesta = await query.json();
-            const mensaje= respuesta.error || "Error al procesar la solicitud.";
-            errorSpecificQuery(mensaje)
+            const mensaje =
+              respuesta.error || "Error al procesar la solicitud.";
+            errorSpecificQuery(mensaje);
           }
         } catch (error) {
           console.log(error);
           errorGeneralQuery();
+        } finally {
+          setSent(false);
         }
       };
       save_log();
@@ -111,10 +118,10 @@ const Usuarios = () => {
       });
       if (query.ok) {
         setSent(true);
-      }else{
+      } else {
         const respuesta = await query.json();
-        const mensaje= respuesta.error || "Error al procesar la solicitud.";
-        errorSpecificQuery(mensaje)
+        const mensaje = respuesta.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje);
       }
     } catch (error) {
       console.log(error);
@@ -124,82 +131,85 @@ const Usuarios = () => {
 
   return (
     <>
-      <h2>Usuarios</h2>
-      {error && <p className="error-message">{error}</p>}
-      <table>
-        <thead>
-          <tr>
-            <th>n°</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
-            <th>Destacamento</th>
-            <th>Rol</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading ? (
-            <tr>
-              <td colSpan="11" className="text-center">
-                {GrowExample()}
-              </td>
-            </tr>
-          ) : Array.isArray(data) && data.length > 0 ? (
-            data.map((user) => (
-              <tr key={user.id}>
-                <td>{contador++}</td>
-                <td>{user.nombre}</td>
-                <td>{user.apellido}</td>
-                <td>{user.email}</td>
-                <td>{capitalize(user.destacamento)}</td>
-                <td>{user.rol}</td>
-                <td>
-                  <Dropdown drop="start">
-                    <Dropdown.Toggle
-                      as="span"
-                      id="dropdown-custom-trigger"
-                      className="border p-1 action"
-                    >
-                      . . .
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item
-                        onClick={() =>
-                          navigate(
-                            `/dashboard/admin/usuarios/editar?id=${user.id}`
-                          )
-                        }
-                        eventKey="1"
-                      >
-                        Editar
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() =>
-                          handleShow({
-                            id: user.id,
-                            nombre: user.nombre,
-                            apellido: user.apellido,
-                          })
-                        }
-                        eventKey="2"
-                      >
-                        Eliminar
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </td>
+      {error && <p className="error-message text-center">{error}</p>}
+      <div className="table-responsive d-flex justify-content-center">
+        <div className="col-12 col-md-10">
+          <table className="table table-bordered table-hover letra_muy_pequeña">
+            <thead className="table-light">
+              <tr>
+                <th>n°</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Destacamento</th>
+                <th>Rol</th>
+                <th>Acción</th>
               </tr>
-            ))
-          ):(
-            <tr>
-            <td colSpan="11" className="text-center">
-              No se encontraron registros
-            </td>
-          </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan="7" className="text-center">
+                    {GrowExample()}
+                  </td>
+                </tr>
+              ) : Array.isArray(data) && data.length > 0 ? (
+                data.map((user) => (
+                  <tr key={user.id}>
+                    <td>{contador++}</td>
+                    <td>{capitalize(user.nombre)}</td>
+                    <td>{capitalize(user.apellido)}</td>
+                    <td>{user.email}</td>
+                    <td>{capitalize(user.destacamento)}</td>
+                    <td>{user.rol}</td>
+                    <td>
+                      <Dropdown drop="start">
+                        <Dropdown.Toggle
+                          as="span"
+                          id="dropdown-custom-trigger"
+                          className="action"
+                        >
+                          . . .
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item
+                            onClick={() =>
+                              navigate(
+                                `/dashboard/admin/usuarios/editar?id=${user.id}`
+                              )
+                            }
+                            eventKey="1"
+                          >
+                            Editar
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onClick={() =>
+                              handleShow({
+                                id: user.id,
+                                nombre: user.nombre,
+                                apellido: user.apellido,
+                              })
+                            }
+                            eventKey="2"
+                          >
+                            Eliminar
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="text-center">
+                    No se encontraron registros
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
       <Modal
         show={show}
         onHide={handleClose}
@@ -207,10 +217,10 @@ const Usuarios = () => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Eliminar Ascenso</Modal.Title>
+          <Modal.Title>Eliminar Usuario</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          ¿Estás seguro(a) que deseas eliminar el usuario: {nombreEliminar}{" "}
+          ¿Estás seguro(a) que deseas eliminar el usuario {nombreEliminar}{" "}
           {apellidoEliminar}?
         </Modal.Body>
         <Modal.Footer>
@@ -218,14 +228,24 @@ const Usuarios = () => {
             Cancelar
           </Button>
           <Button onClick={eliminarRegistro} variant="primary">
-            Si
+            Sí
           </Button>
         </Modal.Footer>
       </Modal>
-      <button onClick={() => navigate("/dashboard/admin/usuarios/crear")}>
-        Crear Usuario
-      </button>
-      <button onClick={dowload}>Descargar</button>
+      <div className="d-flex justify-content-end gap-2 mt-3">
+        <button
+          onClick={() => navigate("/dashboard/admin/usuarios/crear")}
+          className="btn btn-outline-primary letra_muy_pequeña"
+        >
+          Crear Usuario
+        </button>
+        <button
+          onClick={dowload}
+          className="btn btn-outline-secondary letra_muy_pequeña"
+        >
+          Descargar
+        </button>
+      </div>
     </>
   );
 };

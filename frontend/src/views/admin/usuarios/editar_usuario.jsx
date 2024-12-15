@@ -5,6 +5,8 @@ import { getDestacamentos } from "../destacamentos/destacamentos";
 import { capitalize } from "../../../funciones";
 import { useSearchParams } from "react-router-dom";
 import { getUserSession } from "../../lider/LayoutDest";
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
 
 export const find_names_by_ids = (key, value, obj) => {
   if (key == "destacamento_id") {
@@ -207,79 +209,126 @@ const EditarUsuario = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-      <label htmlFor="nombre">
-          Nombre
-          <input id="nombre"
-            type="text"
-            autoComplete="username"
-            required
-            value={data.nombre}
-            name="nombre"
-            placeholder="Escribe el nombre"
-            onChange={handleOnchange}
-          />
-        </label>
-        <label htmlFor="apellido">
-          Apellido
-          <input id="apellido"
-            type="text"
-            autoComplete="username"
-            required
-            value={data.apellido}
-            name="apellido"
-            placeholder="Escribe el apellido"
-            onChange={handleOnchange}
-          />
-        </label>
-        <label htmlFor="email">
-          Email
-          <input id="email"
-            type="email"
-            autoComplete="username"
-            required
-            value={data.email}
-            name="email"
-            placeholder="Tu Email"
-            onChange={handleOnchange}
-          />
-        </label>
-        <label htmlFor="destacamento_id">
-          Destacamento
-          <select
-            id="destacamento_id"
-            name="destacamento_id"
-            required
-            onChange={handleOnchange}
-            value={data.destacamento_id}
-          >
-            <option value="">Selecciona un destacamento</option>
-            {destacamentos &&
-              destacamentos.map((dest) => (
-                <option key={dest.id} value={dest.id}>
-                  {capitalize(dest.nombre)}
-                </option>
-              ))}
-          </select>
-        </label>
-        <label htmlFor="rol">
-          Rol
-          <select id="rol"
-            name="rol"
-            required
-            onChange={handleOnchange}
-            value={data.rol}
-          >
-            <option value="">Selecciona un rol</option>
-            <option value="1">Administrador</option>
-            <option value="2">Usuario</option>
-          </select>
-        </label>
-
-        <button type="submit">Editar usuario</button>
+      <form 
+        onSubmit={handleSubmit} 
+        className="container mt-4 p-4 rounded shadow-sm bg-light"
+        style={{ maxWidth: '600px' }} 
+      >
+        <h2 className="text-center mb-4">Editar Usuario</h2>
+  
+        <div className="row gy-3">
+          {/* Campo Nombre */}
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingNombre"
+              label="Nombre"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="text" 
+                name="nombre" 
+                value={data.nombre} 
+                onChange={handleOnchange} 
+                placeholder="Escribe el nombre"
+                required
+              />
+            </FloatingLabel>
+          </div>
+  
+          {/* Campo Apellido */}
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingApellido"
+              label="Apellido"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="text" 
+                name="apellido" 
+                value={data.apellido} 
+                onChange={handleOnchange} 
+                placeholder="Escribe el apellido"
+                required
+              />
+            </FloatingLabel>
+          </div>
+  
+          {/* Campo Email */}
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingEmail"
+              label="Email"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="email" 
+                name="email" 
+                value={data.email} 
+                onChange={handleOnchange} 
+                placeholder="Tu Email"
+                required
+              />
+            </FloatingLabel>
+          </div>
+  
+          {/* Campo Destacamento */}
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingDestacamento"
+              label="Destacamento"
+              className="mb-3"
+            >
+              <Form.Control 
+                as="select" 
+                name="destacamento_id" 
+                value={data.destacamento_id} 
+                onChange={handleOnchange} 
+                required
+              >
+                <option value="">Selecciona un destacamento</option>
+                {destacamentos && destacamentos.map((dest) => (
+                  <option key={dest.id} value={dest.id}>
+                    {capitalize(dest.nombre)}
+                  </option>
+                ))}
+              </Form.Control>
+            </FloatingLabel>
+          </div>
+  
+          {/* Campo Rol */}
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingRol"
+              label="Rol"
+              className="mb-3"
+            >
+              <Form.Control 
+                as="select" 
+                name="rol" 
+                value={data.rol} 
+                onChange={handleOnchange} 
+                required
+              >
+                <option value="">Selecciona un rol</option>
+                <option value="1">Administrador</option>
+                <option value="2">Usuario</option>
+              </Form.Control>
+            </FloatingLabel>
+          </div>
+  
+          {/* Botón de Enviar */}
+          <div className="col-12">
+            <div className="d-grid">
+              <button type="submit" className="btn btn-success">
+                Editar Usuario
+              </button>
+            </div>
+          </div>
+        </div>
       </form>
     </>
   );
+  
 };
 
 export default EditarUsuario;
