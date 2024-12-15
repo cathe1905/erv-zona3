@@ -1,6 +1,6 @@
 <?php
     require 'config/database.php';
-    require __DIR__ . '/../../vendor/autoload.php';
+    require __DIR__ . '/../vendor/autoload.php';
     require 'includes/funciones.php';
 
     $db= dbConnection();
