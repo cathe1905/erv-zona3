@@ -29,11 +29,14 @@ const Logs = () => {
         } else {
           setError("Error al cargar los datos.");
           setIsLoading(false)
+          const respuesta = await result.json();
+          const mensaje= respuesta.error || "Error al procesar la solicitud.";
+          errorSpecificQuery(mensaje)
         }
       } catch (error) {
         console.error("Hubo un problema con la solicitud", error);
         console.log(error);
-        return;
+        errorGeneralQuery();
       }
     };
     getLogs();
@@ -76,20 +79,26 @@ const Logs = () => {
 
   return (
     <>
-      <h2>Registro de Actividades de Administradores</h2>
-      {error && <p className="error-message">{error}</p>}
-      <label>Límite de resultados
-      <select onChange={(e) => handleFilterChange("limit", e.target.value)}>
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="75">75</option>
-          <option value="100">100</option>
-        </select>
-      </label>
-
-      <table>
-        <thead>
+    {error && <p className="error-message text-center text-danger">{error}</p>}
+  
+    <div className="mb-4">
+      <label htmlFor="limit" className="me-2">Límite de resultados</label>
+      <select 
+        id="limit" 
+        onChange={(e) => handleFilterChange("limit", e.target.value)} 
+        className="form-select d-inline w-auto"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="75">75</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+  
+    <div className="table-responsive">
+      <table className="table table-bordered table-hover letra_muy_pequeña">
+        <thead className="table-light">
           <tr>
             <th>n°</th>
             <th>Acción</th>
@@ -100,43 +109,46 @@ const Logs = () => {
           </tr>
         </thead>
         <tbody>
-  {isLoading ? (
-    <tr>
-      <td colSpan="11" className="text-center">
-        {GrowExample()}
-      </td>
-    </tr>
-  ) : data && data.length > 0 ? (
-
-    data.map((log, index) => (
-      <tr key={log.id}>
-        <td>{(page - 1) * limit + index + 1}</td>
-        <td>{log.action}</td>
-        <td>{capitalize(log.admin_nombre)} {capitalize(log.admin_apellido)}</td>
-        <td>{capitalize(log.target_nombre)} {capitalize(log.target_apellido)}</td>
-        <td>{log.details}</td>
-        <td>{formatDate(log.date)} - {formatHora(log.date)}</td>
-      </tr>
-    ))
-  ) : (
-
-    <tr>
-      <td colSpan="11" className="text-center">
-        No se encontraron registros
-      </td>
-    </tr>
-  )}
-</tbody>
+          {isLoading ? (
+            <tr>
+              <td colSpan="6" className="text-center">
+                {GrowExample()}
+              </td>
+            </tr>
+          ) : Array.isArray(data) && data.length > 0 ? (
+            data.map((log, index) => (
+              <tr key={log.id}>
+                <td>{(page - 1) * limit + index + 1}</td>
+                <td>{log.action}</td>
+                <td>{capitalize(log.admin_nombre)} {capitalize(log.admin_apellido)}</td>
+                <td>{capitalize(log.target_nombre)} {capitalize(log.target_apellido)}</td>
+                <td>{log.details}</td>
+                <td>{formatDate(log.date)} - {formatHora(log.date)}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6" className="text-center">
+                No se encontraron registros
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
-      {total > 0 && (
-        <PaginationGeneral
-          total={total}
-          current_page={page}
-          limit={limit}
-          onSelectPage={handlePage}
-        />
-      )}
-    </>
+    </div>
+  
+    {total > 0 && (
+      <div className="d-flex justify-content-end">
+      <PaginationGeneral
+        total={total}
+        current_page={page}
+        limit={limit}
+        onSelectPage={handlePage}
+      />
+      </div>
+    )}
+  </>
+  
   );
 };
 export default Logs;

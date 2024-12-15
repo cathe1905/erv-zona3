@@ -279,7 +279,7 @@ const EditarDirectiva = () => {
   
           <div className="col-12">
             <div className="d-grid">
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-success">
                 Editar Directivo
               </button>
             </div>

@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
 import { useNavigate } from "react-router-dom"
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
 
 const CrearAscenso =() =>{
     const navigate= useNavigate();
@@ -55,25 +57,68 @@ const CrearAscenso =() =>{
 
     return (
         <>
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="nombre">Nombre
-                <input id="nombre" type="text" required value={data.nombre} name="nombre" onChange={handleOnchange}/>
-            </label>
-            <label htmlFor="rama">Rama
-            <select id="rama" name="rama" required onChange={handleOnchange}>
-                <option value="">Selecciona una rama</option>
-                <option value="pre-junior">Pre-junior y Pre-joya</option>
-                <option value="pionero">Junior y Joya</option>
-                <option value="brijer">Brijer</option>
-                <option value="oficial">Oficial</option>
-            </select>
-            </label>
+          <form 
+            onSubmit={handleSubmit} 
+            className="container mt-4 p-4 rounded shadow-sm bg-light"
+            style={{ maxWidth: '600px' }} 
+          >
+            <h2 className="text-center mb-4">Crear un nuevo Ascenso</h2>
             
-            <button type="submit">Guardar Ascenso</button>
-        </form>
+            <div className="row gy-3">
+              {/* Campo Nombre */}
+              <div className="col-12">
+                <FloatingLabel 
+                  controlId="floatingNombre"
+                  label="Nombre"
+                  className="mb-3"
+                >
+                  <Form.Control 
+                    type="text" 
+                    name="nombre" 
+                    value={data.nombre} 
+                    onChange={handleOnchange} 
+                    placeholder="Nombre"
+                    required
+                  />
+                </FloatingLabel>
+              </div>
+      
+              {/* Campo Rama */}
+              <div className="col-12">
+                <FloatingLabel 
+                  controlId="floatingRama"
+                  label="Rama"
+                  className="mb-3"
+                >
+                  <Form.Control 
+                    as="select" 
+                    name="rama" 
+                    value={data.rama} 
+                    onChange={handleOnchange} 
+                    required
+                  >
+                    <option value="">Selecciona una rama</option>
+                    <option value="pre-junior">Pre-junior y Pre-joya</option>
+                    <option value="pionero">Junior y Joya</option>
+                    <option value="brijer">Brijer</option>
+                    <option value="oficial">Oficial</option>
+                  </Form.Control>
+                </FloatingLabel>
+              </div>
+      
+              {/* Botón de Enviar */}
+              <div className="col-12">
+                <div className="d-grid">
+                  <button type="submit" className="btn btn-success">
+                    Guardar Ascenso
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
         </>
-       
-    )
+      );
+      
 }
 
 export default CrearAscenso

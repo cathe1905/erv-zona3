@@ -2,6 +2,8 @@
 
 namespace Model;
 
+use function Controllers\debuguear;
+
 class Log extends ActiveRecord
 {
 
@@ -60,10 +62,9 @@ class Log extends ActiveRecord
         target_users.apellido AS target_apellido
         FROM admin_log
         LEFT JOIN usuarios AS admin_users ON admin_log.admin_id = admin_users.id
-        LEFT JOIN usuarios AS target_users ON admin_log.target_id = target_users.id ";
+        LEFT JOIN usuarios AS target_users ON admin_log.target_id = target_users.id ORDER BY admin_log.date DESC";
 
-        $query .= " LIMIT " . self::$db->escape_string($limit) . " OFFSET " . $inicio;
-
+        $query .= " LIMIT " . self::$db->escape_string($limit) . " OFFSET " . self::$db->escape_string($inicio);
         $result = static::$db->query($query);
         $destacamentos = [];
 
