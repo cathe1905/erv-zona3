@@ -14,6 +14,8 @@
     $user='';
     $password='';
     $db_name='';
+    $port = $port ?? 3306;  // Asigna el puerto 3306 si no está definido
+
 
     // Variables para Heroku (usando JAWSDB_URL)
     if (getenv('JAWSDB_URL')) {
@@ -41,7 +43,10 @@
     }
 
     // Conexión a la base de datos
-    $db = new mysqli($host, $user, $password, $db_name, $port ?? 3306);  // Usar puerto por defecto si no se especifica
+    $db = new mysqli($host, $user, $password, $db_name, $port);  // Usar puerto por defecto si no se especifica
+    if ($db->connect_error) {
+        die("Connection failed: " . $db->connect_error);
+    }
     $db->set_charset("utf8mb4");
     // echo('db conectada');
     return $db;

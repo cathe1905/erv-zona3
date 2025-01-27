@@ -3,9 +3,9 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "MVC\\" : "routes",
-            "Controllers\\" : "app/controllers",
-            "Model\\" : "app/models"
+            "MVC\\" : "backend/routes",
+            "Controllers\\" : "backend/app/controllers",
+            "Model\\" : "backend/app/models"
         }
     },
     "authors": [
