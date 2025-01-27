@@ -1,7 +1,6 @@
 <?php
 namespace MVC;
 
-use function Controllers\debuguear;
 
     class Router {
         public $getRoutes= [];

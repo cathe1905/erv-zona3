@@ -1,7 +1,6 @@
 <?php
     namespace Model;
 
-use function Controllers\debuguear;
 
     class ActiveRecord{
 
