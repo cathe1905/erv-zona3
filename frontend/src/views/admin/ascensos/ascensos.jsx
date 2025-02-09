@@ -5,12 +5,12 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import GrowExample from "../../../funciones";
-import { capitalize } from "../../../funciones";
+import { capitalize, api } from "../../../funciones";
 import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery} from "../../../funciones";
 
 export async function getAscensos() {
   try {
-    const result = await fetch("http://erv-zona3/backend/ascensos");
+    const result = await fetch(`${api}ascensos`);
     if (result.ok) {
       const respuesta = await result.json();
       return respuesta;
@@ -46,13 +46,13 @@ const Ascensos = () => {
     setShow(true);
   };
   const dowload = () => {
-    const url = "http://erv-zona3/backend/excel?categoria=ascensos";
+    const url = `${api}excel?categoria=ascensos`;
     window.location.href = url;
   };
   const eliminarRegistro = async () => {
     const id = { id: idEliminar };
     try {
-      const query = await fetch("http://erv-zona3/backend/ascensos/eliminar", {
+      const query = await fetch(`${api}ascensos/eliminar`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

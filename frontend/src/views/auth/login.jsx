@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { getUserSession } from "../lider/LayoutDest";
-import { errorGeneralQuery, errorSpecificQuery } from "../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, api } from "../../funciones";
 import { BiShow, BiHide } from "react-icons/bi";
 
 function LoginPage() {
@@ -19,7 +19,7 @@ function LoginPage() {
     };
 
     try {
-      const respuesta = await fetch("http://erv-zona3/backend/users/auth", {
+      const respuesta = await fetch(`${api}users/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +33,6 @@ function LoginPage() {
         localStorage.setItem("token", data.token);
 
         const data_decode = jwtDecode(data.token);
-        console.log(data_decode);
 
         if (data_decode.data.role == 1) {
           navigate("/dashboard/admin");

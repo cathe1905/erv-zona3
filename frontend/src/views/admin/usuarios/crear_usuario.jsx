@@ -6,7 +6,7 @@ import {
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { getDestacamentos } from "../destacamentos/destacamentos";
-import { capitalize } from "../../../funciones";
+import { capitalize, api } from "../../../funciones";
 import { getUserSession } from "../../lider/LayoutDest";
 import { find_names_by_ids } from "./editar_usuario";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -55,7 +55,7 @@ const CrearUsuario = () => {
     ) {
       const save_log = async () => {
         try {
-          const query = await fetch("http://erv-zona3/backend/logs", {
+          const query = await fetch(`${api}logs`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const CrearUsuario = () => {
   const get_id = async () => {
     try {
       const query = await fetch(
-        `http://erv-zona3/backend/user/email?email=${data.email}`
+        `${api}user/email?email=${data.email}`
       );
       if (query.ok) {
         const result = await query.json();
@@ -139,7 +139,7 @@ const CrearUsuario = () => {
       }
     }
     try {
-      const respuesta = await fetch("http://erv-zona3/backend/users", {
+      const respuesta = await fetch(`${api}users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

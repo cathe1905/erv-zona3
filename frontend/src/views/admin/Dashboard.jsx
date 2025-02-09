@@ -3,15 +3,16 @@ import { findRama } from "../../funciones";
 import Number from "../../components/Animation";
 import { errorSpecificQuery, errorGeneralQuery } from "../../funciones";
 import BarChart from "../../components/BarChart";
-import GrowExample from "../../funciones";
+import {GrowExample, api} from "../../funciones";
 
 const Dashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const getEstadisticas = async () => {
+    
     try {
-      const respuesta = await fetch("http://erv-zona3/backend/");
+      const respuesta = await fetch(api);
       if (respuesta.ok) {
         const estadisticas = await respuesta.json();
         setData(estadisticas);

@@ -9,7 +9,7 @@ import GrowExample from "../../../funciones";
 
 export async function getDestacamentos() {
   try {
-    const result = await fetch("http://erv-zona3/backend/destacamentos");
+    const result = await fetch(`{api}destacamentos`);
 
     if (result.ok) {
       const respuesta = await result.json();
@@ -50,7 +50,7 @@ const Destacamentos = () => {
     try {
       const id = { id: idEliminar };
       const result = await fetch(
-        "http://erv-zona3/backend/destacamentos/eliminar",
+       `{api}destacamentos/eliminar`,
         {
           method: "POST",
           headers: {
@@ -93,7 +93,7 @@ const Destacamentos = () => {
   }, []);
 
   const dowload = () => {
-    const url = "http://erv-zona3/backend/excel?categoria=destacamentos";
+    const url = `{api}excel?categoria=destacamentos`;
     window.location.href = url;
   };
 

@@ -1,6 +1,6 @@
 import { getAscensos } from "../../admin/ascensos/ascensos"
 import { useEffect, useState } from "react";
-import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery } from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api } from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import { getUserSession } from "../LayoutDest";
 
@@ -68,7 +68,7 @@ const CrearExplorador =() =>{
            
         }
         try{
-            const respuesta= await fetch("http://erv-zona3/backend/explo", {
+            const respuesta= await fetch(`${api}explo`, {
                 method: "POST",
                 headers:{
                     'Content-Type' : 'application/json'

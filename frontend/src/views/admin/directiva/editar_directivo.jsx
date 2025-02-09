@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { getDestacamentos } from "../destacamentos/destacamentos";
 import { getAscensos } from "../ascensos/ascensos";
 import { capitalize } from "../../../funciones";
-import {errorGeneralQuery, errorSpecificQuery, exitSpecificQuery} from "../../../funciones";
+import {errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api} from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -57,7 +57,7 @@ const EditarDirectiva = () => {
     }
     try {
       const result = await fetch(
-        "http://erv-zona3/backend/directiva/actualizar",
+        `${api}directiva/actualizar`,
         {
           method: "POST",
           headers: {
@@ -92,7 +92,7 @@ const EditarDirectiva = () => {
     const get_directivo_db = async () => {
       try {
         const result = await fetch(
-          `http://erv-zona3/backend/directiva/actualizar?id=${id}`
+          `${api}directiva/actualizar?id=${id}`
         );
         if (result.ok) {
           const respuesta = await result.json();

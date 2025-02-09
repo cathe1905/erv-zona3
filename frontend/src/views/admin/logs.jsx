@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { capitalize } from "../../funciones";
+import { capitalize, api } from "../../funciones";
 import PaginationGeneral from "../../components/Pagination";
 import { useSearchParams } from "react-router-dom";
 import GrowExample from "../../funciones";
@@ -18,7 +18,7 @@ const Logs = () => {
   useEffect(() => {
     const getLogs = async () => {
       try {
-        const result = await fetch(`http://erv-zona3/backend/logs?page=${page}&limit=${limit}`);
+        const result = await fetch(`${api}logs?page=${page}&limit=${limit}`);
 
         if (result.ok) {
           const respuesta = await result.json();

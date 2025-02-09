@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { getDestacamentos } from "../destacamentos/destacamentos";
-import { capitalize } from "../../../funciones";
+import { capitalize, api } from "../../../funciones";
 import { useSearchParams } from "react-router-dom";
 import { getUserSession } from "../../lider/LayoutDest";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -52,7 +52,7 @@ const EditarUsuario = () => {
     const getUserById = async () => {
       try {
         const query = await fetch(
-          `http://erv-zona3/backend/users/actualizar?id=${id}`
+          `${api}users/actualizar?id=${id}`
         );
         if (query.ok) {
           const result = await query.json();
@@ -94,7 +94,7 @@ const EditarUsuario = () => {
       }
       const save_log= async () =>{
         try{
-          const query= await fetch('http://erv-zona3/backend/logs',{
+          const query= await fetch(`${api}logs`,{
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -176,7 +176,7 @@ const EditarUsuario = () => {
     }
     try {
       const respuesta = await fetch(
-        "http://erv-zona3/backend/users/actualizar",
+        `${api}users/actualizar`,
         {
           method: "POST",
           headers: {

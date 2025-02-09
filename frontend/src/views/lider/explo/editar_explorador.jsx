@@ -1,6 +1,6 @@
 import { getAscensos } from "../../admin/ascensos/ascensos"
 import { useEffect, useState } from "react";
-import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery } from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api } from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import { getUserSession } from "../LayoutDest";
 import { useSearchParams } from "react-router-dom"
@@ -35,7 +35,7 @@ const EditarExplorador =() =>{
       useEffect(() =>{
         const getExploById= async () =>{
             try{
-                const query= await fetch(`http://erv-zona3/backend/explo/actualizar?id=${id}`)
+                const query= await fetch(`${api}explo/actualizar?id=${id}`)
                 if(query.ok){
                     const result= await query.json();
                     setData({
@@ -85,7 +85,7 @@ const EditarExplorador =() =>{
           }
       }
     try{
-        const respuesta= await fetch("http://erv-zona3/backend/explo/actualizar", {
+        const respuesta= await fetch(`${api}explo/actualizar`, {
             method: "POST",
             headers:{
                 'Content-Type' : 'application/json'

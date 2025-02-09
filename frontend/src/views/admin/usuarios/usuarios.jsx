@@ -11,7 +11,7 @@ import {
   errorGeneralQuery,
 } from "../../../funciones";
 import { getUserSession } from "../../lider/LayoutDest";
-import GrowExample from "../../../funciones";
+import {GrowExample, api} from "../../../funciones";
 
 const Usuarios = () => {
   const [data, setData] = useState(null);
@@ -27,7 +27,7 @@ const Usuarios = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const dowload = () => {
-    const url = "http://erv-zona3/backend/excel?categoria=usuarios";
+    const url = `${api}excel?categoria=usuarios`;
     window.location.href = url;
   };
 
@@ -45,7 +45,7 @@ const Usuarios = () => {
   };
   const getUsers = async () => {
     try {
-      const query = await fetch("http://erv-zona3/backend/users");
+      const query = await fetch(`${api}users`);
       if (query.ok) {
         const result = await query.json();
         setData(result);
@@ -78,7 +78,7 @@ const Usuarios = () => {
       };
       const save_log = async () => {
         try {
-          const query = await fetch("http://erv-zona3/backend/logs", {
+          const query = await fetch(`${api}logs`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -109,7 +109,7 @@ const Usuarios = () => {
   const eliminarRegistro = async () => {
     const id = { id: idEliminar };
     try {
-      const query = await fetch("http://erv-zona3/backend/users/eliminar", {
+      const query = await fetch(`${api}users/eliminar`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
