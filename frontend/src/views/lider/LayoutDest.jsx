@@ -81,7 +81,7 @@ const LayoutDest = () => {
       setDestacamento(data); // Asegúrate de que esto no cambie el orden de los hooks
     }
     setLoading(false); // Esto se ejecuta después de que se haya obtenido el dato
-  }, []);
+  }, [navigate]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);

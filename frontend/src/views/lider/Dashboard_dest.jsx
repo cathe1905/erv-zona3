@@ -5,6 +5,7 @@ import {
   errorSpecificQuery,
   errorGeneralQuery,
   capitalize,
+  api
 } from "../../funciones";
 import { findRama } from "../../funciones";
 import Number from "../../components/Animation";
@@ -37,7 +38,7 @@ const Dashboard_dest = () => {
     if (user) {
       try {
         const respuesta = await fetch(
-          `http://erv-zona3/backend/?destacamento=${user.destacamento}`
+          `${api}?destacamento=${user.destacamento}`
         );
         if (respuesta.ok) {
           const estadisticas = await respuesta.json();

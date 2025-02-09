@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams  } from "react-router-dom";
 import PaginationGeneral from "../../../components/Pagination";
 import { capitalize, errorGeneralQuery, errorSpecificQuery, exitSpecificQuery } from "../../../funciones";
-import GrowExample from "../../../funciones";
+import {GrowExample, api} from "../../../funciones";
 import { getUserSession } from "../LayoutDest";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { Table } from 'react-bootstrap';
 
 const Explo_dest = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +49,7 @@ const Explo_dest = () => {
         if (!destacamento) return; 
         try {
           const result = await fetch(
-            `http://erv-zona3/backend/explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
+            `${api}explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
           );
           if (result.ok) {
             const respuesta = await result.json();
@@ -79,7 +80,7 @@ const Explo_dest = () => {
       useEffect(() => {
         const getAscensos = async () => {
           try {
-            const result = await fetch("http://erv-zona3/backend/ascensos");
+            const result = await fetch(`${api}ascensos`);
             if (result.ok) {
               const respuesta = await result.json();
               setAscensos(respuesta);
@@ -126,7 +127,7 @@ const Explo_dest = () => {
       const eliminarRegistro = async () => {
         const id = { id: idEliminar };
         try {
-          const query = await fetch("http://erv-zona3/backend/explo/eliminar", {
+          const query = await fetch(`${api}explo/eliminar`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -138,7 +139,7 @@ const Explo_dest = () => {
             setShow(false);
             getExploradores();
           }else{
-            const respuesta = await result.json();
+            const respuesta = await query.json();
             const mensaje= respuesta.error || "Error al procesar la solicitud.";
             errorSpecificQuery(mensaje)
           }
@@ -149,7 +150,7 @@ const Explo_dest = () => {
       };
     
       const dowload= (all) =>{
-          const url = `http://erv-zona3/backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
+          const url = `${api}excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
           window.location.href = url; 
       }
 

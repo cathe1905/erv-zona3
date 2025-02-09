@@ -18,7 +18,7 @@ const EditarAscenso =() =>{
     useEffect(() =>{
         const getAscensoById= async () =>{
             try{
-                const query= await fetch(`http://erv-zona3/backend/ascensos/actualizar?id=${id}`)
+                const query= await fetch(`{api}ascensos/actualizar?id=${id}`)
                 if(query.ok){
                     const result= await query.json();
                     setData({
@@ -53,7 +53,7 @@ const EditarAscenso =() =>{
         }
 
         try{
-            const respuesta= await fetch("http://erv-zona3/backend/ascensos/actualizar", {
+            const respuesta= await fetch(`{api}ascensos/actualizar`, {
                 method: "POST",
                 headers:{
                     'Content-Type' : 'application/json'

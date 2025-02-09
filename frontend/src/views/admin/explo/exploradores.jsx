@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PaginationGeneral from "../../../components/Pagination";
-import { capitalize } from "../../../funciones";
-import GrowExample from "../../../funciones";
+import { capitalize, GrowExample, api } from "../../../funciones";
 import { Table } from 'react-bootstrap';
 
 const Explo = () => {
@@ -25,7 +24,7 @@ const Explo = () => {
     const getExploradores = async () => {
       try {
         const result = await fetch(
-          `http://erv-zona3/backend/explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
+          `${api}explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
         );
 
         if (result.ok) {
@@ -50,7 +49,7 @@ const Explo = () => {
   useEffect(() => {
     const getDestacamentos = async () => {
       try {
-        const result = await fetch("http://erv-zona3/backend/destacamentos");
+        const result = await fetch(`${api}destacamentos`);
         if (result.ok) {
           const respuesta = await result.json();
           setDestacamentos(respuesta);
@@ -67,7 +66,7 @@ const Explo = () => {
   useEffect(() => {
     const getAscensos = async () => {
       try {
-        const result = await fetch("http://erv-zona3/backend/ascensos");
+        const result = await fetch(`${api}ascensos`);
         if (result.ok) {
           const respuesta = await result.json();
           setAscensos(respuesta);
@@ -109,7 +108,7 @@ const Explo = () => {
   }
 
   const dowload= (all) =>{
-      const url = `http://erv-zona3/backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
+      const url = `${api}excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
       window.location.href = url; 
   }
 

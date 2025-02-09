@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { getDestacamentos } from "../destacamentos/destacamentos";
 import { getAscensos } from "../ascensos/ascensos";
 import { capitalize } from "../../../funciones";
-import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery } from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
@@ -51,7 +51,7 @@ const CrearDirectiva = () => {
       }
     }
     try {
-      const result = await fetch("http://erv-zona3/backend/directiva", {
+      const result = await fetch(`${api}directiva`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

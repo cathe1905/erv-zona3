@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import {errorGeneralQuery, errorSpecificQuery, exitSpecificQuery} from "../../../funciones";
+import {errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api} from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -29,7 +29,7 @@ const EditarDestacamento = () => {
     const fetchData = async () => {
       try {
         const respuesta = await fetch(
-          `http://erv-zona3/backend/destacamentos/actualizar?id=${id}`
+          `{api}destacamentos/actualizar?id=${id}`
         );
 
         if (respuesta.ok) {
@@ -67,7 +67,7 @@ const EditarDestacamento = () => {
     }
     try {
       const respuesta = await fetch(
-        "http://erv-zona3/backend/destacamentos/actualizar",
+        `{api}destacamentos/actualizar`,
         {
           method: "POST",
           headers: {

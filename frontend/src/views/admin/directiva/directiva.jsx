@@ -5,7 +5,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery} from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api} from "../../../funciones";
 import GrowExample from "../../../funciones";
 
 const Directiva = () => {
@@ -32,7 +32,7 @@ const Directiva = () => {
   const eliminarRegistro= async () =>{
     try {
       const id= {id: idEliminar}
-      const result = await fetch("http://erv-zona3/backend/directiva/eliminar",{
+      const result = await fetch(`${api}directiva/eliminar`,{
         method: 'POST',
             headers: {
                 'Content-Type' : 'application/json'
@@ -57,7 +57,7 @@ const Directiva = () => {
   }
   const getDirectiva = async () => {
     try {
-      const result = await fetch("http://erv-zona3/backend/directiva");
+      const result = await fetch(`${api}directiva`);
 
       if (result.ok) {
         const respuesta = await result.json();

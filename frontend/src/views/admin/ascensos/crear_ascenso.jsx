@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
+import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery, api} from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
@@ -24,7 +24,7 @@ const CrearAscenso =() =>{
             }
         }
         try{
-            const respuesta= await fetch("http://erv-zona3/backend/ascensos", {
+            const respuesta= await fetch(`${api}ascensos`, {
                 method: "POST",
                 headers:{
                     'Content-Type' : 'application/json'
