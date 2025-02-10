@@ -1,42 +1,36 @@
 <?php
+
+
 function dbConnection(): mysqli {
-    // Detectamos el entorno usando una variable de entorno 'ENVIRONMENT'
-    $environment = getenv('ENVIRONMENT') ?: 'local'; // Si no está definida, asumimos que es local
+    // Detectar entorno y valores por defecto
+    $environment = getenv('ENVIRONMENT') ?: 'local';
 
-    // Variables para local
-    $local_host = 'localhost';
-    $local_user = 'root';
-    $local_password = '';
-    $local_db_name = 'erv_zona3';
+    // Configuraciones
+    $config = [
+        'local' => [
+            'host' => 'localhost',
+            'user' => 'root',
+            'password' => '',
+            'db_name' => 'erv_zona3'
+        ],
+        'domcloud' => [
+            'host' => 'sao.domcloud.co',
+            'user' => 'ervzona3',
+            'password' => getenv('DATA_BASE'),
+            'db_name' => 'ervzona3_db'
+        ]
+    ];
 
-    // Variables para DomCloud
-    $domcloud_host = 'sao.domcloud.co';  // Cambiar al host proporcionado por DomCloud
-    $domcloud_user = 'ervzona3';
-    $domcloud_password = getenv('DATA_BASE');
-    $domcloud_db_name = 'ervzona3_db';
-
-    $host = '';
-    $user = '';
-    $password = '';
-    $db_name = '';
-    $port = 3306;
-
-    // Configurar conexión según el entorno
-    if ($environment === 'domcloud') {
-        $host = $domcloud_host;
-        $user = $domcloud_user;
-        $password = $domcloud_password;
-        $db_name = $domcloud_db_name;
-    } else {
-        // Conexión local
-        $host = $local_host;
-        $user = $local_user;
-        $password = $local_password;
-        $db_name = $local_db_name;
-    }
-
+    $dbConfig = $config[$environment] ?? $config['local'];
+    
     // Conexión a la base de datos
-    $db = new mysqli($host, $user, $password, $db_name, $port);
+    $db = new mysqli(
+        $dbConfig['host'],
+        $dbConfig['user'],
+        $dbConfig['password'],
+        $dbConfig['db_name'],
+        3306
+    );
 
     if ($db->connect_error) {
         die("Connection failed: " . $db->connect_error);
@@ -45,4 +39,5 @@ function dbConnection(): mysqli {
     $db->set_charset("utf8mb4");
     return $db;
 }
+
 ?>
