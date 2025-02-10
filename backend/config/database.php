@@ -3,7 +3,7 @@
 
 function dbConnection(): mysqli {
     // Detectar entorno y valores por defecto
-    $environment = getenv('ENVIRONMENT') ?: 'local';
+    $environment = $_ENV['ENVIRONMENT'] ?: 'local';
 
     // Configuraciones
     $config = [
@@ -16,7 +16,7 @@ function dbConnection(): mysqli {
         'domcloud' => [
             'host' => 'sao.domcloud.co',
             'user' => 'ervzona3',
-            'password' => getenv('DATA_BASE'),
+            'password' => $_ENV['DATA_BASE'],
             'db_name' => 'ervzona3_db'
         ]
     ];
