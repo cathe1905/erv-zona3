@@ -3,7 +3,7 @@
         'name' => 'app/erv',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '29c24ad7c7a3be6d73c8184b9d6e538e2cd8413d',
+        'reference' => 'ce4a44c6b5bc079f838f0184d0627a5cbb909741',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'app/erv' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '29c24ad7c7a3be6d73c8184b9d6e538e2cd8413d',
+            'reference' => 'ce4a44c6b5bc079f838f0184d0627a5cbb909741',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
