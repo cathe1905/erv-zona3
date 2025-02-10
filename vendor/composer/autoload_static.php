@@ -7,9 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInitdfca8a17592488e748f2519c2913434e
 {
     public static $files = array (
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
     );
 
@@ -35,6 +36,7 @@ class ComposerStaticInitdfca8a17592488e748f2519c2913434e
         ),
         'M' => 
         array (
+            'MyCLabs\\Enum\\' => 13,
             'Model\\' => 6,
             'Matrix\\' => 7,
             'MVC\\' => 4,
@@ -59,6 +61,7 @@ class ComposerStaticInitdfca8a17592488e748f2519c2913434e
         'C' => 
         array (
             'Controllers\\' => 12,
+            'Composer\\Pcre\\' => 14,
             'Complex\\' => 8,
         ),
     );
@@ -105,6 +108,10 @@ class ComposerStaticInitdfca8a17592488e748f2519c2913434e
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
+        'MyCLabs\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
+        ),
         'Model\\' => 
         array (
             0 => __DIR__ . '/../..' . '/backend/app/models',
@@ -141,9 +148,23 @@ class ComposerStaticInitdfca8a17592488e748f2519c2913434e
         array (
             0 => __DIR__ . '/../..' . '/backend/app/controllers',
         ),
+        'Composer\\Pcre\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/pcre/src',
+        ),
         'Complex\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'H' => 
+        array (
+            'HTMLPurifier' => 
+            array (
+                0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
+            ),
         ),
     );
 
@@ -161,6 +182,7 @@ class ComposerStaticInitdfca8a17592488e748f2519c2913434e
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitdfca8a17592488e748f2519c2913434e::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitdfca8a17592488e748f2519c2913434e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitdfca8a17592488e748f2519c2913434e::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitdfca8a17592488e748f2519c2913434e::$classMap;
 
         }, null, ClassLoader::class);
