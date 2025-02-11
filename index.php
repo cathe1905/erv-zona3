@@ -23,7 +23,7 @@ use Controllers\LogController;
 
 $router= new Router();
 
-$router->get('/backend/', [StatisticsController::class, 'getStatistics']);
+$router->get('/', [StatisticsController::class, 'getStatistics']);
 
 $router->get('/backend/explo', [ExploController::class, 'getExploradores']);
 $router->post('/backend/explo', [ExploController::class, 'newExplorador']);
