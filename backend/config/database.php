@@ -1,28 +1,14 @@
 <?php
 
-
 function dbConnection(): mysqli {
-    // Detectar entorno y valores por defecto
-    $environment = $_ENV['ENVIRONMENT'] ?: 'local';
-
-    // Configuraciones
-    $config = [
-        'local' => [
-            'host' => 'localhost',
-            'user' => 'root',
-            'password' => '',
-            'db_name' => 'erv_zona3'
-        ],
-        'domcloud' => [
-            'host' => 'sao.domcloud.co',
-            'user' => 'ervzona3',
-            'password' => $_ENV['DATA_BASE'],
-            'db_name' => 'ervzona3_db'
-        ]
+    // Configuración de producción
+    $dbConfig = [
+        'host' => 'sao.domcloud.co',
+        'user' => 'ervzona3',
+        'password' => getenv('DATA_BASE'), // Obtiene la contraseña del archivo .env
+        'db_name' => 'ervzona3_db'
     ];
 
-    $dbConfig = $config[$environment] ?? $config['local'];
-    
     // Conexión a la base de datos
     $db = new mysqli(
         $dbConfig['host'],
