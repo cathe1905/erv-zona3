@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getUserSession } from "./LayoutDest";
+import { getUserSession } from "../../funciones";
 import {
   errorSpecificQuery,
   errorGeneralQuery,
@@ -10,7 +10,7 @@ import {
 import { findRama } from "../../funciones";
 import Number from "../../components/Animation";
 import BarChart from "../../components/BarChart";
-import GrowExample from "../../funciones";
+import GrowExample from "../../components/GrowExample";
 
 const Dashboard_dest = () => {
   const [param, setParam] = useSearchParams();
@@ -30,33 +30,33 @@ const Dashboard_dest = () => {
     evaluateUser();
   }, []);
 
-  const getStadisticas = async () => {
+  const getStadisticas = useCallback(async () => {
     if (!user) {
       console.error("Token ausente o erróneo");
       return;
     }
-    if (user) {
-      try {
-        const respuesta = await fetch(
-          `${api}?destacamento=${user.destacamento}`
-        );
-        if (respuesta.ok) {
-          const estadisticas = await respuesta.json();
-          setData(estadisticas); 
-        } else {
-          const result = await respuesta.json();
-          const mensaje = result.error || "Error al procesar la solicitud.";
-          errorSpecificQuery(mensaje);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error("Hubo un problema con la solicitud", error);
-        errorGeneralQuery();
-        setLoading(false);
-        return;
+  
+    try {
+      const respuesta = await fetch(
+        
+        `${api}?destacamento=${user.destacamento}`
+      );
+  
+      if (respuesta.ok) {
+        const estadisticas = await respuesta.json();
+        setData(estadisticas);
+      } else {
+        const result = await respuesta.json();
+        const mensaje = result.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje);
       }
+    } catch (error) {
+      console.error("Hubo un problema con la solicitud", error);
+      errorGeneralQuery();
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [user]); // Solo se vuelve a crear si `user` cambia.
 
   useEffect(() => {
     if (user && user.destacamento) {
@@ -68,7 +68,7 @@ const Dashboard_dest = () => {
         getStadisticas();
       }
     }
-  }, [user, destacamento]);
+  }, [user, destacamento, getStadisticas, setParam]);
 
   const prejuniors = parseInt(findRama("pre-junior", data), 10);
   const pioneros = parseInt(findRama("pionero", data), 10);
@@ -176,7 +176,7 @@ const Dashboard_dest = () => {
               </a>
             </aside>
           </div>
-          <BarChart data={dataExplo} />
+          {dataExplo && <BarChart data={dataExplo} />}
         </>
       )}
     </main>

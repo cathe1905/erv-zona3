@@ -4,13 +4,13 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import GrowExample from "../../../funciones";
+import GrowExample from "../../../components/GrowExample";
 import { capitalize, api } from "../../../funciones";
 import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery} from "../../../funciones";
 
 export async function getAscensos() {
   try {
-    const result = await fetch(`${api}ascensos`);
+    const result = await fetch(`${api}backend/ascensos`);
     if (result.ok) {
       const respuesta = await result.json();
       return respuesta;
@@ -46,13 +46,13 @@ const Ascensos = () => {
     setShow(true);
   };
   const dowload = () => {
-    const url = `${api}excel?categoria=ascensos`;
+    const url = `${api}backend/excel?categoria=ascensos`;
     window.location.href = url;
   };
   const eliminarRegistro = async () => {
     const id = { id: idEliminar };
     try {
-      const query = await fetch(`${api}ascensos/eliminar`, {
+      const query = await fetch(`${api}backend/ascensos/eliminar`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +64,7 @@ const Ascensos = () => {
         setShow(false);
         getData();
       }else{
-        const respuesta = await result.json();
+        const respuesta = await query.json();
         const mensaje= respuesta.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje)
       }

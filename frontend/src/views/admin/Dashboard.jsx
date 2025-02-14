@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { findRama } from "../../funciones";
 import Number from "../../components/Animation";
-import { errorSpecificQuery, errorGeneralQuery } from "../../funciones";
+import { errorSpecificQuery, errorGeneralQuery, api } from "../../funciones";
 import BarChart from "../../components/BarChart";
-import {GrowExample, api} from "../../funciones";
+import GrowExample from "../../components/GrowExample";
 
 const Dashboard = () => {
   const [data, setData] = useState(null);
@@ -155,7 +155,7 @@ const Dashboard = () => {
             </aside>
           </div>
 
-          <BarChart data={dataExplo} />
+          {dataExplo && <BarChart data={dataExplo} />}
         </>
       )}
     </main>

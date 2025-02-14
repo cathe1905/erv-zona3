@@ -1,4 +1,3 @@
-import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -12,6 +11,7 @@ import {
 // Registrar componentes necesarios para Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
+// eslint-disable-next-line react/prop-types
 const BarChart = ({data}) => {
 
   // Opciones para la gráfica

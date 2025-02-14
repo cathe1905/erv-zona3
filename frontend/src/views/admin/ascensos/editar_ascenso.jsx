@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
+import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery, api} from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
@@ -7,6 +7,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 
 const EditarAscenso =() =>{
+    // eslint-disable-next-line no-unused-vars
     const [params, setParams] = useSearchParams();
     const id= parseInt(params.get('id'), 10) || null;
     const navigate= useNavigate();
@@ -18,7 +19,7 @@ const EditarAscenso =() =>{
     useEffect(() =>{
         const getAscensoById= async () =>{
             try{
-                const query= await fetch(`{api}ascensos/actualizar?id=${id}`)
+                const query= await fetch(`${api}backend/ascensos/actualizar?id=${id}`)
                 if(query.ok){
                     const result= await query.json();
                     setData({
@@ -53,7 +54,7 @@ const EditarAscenso =() =>{
         }
 
         try{
-            const respuesta= await fetch(`{api}ascensos/actualizar`, {
+            const respuesta= await fetch(`${api}backend/ascensos/actualizar`, {
                 method: "POST",
                 headers:{
                     'Content-Type' : 'application/json'

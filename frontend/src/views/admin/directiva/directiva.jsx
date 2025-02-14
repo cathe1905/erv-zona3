@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api} from "../../../funciones";
-import GrowExample from "../../../funciones";
+import GrowExample from "../../../components/GrowExample";
 
 const Directiva = () => {
   const [data, setData] = useState(null);
@@ -32,7 +32,7 @@ const Directiva = () => {
   const eliminarRegistro= async () =>{
     try {
       const id= {id: idEliminar}
-      const result = await fetch(`${api}directiva/eliminar`,{
+      const result = await fetch(`${api}backend/directiva/eliminar`,{
         method: 'POST',
             headers: {
                 'Content-Type' : 'application/json'
@@ -57,7 +57,7 @@ const Directiva = () => {
   }
   const getDirectiva = async () => {
     try {
-      const result = await fetch(`${api}directiva`);
+      const result = await fetch(`${api}backend/directiva`);
 
       if (result.ok) {
         const respuesta = await result.json();
@@ -124,7 +124,7 @@ const Directiva = () => {
                   <img
                     className="img-fluid"
                     style={{ width: '100px' }}
-                    src={`http://erv-zona3/imagenes/${miembro.foto}`}
+                    src={`${api}imagenes/${miembro.foto}`}
                     alt="foto del directivo"
                   />
                 </td>

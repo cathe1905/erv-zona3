@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { capitalize, api } from "../../funciones";
+import { capitalize, api, errorGeneralQuery, errorSpecificQuery } from "../../funciones";
 import PaginationGeneral from "../../components/Pagination";
 import { useSearchParams } from "react-router-dom";
-import GrowExample from "../../funciones";
+import GrowExample from "../../components/GrowExample";
 
 
 const Logs = () => {
@@ -18,7 +18,7 @@ const Logs = () => {
   useEffect(() => {
     const getLogs = async () => {
       try {
-        const result = await fetch(`${api}logs?page=${page}&limit=${limit}`);
+        const result = await fetch(`${api}backend/logs?page=${page}&limit=${limit}`);
 
         if (result.ok) {
           const respuesta = await result.json();

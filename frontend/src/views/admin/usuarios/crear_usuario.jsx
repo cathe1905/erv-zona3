@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, } from "react";
 import {
   exitSpecificQuery,
   errorSpecificQuery,
@@ -6,9 +6,8 @@ import {
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { getDestacamentos } from "../destacamentos/destacamentos";
-import { capitalize, api } from "../../../funciones";
-import { getUserSession } from "../../lider/LayoutDest";
-import { find_names_by_ids } from "./editar_usuario";
+import { capitalize, api, find_names_by_ids } from "../../../funciones";
+import { getUserSession } from "../../../funciones";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 
@@ -55,7 +54,7 @@ const CrearUsuario = () => {
     ) {
       const save_log = async () => {
         try {
-          const query = await fetch(`${api}logs`, {
+          const query = await fetch(`${api}backend/logs`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -77,18 +76,41 @@ const CrearUsuario = () => {
       };
       save_log();
     }
-  }, [log]);
+  }, [log, navigate]);
+
+  const evaluacion = useCallback(() => {
+    let detalles = "Se añadió la siguiente información: ";
+  
+    Object.entries(data).forEach(([key, value]) => {
+      if (key !== "contraseña") {
+        if (key === "destacamento_id" || key === "rol") {
+          const result = find_names_by_ids(key, value, destacamentos);
+          detalles += `${key}: ${result} `;
+        } else {
+          detalles += `${key}: ${value} `;
+        }
+      }
+    });
+  
+    setLog({
+      ...log,
+      admin_id: idUserSession,
+      action: "Creación de un nuevo usuario",
+      target_id: id,
+      details: detalles,
+    });
+  }, [data, destacamentos, idUserSession, id, log]);
 
   useEffect(() => {
     if (id !== null) {
       evaluacion();
     }
-  }, [id]);
+  }, [id, evaluacion]);
 
   const get_id = async () => {
     try {
       const query = await fetch(
-        `${api}user/email?email=${data.email}`
+        `${api}backend/user/email?email=${data.email}`
       );
       if (query.ok) {
         const result = await query.json();
@@ -103,28 +125,7 @@ const CrearUsuario = () => {
       errorGeneralQuery();
     }
   };
-  const evaluacion = () => {
-    let detalles = "Se añadió la siguiente información: ";
-
-    Object.entries(data).forEach(([key, value]) => {
-      if (key != "contraseña") {
-        if (key == "destacamento_id" || key == "rol") {
-          const result = find_names_by_ids(key, value, destacamentos);
-          detalles += `${key}: ${result} `;
-        } else {
-          detalles += `${key}: ${value} `;
-        }
-      }
-    });
-
-    setLog({
-      ...log,
-      admin_id: idUserSession,
-      action: "Creación de un nuevo usuario",
-      target_id: id,
-      details: detalles,
-    });
-  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -139,7 +140,7 @@ const CrearUsuario = () => {
       }
     }
     try {
-      const respuesta = await fetch(`${api}users`, {
+      const respuesta = await fetch(`${api}backend/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

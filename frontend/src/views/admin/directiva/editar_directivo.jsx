@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/Form';
 
 const EditarDirectiva = () => {
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const [params, setParams] = useSearchParams();
   const id = parseInt(params.get("id"), 10) || null;
   const [destacamentos, setDestacamentos] = useState(null);
@@ -57,7 +58,7 @@ const EditarDirectiva = () => {
     }
     try {
       const result = await fetch(
-        `${api}directiva/actualizar`,
+        `${api}backend/directiva/actualizar`,
         {
           method: "POST",
           headers: {
@@ -92,7 +93,7 @@ const EditarDirectiva = () => {
     const get_directivo_db = async () => {
       try {
         const result = await fetch(
-          `${api}directiva/actualizar?id=${id}`
+          `${api}backend/directiva/actualizar?id=${id}`
         );
         if (result.ok) {
           const respuesta = await result.json();

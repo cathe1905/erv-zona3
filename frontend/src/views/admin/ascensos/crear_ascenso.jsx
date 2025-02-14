@@ -24,7 +24,7 @@ const CrearAscenso =() =>{
             }
         }
         try{
-            const respuesta= await fetch(`${api}ascensos`, {
+            const respuesta= await fetch(`${api}backend/ascensos`, {
                 method: "POST",
                 headers:{
                     'Content-Type' : 'application/json'

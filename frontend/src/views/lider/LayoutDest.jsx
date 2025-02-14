@@ -1,41 +1,29 @@
-import { Outlet, useLocation } from "react-router-dom";
+/* eslint-disable react/prop-types */
+import { Outlet} from "react-router-dom";
 import { useEffect, useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { jwtDecode } from "jwt-decode";
-import { capitalize } from "../../funciones";
+import { capitalize, getUserSession  } from "../../funciones";
 import { useNavigate } from "react-router-dom";
-import GrowExample from "../../funciones";
+import GrowExample from "../../components/GrowExample";
 
 const Logout = () => {
   localStorage.removeItem("token");
   location.href = "/";
 };
 
-export const getUserSession = () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    return null;
-  }
-  try {
-    const destacamento = jwtDecode(token);
-    return destacamento.data;
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    return null;
-  }
-};
 
-const titulo = () => {
-  const location = useLocation();
-  switch (location.pathname) {
-    case "/dashboard/dest":
-      return "Bienvenido";
-    case "/dashboard/dest/explo":
-      return "Exploradores";
-    default:
-      return "";
-  }
-};
+
+// const Titulo = () => {
+//   const location = useLocation();
+//   switch (location.pathname) {
+//     case "/dashboard/dest":
+//       return "Bienvenido";
+//     case "/dashboard/dest/explo":
+//       return "Exploradores";
+//     default:
+//       return "";
+//   }
+// };
 
 const Menu = ({ destacamento }) => {
   return (
@@ -70,31 +58,46 @@ const Menu = ({ destacamento }) => {
 const LayoutDest = () => {
   const [show, setShow] = useState(false);
   const [destacamento, setDestacamento] = useState(null);
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const data = getUserSession();
     if (!data) {
       navigate("/");
-    } else {
-      setDestacamento(data); // Asegúrate de que esto no cambie el orden de los hooks
-    }
-    setLoading(false); // Esto se ejecuta después de que se haya obtenido el dato
+    } 
+      setDestacamento(data); 
+    
+    setLoading(false); 
   }, [navigate]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const getTitulo = () => {
+    switch (location.pathname) {
+      case "/dashboard/dest":
+        return "Bienvenido";
+      case "/dashboard/dest/explo":
+        return "Exploradores";
+      default:
+        return "";
+    }
+  };
+
   if (loading)
     return (
-      <>
-        <tr>
-          <td colSpan="12" className="text-center">
-            {GrowExample()}
-          </td>
-        </tr>
-      </>
+      <div className="text-center">
+      <table>
+        <tbody>
+          <tr>
+            <td colSpan="12">
+              {GrowExample()}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     );
 
   return (
@@ -110,7 +113,7 @@ const LayoutDest = () => {
         <div className="col-md-10 p-md-4 margen">
           <div className="d-flex flex-row justify-content-between mx-md-3 my-md-3">
             <h1 className="d-none d-md-block titulo_principal text-start">
-              {titulo()}
+              {getTitulo()}
             </h1>
             <div className="d-flex justify-content-center align-items-center">
               <i className="bi bi-person me-2 fs-4 rounded-circle bg-secondary px-2"></i>
@@ -147,7 +150,7 @@ const LayoutDest = () => {
           </div>
         </div>
         <h1 className="d-md-none mx-4 mt-4 titulo_principal_mobile text-start">
-          {titulo()}
+          {getTitulo()}
         </h1>
 
         <Offcanvas

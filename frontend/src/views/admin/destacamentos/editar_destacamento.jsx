@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 
 const EditarDestacamento = () => {
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const [params, setParams] = useSearchParams();
   const id = parseInt(params.get("id"), 10) || null;
   const [data, setData] = useState({
@@ -29,7 +30,7 @@ const EditarDestacamento = () => {
     const fetchData = async () => {
       try {
         const respuesta = await fetch(
-          `{api}destacamentos/actualizar?id=${id}`
+          `${api}backend/destacamentos/actualizar?id=${id}`
         );
 
         if (respuesta.ok) {
@@ -67,7 +68,7 @@ const EditarDestacamento = () => {
     }
     try {
       const respuesta = await fetch(
-        `{api}destacamentos/actualizar`,
+        `${api}backend/destacamentos/actualizar`,
         {
           method: "POST",
           headers: {

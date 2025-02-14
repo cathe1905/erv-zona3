@@ -51,7 +51,7 @@ const CrearDirectiva = () => {
       }
     }
     try {
-      const result = await fetch(`${api}directiva`, {
+      const result = await fetch(`${api}backend/directiva`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
