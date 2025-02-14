@@ -230,7 +230,7 @@ class UserController
         if ($user) {
             if (password_verify($contraseña, $user['contraseña'])) {
 
-                $jwtSecret = $_ENV['JWT_SECRET'];
+                $jwtSecret = getenv('JWT_SECRET');
 
                 // Datos a incluir en el token
                 $payload = [
