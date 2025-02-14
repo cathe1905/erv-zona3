@@ -2,13 +2,15 @@ import { getAscensos } from "../../admin/ascensos/ascensos"
 import { useEffect, useState } from "react";
 import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api } from "../../../funciones";
 import { useNavigate } from "react-router-dom"
-import { getUserSession } from "../LayoutDest";
+import { getUserSession } from "../../../funciones";
 import { useSearchParams } from "react-router-dom"
 
 const EditarExplorador =() =>{
     const navigate= useNavigate();
+    // eslint-disable-next-line no-unused-vars
     const [params, setParams] = useSearchParams();
     const id= parseInt(params.get('id'), 10) || null;
+    // eslint-disable-next-line no-unused-vars
     const [error, setError] = useState(null);
     const [ascensos, setAscensos] = useState(null);
     const [destacamento, setDestacamento] = useState("");
@@ -35,7 +37,7 @@ const EditarExplorador =() =>{
       useEffect(() =>{
         const getExploById= async () =>{
             try{
-                const query= await fetch(`${api}explo/actualizar?id=${id}`)
+                const query= await fetch(`${api}backend/explo/actualizar?id=${id}`)
                 if(query.ok){
                     const result= await query.json();
                     setData({
@@ -85,7 +87,7 @@ const EditarExplorador =() =>{
           }
       }
     try{
-        const respuesta= await fetch(`${api}explo/actualizar`, {
+        const respuesta= await fetch(`${api}backend/explo/actualizar`, {
             method: "POST",
             headers:{
                 'Content-Type' : 'application/json'

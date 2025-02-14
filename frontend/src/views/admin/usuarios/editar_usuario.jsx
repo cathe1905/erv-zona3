@@ -2,22 +2,16 @@ import { useEffect, useState } from "react";
 import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { getDestacamentos } from "../destacamentos/destacamentos";
-import { capitalize, api } from "../../../funciones";
+import { capitalize, api, find_names_by_ids } from "../../../funciones";
 import { useSearchParams } from "react-router-dom";
-import { getUserSession } from "../../lider/LayoutDest";
+import { getUserSession } from "../../../funciones";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 
-export const find_names_by_ids = (key, value, obj) => {
-  if (key == "destacamento_id") {
-    const result = obj.find((dest) => dest.id == value);
-    return result ? result.nombre : null;
-  } else if (key == "rol") {
-    return value == 1 ? "Administrador" : "Usuario";
-  }
-};
+
 const EditarUsuario = () => {
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const [params, setParams] = useSearchParams();
   const id = parseInt(params.get("id"), 10) || null;
   const [destacamentos, setDestacamentos] = useState(null);
@@ -52,7 +46,7 @@ const EditarUsuario = () => {
     const getUserById = async () => {
       try {
         const query = await fetch(
-          `${api}users/actualizar?id=${id}`
+          `${api}backend/users/actualizar?id=${id}`
         );
         if (query.ok) {
           const result = await query.json();
@@ -94,7 +88,7 @@ const EditarUsuario = () => {
       }
       const save_log= async () =>{
         try{
-          const query= await fetch(`${api}logs`,{
+          const query= await fetch(`${api}backend/logs`,{
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -176,7 +170,7 @@ const EditarUsuario = () => {
     }
     try {
       const respuesta = await fetch(
-        `${api}users/actualizar`,
+        `${api}backend/users/actualizar`,
         {
           method: "POST",
           headers: {

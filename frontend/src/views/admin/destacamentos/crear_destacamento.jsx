@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { capitalize, errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api} from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api} from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
@@ -34,7 +34,7 @@ const CrearDestacamento =() =>{
             }
         }
         try {
-            const respuesta= await fetch(`{api}destacamentos`, {
+            const respuesta= await fetch(`${api}backend/destacamentos`, {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json'

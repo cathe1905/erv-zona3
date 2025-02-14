@@ -1,5 +1,5 @@
-import Spinner from 'react-bootstrap/Spinner';
 import Swal from 'sweetalert2'
+import { jwtDecode } from "jwt-decode";
 
 export function capitalize(str) {
   if (!str || str.charAt(0) === str.charAt(0).toUpperCase()) {
@@ -23,10 +23,6 @@ export const findRama = (tipo, data) => {
 
   return 0;
 };
-
-export function GrowExample() {
-  return <Spinner animation="grow" />;
-}
 
 export function errorGeneralQuery(){
   return Swal.fire({
@@ -55,7 +51,30 @@ export function exitSpecificQuery(mensaje){
   });
 }
 
-export default GrowExample;
+export const find_names_by_ids = (key, value, obj) => {
+  if (key == "destacamento_id") {
+    const result = obj.find((dest) => dest.id == value);
+    return result ? result.nombre : null;
+  } else if (key == "rol") {
+    return value == 1 ? "Administrador" : "Usuario";
+  }
+};
+
+export const getUserSession = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return null;
+  }
+ 
+  try {
+    const destacamento = jwtDecode(token);
+    return destacamento.data;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
+
 
 export const api= import.meta.env.VITE_API_URL;
 

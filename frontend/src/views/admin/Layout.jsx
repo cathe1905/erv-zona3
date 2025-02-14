@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { getUserSession } from "../lider/LayoutDest";
+import { getUserSession } from "../../funciones";
 import { useEffect } from "react";
 import { capitalize } from "../../funciones";
 
@@ -10,7 +10,7 @@ const Logout= () => {
   location.href = '/';
 }
 
-const titulo =() =>{
+const Titulo =() =>{
   const location = useLocation();
   switch(location.pathname){
     case "/dashboard/admin":
@@ -102,7 +102,7 @@ const Layout = () => {
         </div>
         <div className="col-md-10 p-md-4 margen">
           <div className="d-flex flex-row justify-content-between mx-md-3 my-md-3">
-            <h1 className="d-none d-md-block titulo_principal text-start">{titulo()}</h1>
+            <h1 className="d-none d-md-block titulo_principal text-start">{Titulo()}</h1>
             <div className="d-flex justify-content-center align-items-center">
               <i className="bi bi-person me-2 fs-4 rounded-circle bg-secondary px-2"></i>
               <div>
@@ -132,7 +132,7 @@ const Layout = () => {
               </div>
             </div>
         </div>
-        <h1 className="d-md-none mx-4 mt-4 titulo_principal_mobile text-start">{titulo()}</h1>
+        <h1 className="d-md-none mx-4 mt-4 titulo_principal_mobile text-start">{Titulo()}</h1>
 
 
         <Offcanvas

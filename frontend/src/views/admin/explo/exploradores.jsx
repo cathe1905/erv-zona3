@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PaginationGeneral from "../../../components/Pagination";
-import { capitalize, GrowExample, api } from "../../../funciones";
+import { capitalize,  api } from "../../../funciones";
+import GrowExample from "../../../components/GrowExample";
 import { Table } from 'react-bootstrap';
 
 const Explo = () => {
@@ -18,13 +19,14 @@ const Explo = () => {
   const [destacamentos, setDestacamentos] = useState(null);
   const [ascensos, setAscensos]= useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const getExploradores = async () => {
       try {
         const result = await fetch(
-          `${api}explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
+          `${api}backend/explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
         );
 
         if (result.ok) {
@@ -49,7 +51,7 @@ const Explo = () => {
   useEffect(() => {
     const getDestacamentos = async () => {
       try {
-        const result = await fetch(`${api}destacamentos`);
+        const result = await fetch(`${api}backend/destacamentos`);
         if (result.ok) {
           const respuesta = await result.json();
           setDestacamentos(respuesta);
@@ -66,7 +68,7 @@ const Explo = () => {
   useEffect(() => {
     const getAscensos = async () => {
       try {
-        const result = await fetch(`${api}ascensos`);
+        const result = await fetch(`${api}backend/ascensos`);
         if (result.ok) {
           const respuesta = await result.json();
           setAscensos(respuesta);
@@ -106,10 +108,13 @@ const Explo = () => {
       page: 1,
     });
   }
-
+  const url = `${api}backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=false`;
+  console.log(url)
   const dowload= (all) =>{
-      const url = `${api}excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
-      window.location.href = url; 
+    
+      const url = `${api}backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
+      console.log(url)
+      window.open(url, "_blank"); 
   }
 
   return (

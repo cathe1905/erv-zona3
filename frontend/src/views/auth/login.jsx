@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { getUserSession } from "../lider/LayoutDest";
+import { getUserSession } from "../../funciones";
 import { errorGeneralQuery, errorSpecificQuery, api } from "../../funciones";
 import { BiShow, BiHide } from "react-icons/bi";
 
 function LoginPage() {
+  // eslint-disable-next-line no-unused-vars
   const [loged, setLoged] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -19,7 +21,8 @@ function LoginPage() {
     };
 
     try {
-      const respuesta = await fetch(`${api}users/auth`, {
+
+      const respuesta = await fetch(`${api}backend/users/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

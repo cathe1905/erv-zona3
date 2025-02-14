@@ -5,11 +5,12 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import GrowExample from "../../../funciones";
+import GrowExample from "../../../components/GrowExample";
+import { api } from "../../../funciones";
 
 export async function getDestacamentos() {
   try {
-    const result = await fetch(`{api}destacamentos`);
+    const result = await fetch(`${api}backend/destacamentos`);
 
     if (result.ok) {
       const respuesta = await result.json();
@@ -50,7 +51,7 @@ const Destacamentos = () => {
     try {
       const id = { id: idEliminar };
       const result = await fetch(
-       `{api}destacamentos/eliminar`,
+       `${api}backend/destacamentos/eliminar`,
         {
           method: "POST",
           headers: {
@@ -93,7 +94,7 @@ const Destacamentos = () => {
   }, []);
 
   const dowload = () => {
-    const url = `{api}excel?categoria=destacamentos`;
+    const url = `${api}backend/excel?categoria=destacamentos`;
     window.location.href = url;
   };
 
