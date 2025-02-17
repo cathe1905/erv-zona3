@@ -34,7 +34,6 @@ class UserController
 
 
             $record = new User($data['usuario']);
-            debuguear($record);
 
             $errores = $record->validar();
 
@@ -51,7 +50,7 @@ class UserController
             //Intentar crear el recurso
             $result = $record->crear();
             //CUANDO TENGA DOMINIO IMPLEMENTAR EL ENVIO DE CORREOS
-            // $result_email = self::sendVerificationEmail($record->email, $record->token);
+            $result_email = self::sendVerificationEmail($record->email, $record->token);
 
             if ($result) {
                 http_response_code(201);
