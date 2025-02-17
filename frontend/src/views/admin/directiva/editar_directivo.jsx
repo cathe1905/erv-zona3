@@ -256,7 +256,7 @@ const EditarDirectiva = () => {
             <div className="col-12 text-center">
               <p>Foto actual</p>
               <img
-                src={`http://erv-zona3/imagenes/${data.foto}`}
+                src={`${api}imagenes/${data.foto}`}
                 alt="foto miembro"
                 className="img-thumbnail"
                 style={{width: '200px'}}

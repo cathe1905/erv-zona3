@@ -13,6 +13,7 @@ import Form from 'react-bootstrap/Form';
 
 const CrearUsuario = () => {
   const navigate = useNavigate();
+  const [logSent, setLogSent] = useState(false);
   const [destacamentos, setDestacamentos] = useState(null);
   const [data, setData] = useState({
     nombre: "",
@@ -46,12 +47,8 @@ const CrearUsuario = () => {
     const log_data_enviar = {
       log: { ...log },
     };
-    if (
-      log.admin_id !== "" ||
-      log.action !== "" ||
-      log.target_id !== "" ||
-      log.details !== ""
-    ) {
+    if (!logSent && log.admin_id && log.action && log.target_id && log.details) {
+      setLogSent(true);
       const save_log = async () => {
         try {
           const query = await fetch(`${api}backend/logs`, {
@@ -76,7 +73,7 @@ const CrearUsuario = () => {
       };
       save_log();
     }
-  }, [log, navigate]);
+  }, [log, navigate, logSent]);
 
   const evaluacion = useCallback(() => {
     let detalles = "Se añadió la siguiente información: ";
@@ -148,6 +145,13 @@ const CrearUsuario = () => {
         body: JSON.stringify(data_enviar),
       });
 
+      let resultado = null;
+    try {
+      resultado = await respuesta.json(); // Intentamos parsear el JSON
+    } catch (jsonError) {
+      console.warn("La respuesta no es JSON válido:", jsonError);
+    }
+
       if (respuesta.ok) {
         const fetchId = async () => {
           const result = await get_id();
@@ -155,9 +159,9 @@ const CrearUsuario = () => {
         };
         fetchId();
       } else {
-        const result = await respuesta.json();
-        const mensaje = result.error || "Error al procesar la solicitud.";
-        errorSpecificQuery(mensaje);
+        // const result = await respuesta.json();
+        // const mensaje = result.error ;
+        errorSpecificQuery(resultado?.errores || "Error al procesar la solicitud.");
       }
     } catch (error) {
       console.log(error);
