@@ -201,7 +201,7 @@ const Explo = () => {
         </div>
       </div>
 
-      <div className="table-responsive">
+      <div className="table-responsive overflow-y-scroll" style={{ maxHeight: "400px"}}>
         <Table bordered hover>
           <thead className="table-light">
             <tr>

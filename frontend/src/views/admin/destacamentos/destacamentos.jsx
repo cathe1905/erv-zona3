@@ -6,26 +6,9 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import GrowExample from "../../../components/GrowExample";
-import { api } from "../../../funciones";
+import { api, getDestacamentos } from "../../../funciones";
 
-export async function getDestacamentos() {
-  try {
-    const result = await fetch(`${api}backend/destacamentos`);
 
-    if (result.ok) {
-      const respuesta = await result.json();
-      return respuesta;
-    }else{
-      const respuesta = await result.json();
-      const mensaje= respuesta.error || "Error al procesar la solicitud.";
-      errorSpecificQuery(mensaje)
-    }
-  } catch (error) {
-    console.error("Hubo un problema con la solicitud", error);
-    console.log(error);
-    errorGeneralQuery();
-  }
-}
 const Destacamentos = () => {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
@@ -101,7 +84,10 @@ const Destacamentos = () => {
   return (
     <>
       {error && <p className="error-message">{error}</p>}
-      <div className="table-responsive">
+      <div
+        className="table-responsive overflow-y-scroll"
+        style={{ maxHeight: "400px" }}
+      >
         <table className="table table-bordered table-hover letra_muy_pequeña">
           <thead className="table-light">
             <tr>
@@ -208,7 +194,7 @@ const Destacamentos = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div className="d-flex justify-content-end gap-2">
+      <div className="d-flex justify-content-end gap-2 m-3">
         <a
           href="/dashboard/admin/destacamentos/crear"
           className="btn btn-outline-primary letra_muy_pequeña"

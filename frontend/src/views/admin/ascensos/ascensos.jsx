@@ -6,25 +6,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import GrowExample from "../../../components/GrowExample";
 import { capitalize, api } from "../../../funciones";
-import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery} from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, getAscensos} from "../../../funciones";
 
-export async function getAscensos() {
-  try {
-    const result = await fetch(`${api}backend/ascensos`);
-    if (result.ok) {
-      const respuesta = await result.json();
-      return respuesta;
-    }else{
-      const respuesta = await result.json();
-      const mensaje= respuesta.error || "Error al procesar la solicitud.";
-      errorSpecificQuery(mensaje)
-    }
-  } catch (error) {
-    console.error("Hubo un problema con la solicitud", error);
-    console.log(error);
-    errorGeneralQuery();
-  }
-}
+
 const Ascensos = () => {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
@@ -176,7 +160,7 @@ const Ascensos = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div className="d-flex justify-content-end gap-2 mt-3">
+      <div className="d-flex justify-content-end gap-2 m-3">
         <button
           onClick={() => navigate("/dashboard/admin/ascensos/crear")}
           className="btn btn-outline-primary letra_muy_pequeña"

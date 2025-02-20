@@ -81,7 +81,7 @@ const Logs = () => {
     <>
     {error && <p className="error-message text-center text-danger">{error}</p>}
   
-    <div className="mb-4">
+    <div className="mb-4 ms-2 ms-md-0">
       <label htmlFor="limit" className="me-2">Límite de resultados</label>
       <select 
         id="limit" 
@@ -96,7 +96,7 @@ const Logs = () => {
       </select>
     </div>
   
-    <div className="table-responsive">
+    <div className="table-responsive overflow-y-scroll" style={{ maxHeight: "400px"}}>
       <table className="table table-bordered table-hover letra_muy_pequeña">
         <thead className="table-light">
           <tr>
@@ -138,7 +138,7 @@ const Logs = () => {
     </div>
   
     {total > 0 && (
-      <div className="d-flex justify-content-end">
+      <div className="d-flex justify-content-end mx-2 my-3">
       <PaginationGeneral
         total={total}
         current_page={page}

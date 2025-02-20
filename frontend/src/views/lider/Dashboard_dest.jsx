@@ -92,6 +92,9 @@ const Dashboard_dest = () => {
         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
         borderColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
         borderWidth: 1,
+         font: {
+           size: window.innerWidth < 768 ? 10 : 14, // Ajusta el tamaño de la fuente según el ancho de pantalla
+          },
       },
     ],
   };

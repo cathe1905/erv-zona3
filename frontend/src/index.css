@@ -1,3 +1,7 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 body {
   overflow-x: hidden;
 }
@@ -109,6 +113,10 @@ body {
 
 .letra_muy_pequeña {
   font-size: 14px;
+}
+
+.letra_extr_pequeña {
+  font-size: 12px;
 }
 
 .fondo-menu {

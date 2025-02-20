@@ -133,7 +133,7 @@ const Usuarios = () => {
   return (
     <>
       {error && <p className="error-message text-center">{error}</p>}
-      <div className="table-responsive d-flex justify-content-center">
+      <div className="table-responsive d-flex justify-content-center overflow-y-scroll" style={{ maxHeight: "400px"}}>
         <div className="col-12 col-md-10">
           <table className="table table-bordered table-hover letra_muy_pequeña">
             <thead className="table-light">
@@ -233,7 +233,7 @@ const Usuarios = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div className="d-flex justify-content-end gap-2 mt-3">
+      <div className="d-flex justify-content-end gap-2 m-3">
         <button
           onClick={() => navigate("/dashboard/admin/usuarios/crear")}
           className="btn btn-outline-primary letra_muy_pequeña"

@@ -29,10 +29,10 @@ function LoginPage() {
         },
         body: JSON.stringify(datos),
       });
-
+      const data = await respuesta.json();
       if (respuesta.ok) {
         setLoged(true);
-        const data = await respuesta.json();
+        
         localStorage.setItem("token", data.token);
 
         const data_decode = jwtDecode(data.token);
@@ -46,7 +46,7 @@ function LoginPage() {
         }
       } else {
         setError("Error al iniciar sesión");
-        errorSpecificQuery("Contraseña o email incorrectos");
+        errorSpecificQuery(data.error);
         return;
       }
     } catch (error) {
@@ -79,7 +79,7 @@ function LoginPage() {
       >
         <form
           onSubmit={logIn}
-          className="card p-4 shadow-lg sombra2"
+          className="card py-3 px-4 shadow-lg sombra2"
           style={{ maxWidth: "400px", width: "100%" }}
         >
           <div className="text-center mb-3">
@@ -114,7 +114,7 @@ function LoginPage() {
               />
             </div>
           </div>
-          <div className="mb-3">
+          <div className="mb-4">
             <label htmlFor="contraseña" className="form-label">
               Contraseña
             </label>
@@ -139,16 +139,6 @@ function LoginPage() {
               </button>
             </div>
           </div>
-          <div className="mb-3 form-check">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              id="rememberMe"
-            />
-            <label className="form-check-label" htmlFor="rememberMe">
-              Recordarme
-            </label>
-          </div>
           <button type="submit" className="btn btn-success w-100">
             Ingresar
           </button>
@@ -159,7 +149,7 @@ function LoginPage() {
           </div>
         </form>
         <footer className="mt-4 text-center">
-          <p className="text-muted">© {new Date().getFullYear()} E.R.V Zona 3. Todos los derechos reservados.</p>
+          <p className="text-muted letra_muy_pequeña">© {new Date().getFullYear()} E.R.V Zona 3, buit by <span><a className="bw-bold text-decoration-underline text-muted fst-italic" href="https://personal-portfolio-eta-ashy.vercel.app/">Catherin Romero</a></span></p>
         </footer>
       </div>
     </div>
