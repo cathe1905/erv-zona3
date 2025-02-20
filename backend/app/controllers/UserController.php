@@ -50,9 +50,9 @@ class UserController
             //Intentar crear el recurso
             $result = $record->crear();
             //CUANDO TENGA DOMINIO IMPLEMENTAR EL ENVIO DE CORREOS
-            $result_email = self::sendVerificationEmail($record->email, $record->token);
+             $result_email = self::sendVerificationEmail($record->email, $record->token);
 
-            if ($result) {
+            if ($result && $result_email) {
                 http_response_code(201);
                 $response = [
                     'mensaje' => 'Usuario creado exitosamente, email enviado exitosamente',
@@ -77,12 +77,12 @@ class UserController
         // Configuración del servidor SMTP, CAMBIAR CREDENCIALES CUANDO TENGA DOMINIO
 
         $mail->isSMTP();
-        $mail->Host       = 'sandbox.smtp.mailtrap.io';
+        $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = '22ef6e034d610b';
-        $mail->Password   = 'c20ad2d3e5444b';
-        $mail->SMTPSecure = 'tls';
-        $mail->Port       = 2525;
+        $mail->Username   = 'erv.zona3@gmail.com';
+        $mail->Password   = 'alxihjmrctadtyhk';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
 
         $body = "
         <!DOCTYPE html>
@@ -126,20 +126,26 @@ class UserController
                     color: #333;
                     line-height: 1.5;
                 }
+                img {
+                  max-width: 100px;
+                    margin: 0 auto 20px;
+                    display: block;
+                }
             </style>
         </head>
         <body>
             <div class='container'>
-                <h1>¡Hola!</h1>
+                <img src='" . getenv('API') . "/imagenes/logo.jpg' alt='Logo de la empresa'>
+                <h1>¡Bienvenido a nuestro Sistema de Gestión de datos ERV Zona 3!</h1>
                 <p>Por favor, confirma tu cuenta haciendo clic en el siguiente enlace:</p>
-                <a href='http://erv-zona3/backend/users/verification?token=" . $token . "'>Confirma tu cuenta</a>
+                 <a href='" . getenv('API') . "/backend/users/verification?token=" . $token . "'>Confirma tu cuenta</a>
             </div>
         </body>
         </html>
         ";
         $mail->Subject = "Confirma tu cuenta";
-        $mail->SetFrom('catherinr24@gmail.com', 'Catherin Romero');
-        $mail->AddAddress($correo, 'Querido Líder o comandante');
+        $mail->SetFrom('tucorreo@gmail.com', 'Exploradores del Rey Zona 3');
+        $mail->AddAddress($correo, 'Querido Líder / comandante');
         $mail->AddReplyTo('catherinr24@gmail.com', 'Catherin Romero');
         $mail->isHTML(TRUE);
         $mail->CharSet = 'UTF-8';
@@ -147,9 +153,9 @@ class UserController
 
         //envío el mensaje, comprobando si se envió correctamente
         if (!$mail->send()) {
-            return "Error al enviar el mensaje: " . $mail->ErrorInfo;
+            echo json_encode(['error' => $mail->ErrorInfo]);
         } else {
-            return "Mensaje enviado!!";
+            echo json_encode(['error' => 'Mensaje enviado!!']);
         }
     }
 
@@ -177,11 +183,13 @@ class UserController
         $result = $usuario_act->actualizar();
 
         if ($result) {
-            http_response_code(200);
-            echo json_encode(['mensaje' => 'El usuario se ha verificado  exitosamente']);
+            header("Location: " . getenv('FRONTEND_URL') . "/verificacion-exitosa");
+            exit();
         } else {
             http_response_code(500);
             echo json_encode(['mensaje' => 'Error al verificar el usuario']);
+            header("Location: " . getenv('URL_FRONTEND') . "/verificacion-fallida");
+            exit();
         }
     }
 
@@ -233,8 +241,8 @@ class UserController
 
                 // Datos a incluir en el token
                 $payload = [
-                    'iss' => 'http://erv-zona3/backend/users/auth', // Emisor del token
-                    'aud' => 'http://erv-zona3/backend/users/auth', // Audiencia del token
+                    'iss' => getenv('API'), // Emisor del token
+                    'aud' => getenv('API'), // Audiencia del token
                     'iat' => time(),              // Tiempo de emisión
                     'exp' => time() + (14400),  // 4 horas
                     'data' => [
@@ -259,7 +267,7 @@ class UserController
             }
         } else {
             http_response_code(404);
-            echo json_encode(['error' => 'No esta registrado este email']);
+            echo json_encode(['error' => 'Este email no esta registrado, o aun no ha sido verificado través del email']);
         }
     }
 
@@ -306,8 +314,8 @@ class UserController
         $jwtSecret = $_ENV['JWT_SECRET'];
 
         $payload = [
-            'iss' => 'http://erv-zona3/backend/users/auth', 
-            'aud' => 'http://erv-zona3/backend/users/auth', 
+            'iss' => getenv('API'), 
+            'aud' => getenv('API'), 
             'iat' => time(),              
             'exp' => time() + (14400),  
             'data' => [

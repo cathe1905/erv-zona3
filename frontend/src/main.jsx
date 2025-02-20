@@ -23,6 +23,7 @@ import EditarDirectiva from "./views/admin/directiva/editar_directivo.jsx";
 import Usuarios from "./views/admin/usuarios/usuarios.jsx";
 import CrearUsuario from "./views/admin/usuarios/crear_usuario.jsx";
 import EditarUsuario from "./views/admin/usuarios/editar_usuario.jsx";
+import { SuccessVerification, FailedVerification } from "./views/auth/UserVerification.jsx";
 import Logs from "./views/admin/logs.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
@@ -34,6 +35,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/verificacion-exitosa" element={<SuccessVerification />} />
+        <Route path="/verificacion-fallida" element={<FailedVerification />} />
 
         <Route element={<RequireAuth role={1} />}>
           <Route element={<Layout />}>

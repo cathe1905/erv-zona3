@@ -1,6 +1,5 @@
-import { getAscensos } from "../../admin/ascensos/ascensos"
 import { useEffect, useState } from "react";
-import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api } from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api, capitalize, getAscensos } from "../../../funciones";
 import { useNavigate } from "react-router-dom"
 import { getUserSession } from "../../../funciones";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -102,181 +101,182 @@ const CrearExplorador =() =>{
     }
     return (
       <>
-        <form 
+      <form 
           onSubmit={handleSubmit} 
           className="container mt-4 p-4 rounded shadow-sm bg-light"
           style={{ maxWidth: '600px' }} 
-        >
-          <h2 className="text-center mb-4">Crear nuevo explorador</h2>
+      >
+        <h2 className="text-center mb-4">Crear nuevo explorador</h2>
     
-          <div className="row gy-3">
-            <div className="col-12">
-              <FloatingLabel 
-                controlId="floatingNombres"
-                label="Nombres"
-                className="mb-3"
+        <div className="row gy-3">
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingNombres"
+              label="Nombres"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="text" 
+                name="nombres" 
+                value={data.nombres} 
+                onChange={handleOnchange} 
+                placeholder="Nombres" 
+                required 
+              />
+            </FloatingLabel>
+          </div>
+    
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingApellidos"
+              label="Apellidos"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="text" 
+                name="apellidos" 
+                value={data.apellidos} 
+                onChange={handleOnchange} 
+                placeholder="Apellidos" 
+                required 
+              />
+            </FloatingLabel>
+          </div>
+    
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingFechaNacimiento"
+              label="Fecha de Nacimiento"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="date" 
+                name="fecha_nacimiento" 
+                value={data.fecha_nacimiento} 
+                onChange={handleOnchange} 
+                max={new Date().toISOString().split('T')[0]}
+                required 
+              />
+            </FloatingLabel>
+          </div>
+    
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingAscenso"
+              label="Ascenso"
+              className="mb-3"
+            >
+              <Form.Control 
+                as="select" 
+                name="ascenso_id"
+                value={data.ascenso_id}
+                onChange={handleOnchange}
+                required
               >
-                <Form.Control 
-                  type="text" 
-                  name="nombres" 
-                  value={data.nombres} 
-                  onChange={handleOnchange} 
-                  placeholder="Nombres" 
-                  required 
-                />
-              </FloatingLabel>
-            </div>
+                <option value="">Seleccione un ascenso</option>
+                {ascensos &&
+                  ascensos.map((ascenso) => (
+                    <option key={ascenso.id} value={ascenso.id}>
+                      {capitalize(ascenso.nombre)}
+                    </option>
+                  ))}
+              </Form.Control>
+            </FloatingLabel>
+          </div>
     
-            <div className="col-12">
-              <FloatingLabel 
-                controlId="floatingApellidos"
-                label="Apellidos"
-                className="mb-3"
-              >
-                <Form.Control 
-                  type="text" 
-                  name="apellidos" 
-                  value={data.apellidos} 
-                  onChange={handleOnchange} 
-                  placeholder="Apellidos" 
-                  required 
-                />
-              </FloatingLabel>
-            </div>
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingFechaPromesacion"
+              label="Fecha de Promesación"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="date" 
+                name="fecha_promesacion" 
+                value={data.fecha_promesacion} 
+                onChange={handleOnchange} 
+                max={new Date().toISOString().split('T')[0]}
+                required 
+              />
+            </FloatingLabel>
+          </div>
     
-            <div className="col-12">
-              <FloatingLabel 
-                controlId="floatingFechaNacimiento"
-                label="Fecha de Nacimiento"
-                className="mb-3"
-              >
-                <Form.Control 
-                  type="date" 
-                  name="fecha_nacimiento" 
-                  value={data.fecha_nacimiento} 
-                  onChange={handleOnchange} 
-                  max={new Date().toISOString().split('T')[0]}
-                  required 
-                />
-              </FloatingLabel>
-            </div>
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingCargo"
+              label="Cargo"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="text" 
+                name="cargo" 
+                value={data.cargo} 
+                onChange={handleOnchange} 
+                placeholder="Cargo" 
+              />
+            </FloatingLabel>
+          </div>
     
-            <div className="col-12">
-              <FloatingLabel 
-                controlId="floatingAscenso"
-                label="Ascenso"
-                className="mb-3"
-              >
-                <Form.Control 
-                  as="select" 
-                  name="ascenso_id"
-                  value={data.ascenso_id}
-                  onChange={handleOnchange}
-                  required
-                >
-                  <option value="">Seleccione un ascenso</option>
-                  {ascensos &&
-                    ascensos.map((ascenso) => (
-                      <option key={ascenso.id} value={ascenso.id}>
-                        {ascenso.nombre}
-                      </option>
-                    ))}
-                </Form.Control>
-              </FloatingLabel>
-            </div>
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingCedula"
+              label="Cédula"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="text" 
+                name="cedula" 
+                value={data.cedula} 
+                onChange={handleOnchange} 
+                placeholder="Cédula" 
+              />
+            </FloatingLabel>
+          </div>
     
-            <div className="col-12">
-              <FloatingLabel 
-                controlId="floatingFechaPromesacion"
-                label="Fecha de Promesación"
-                className="mb-3"
-              >
-                <Form.Control 
-                  type="date" 
-                  name="fecha_promesacion" 
-                  value={data.fecha_promesacion} 
-                  onChange={handleOnchange} 
-                  max={new Date().toISOString().split('T')[0]}
-                  required 
-                />
-              </FloatingLabel>
-            </div>
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingTelefono"
+              label="Teléfono"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="number" 
+                name="telefono" 
+                value={data.telefono} 
+                onChange={handleOnchange} 
+                placeholder="Teléfono" 
+                required 
+              />
+            </FloatingLabel>
+          </div>
     
-            <div className="col-12">
-              <FloatingLabel 
-                controlId="floatingCargo"
-                label="Cargo"
-                className="mb-3"
-              >
-                <Form.Control 
-                  type="text" 
-                  name="cargo" 
-                  value={data.cargo} 
-                  onChange={handleOnchange} 
-                  placeholder="Cargo" 
-                />
-              </FloatingLabel>
-            </div>
+          <div className="col-12">
+            <FloatingLabel 
+              controlId="floatingEmail"
+              label="Email"
+              className="mb-3"
+            >
+              <Form.Control 
+                type="email" 
+                name="email" 
+                value={data.email} 
+                onChange={handleOnchange} 
+                placeholder="Email" 
+              />
+            </FloatingLabel>
+          </div>
     
-            <div className="col-12">
-              <FloatingLabel 
-                controlId="floatingCedula"
-                label="Cédula"
-                className="mb-3"
-              >
-                <Form.Control 
-                  type="text" 
-                  name="cedula" 
-                  value={data.cedula} 
-                  onChange={handleOnchange} 
-                  placeholder="Cédula" 
-                />
-              </FloatingLabel>
-            </div>
-    
-            <div className="col-12">
-              <FloatingLabel 
-                controlId="floatingTelefono"
-                label="Teléfono"
-                className="mb-3"
-              >
-                <Form.Control 
-                  type="text" 
-                  name="telefono" 
-                  value={data.telefono} 
-                  onChange={handleOnchange} 
-                  placeholder="Teléfono" 
-                  required 
-                />
-              </FloatingLabel>
-            </div>
-    
-            <div className="col-12">
-              <FloatingLabel 
-                controlId="floatingEmail"
-                label="Email"
-                className="mb-3"
-              >
-                <Form.Control 
-                  type="email" 
-                  name="email" 
-                  value={data.email} 
-                  onChange={handleOnchange} 
-                  placeholder="Email" 
-                />
-              </FloatingLabel>
-            </div>
-    
-            <div className="col-12">
-              <div className="d-grid">
-                <button type="submit" className="btn btn-success">
-                  Crear explorador
-                </button>
-              </div>
+          <div className="col-12">
+            <div className="d-grid">
+              <button type="submit" className="btn btn-primary">
+                Crear explorador
+              </button>
             </div>
           </div>
-        </form>
-      </>
-    );
+        </div>
+      </form>
+    </>
+  );
+  
   }
 export default CrearExplorador

@@ -67,7 +67,7 @@ const CrearDestacamento =() =>{
         <>
   <form 
       onSubmit={handleSubmit} 
-      className="container mt-4 p-4 rounded shadow-sm bg-light"
+      className="container p-4 rounded shadow-sm bg-light"
       style={{ maxWidth: '600px' }} 
     >
       <h2 className="text-center mb-4">Crea un nuevo Destacamento</h2>

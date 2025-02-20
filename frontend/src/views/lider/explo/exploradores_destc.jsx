@@ -7,13 +7,14 @@ import {
   errorSpecificQuery,
   exitSpecificQuery,
   api,
-  getUserSession
+  getUserSession,
 } from "../../../funciones";
 import GrowExample from "../../../components/GrowExample";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Table } from "react-bootstrap";
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 
 const Explo_dest = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -76,7 +77,7 @@ const Explo_dest = () => {
       errorGeneralQuery();
       return;
     }
-  }, [destacamento, rama, query, ascenso, page, limit]); // Dependencias de useCallback
+  }, [destacamento, rama, query, ascenso, page, limit]);
 
   useEffect(() => {
     getExploradores();
@@ -235,7 +236,10 @@ const Explo_dest = () => {
         </div>
       </div>
 
-      <div className="table-responsive">
+      <div
+        className="table-responsive overflow-y-scroll"
+        style={{ maxHeight: "400px" }}
+      >
         <Table bordered hover>
           <thead className="table-light">
             <tr>
@@ -281,7 +285,7 @@ const Explo_dest = () => {
                       <Dropdown.Toggle
                         as="span"
                         id="dropdown-custom-trigger"
-                        className="border p-1 action"
+                        className="action"
                       >
                         . . .
                       </Dropdown.Toggle>
@@ -297,13 +301,19 @@ const Explo_dest = () => {
                           Editar
                         </Dropdown.Item>
                         <Dropdown.Item
-                        onClick={() =>
-                          handleShow({ id: explo.id, nombre: capitalize(explo.nombres) + ' ' + capitalize(explo.apellidos)})
-                        }
-                        eventKey="2"
-                      >
-                        Eliminar
-                      </Dropdown.Item>
+                          onClick={() =>
+                            handleShow({
+                              id: explo.id,
+                              nombre:
+                                capitalize(explo.nombres) +
+                                " " +
+                                capitalize(explo.apellidos),
+                            })
+                          }
+                          eventKey="2"
+                        >
+                          Eliminar
+                        </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </td>
@@ -319,29 +329,29 @@ const Explo_dest = () => {
           </tbody>
         </Table>
         <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Eliminar explorador</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          ¿Estás seguro(a) que deseas eliminar a: {nombreEliminar}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button onClick={eliminarRegistro} variant="primary">
-            Si
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          show={show}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Eliminar explorador</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            ¿Estás seguro(a) que deseas eliminar a: {nombreEliminar}?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button onClick={eliminarRegistro} variant="primary">
+              Si
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
       {total > 0 && (
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-center justify-content-md-end py-1">
           <PaginationGeneral
             total={total}
             current_page={page}
@@ -351,22 +361,41 @@ const Explo_dest = () => {
         </div>
       )}
 
-      <div className="d-flex justify-content-end gap-2">
+      <div className="d-flex flex-column flex-md-row align-items-end justify-content-md-end gap-2 pb-2">
         <button
-          className="btn btn-outline-primary letra_muy_pequeña"
-          onClick={() => dowload("false")}
+          className="btn btn-secondary letra_muy_pequeña w-auto"
+          onClick={() => navigate("/dashboard/dest/explo/crear")}
         >
-          Descargar registros en pantalla
-        </button>
-        <button
-          className="btn btn-primary letra_muy_pequeña"
-          onClick={() => dowload("true")}
-        >
-          Descargar toda la selección: {total}
-        </button>
-        <button className="btn btn-secondary letra_muy_pequeña" onClick={() => navigate("/dashboard/dest/explo/crear")}>
           Crear nuevo explorador
         </button>
+
+        <div className="d-flex flex-wrap gap-2">
+          <OverlayTrigger
+            placement="top"
+            overlay={
+              <Tooltip id="tooltip-download">
+                Descargar selección en pantalla
+              </Tooltip>
+            }
+          >
+            <Button variant="primary" className="btn letra_muy_pequeña" onClick={() => dowload("false")}>
+              Descargar
+            </Button>
+          </OverlayTrigger>
+          <OverlayTrigger
+            placement="top"
+            overlay={
+              <Tooltip id="tooltip-download">
+                Descargar todos los registros
+              </Tooltip>
+            }
+          >
+            <Button variant="primary" className="btn letra_muy_pequeña" onClick={() => dowload("true")}>
+            Descargar todo: {total}
+            </Button>
+          </OverlayTrigger>
+          
+        </div>
       </div>
     </div>
   );

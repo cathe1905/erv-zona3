@@ -191,7 +191,7 @@ const Directiva = () => {
       </Modal.Footer>
     </Modal>
   
-    <div className="d-flex justify-content-end gap-2">
+    <div className="d-flex justify-content-end gap-2 m-3">
       <a
         href="/dashboard/admin/directiva/crear"
         className="btn btn-outline-primary letra_muy_pequeña"

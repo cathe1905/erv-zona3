@@ -17,8 +17,13 @@ const BarChart = ({data}) => {
   // Opciones para la gráfica
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
+        labels: {
+          usePointStyle: true, // Usa un estilo de punto en lugar del cuadro de color
+          color: "#000",       // Color del texto de la leyenda (opcional)
+        },
         position: "top", // Posición de la leyenda
       },
       tooltip: {
@@ -30,7 +35,7 @@ const BarChart = ({data}) => {
         beginAtZero: true, // Inicia el eje Y en 0
         title: {
           display: true,
-          text: "Cantidades", // Título del eje Y
+          text: "", // Título del eje Y
         },
       },
       x: {
@@ -44,7 +49,7 @@ const BarChart = ({data}) => {
 
   return (
     <div className="overflow-auto">
-      <div style={{ width: "600px", margin: "0 auto"}}>
+      <div style={{ width: "600px", margin: "20px auto"}}>
       <Bar data={data} options={options} />
     </div>
     </div>

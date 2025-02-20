@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
+import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery, getDestacamentos} from "../../../funciones";
 import { useNavigate } from "react-router-dom";
-import { getDestacamentos } from "../destacamentos/destacamentos";
 import { capitalize, api, find_names_by_ids } from "../../../funciones";
 import { useSearchParams } from "react-router-dom";
 import { getUserSession } from "../../../funciones";
@@ -79,7 +78,7 @@ const EditarUsuario = () => {
     getUserById();
     const dataUserSession = getUserSession();
     setIdUserSession(dataUserSession.id);
-  }, []);
+  }, [data, id]);
 
   useEffect(() => {
     if (log.admin_id !== "" || log.action !== "" || log.target_id !== "" || log.details !== "") {
@@ -110,7 +109,7 @@ const EditarUsuario = () => {
       }
       save_log();
     }
-  }, [log]);
+  }, [log, navigate]);
 
   const evaluacionCambios = () => {
     let cambiosNuevos = {};

@@ -11,20 +11,6 @@ const Logout = () => {
   location.href = "/";
 };
 
-
-
-// const Titulo = () => {
-//   const location = useLocation();
-//   switch (location.pathname) {
-//     case "/dashboard/dest":
-//       return "Bienvenido";
-//     case "/dashboard/dest/explo":
-//       return "Exploradores";
-//     default:
-//       return "";
-//   }
-// };
-
 const Menu = ({ destacamento }) => {
   return (
     <>
@@ -80,6 +66,8 @@ const LayoutDest = () => {
         return "Bienvenido";
       case "/dashboard/dest/explo":
         return "Exploradores";
+        case "/dashboard/dest/explo/crear":
+        return "Exploradores";
       default:
         return "";
     }
@@ -111,7 +99,7 @@ const LayoutDest = () => {
           <Menu destacamento={destacamento} />
         </div>
         <div className="col-md-10 p-md-4 margen">
-          <div className="d-flex flex-row justify-content-between mx-md-3 my-md-3">
+          <div className="d-flex flex-row justify-content-between mx-md-3 my-md-2">
             <h1 className="d-none d-md-block titulo_principal text-start">
               {getTitulo()}
             </h1>

@@ -3,9 +3,9 @@ import {
   exitSpecificQuery,
   errorSpecificQuery,
   errorGeneralQuery,
+  getDestacamentos
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
-import { getDestacamentos } from "../destacamentos/destacamentos";
 import { capitalize, api, find_names_by_ids } from "../../../funciones";
 import { getUserSession } from "../../../funciones";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';

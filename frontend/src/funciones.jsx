@@ -74,7 +74,42 @@ export const getUserSession = () => {
     return null;
   }
 };
+export async function getDestacamentos() {
+  try {
+    const result = await fetch(`${api}backend/destacamentos`);
 
+    if (result.ok) {
+      const respuesta = await result.json();
+      return respuesta;
+    }else{
+      const respuesta = await result.json();
+      const mensaje= respuesta.error || "Error al procesar la solicitud.";
+      errorSpecificQuery(mensaje)
+    }
+  } catch (error) {
+    console.error("Hubo un problema con la solicitud", error);
+    console.log(error);
+    errorGeneralQuery();
+  }
+}
+
+export async function getAscensos() {
+  try {
+    const result = await fetch(`${api}backend/ascensos`);
+    if (result.ok) {
+      const respuesta = await result.json();
+      return respuesta;
+    }else{
+      const respuesta = await result.json();
+      const mensaje= respuesta.error || "Error al procesar la solicitud.";
+      errorSpecificQuery(mensaje)
+    }
+  } catch (error) {
+    console.error("Hubo un problema con la solicitud", error);
+    console.log(error);
+    errorGeneralQuery();
+  }
+}
 
 export const api= import.meta.env.VITE_API_URL;
 
