@@ -80,7 +80,7 @@ class UserController
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'erv.zona3@gmail.com';
-        $mail->Password   = 'alxihjmrctadtyhk';
+        $mail->Password   = getenv('EMAIL_PASS');
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
