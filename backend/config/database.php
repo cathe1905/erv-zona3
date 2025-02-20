@@ -4,9 +4,9 @@ function dbConnection(): mysqli {
     // Configuración de producción
     $dbConfig = [
         'host' => 'sao.domcloud.co',
-        'user' => 'ervzona3',
+        'user' => 'exploradoresz3',
         'password' => getenv('DATA_BASE'), // Obtiene la contraseña del archivo .env
-        'db_name' => 'ervzona3_db'
+        'db_name' => 'exploradoresz3_db'
     ];
 
     // Conexión a la base de datos
