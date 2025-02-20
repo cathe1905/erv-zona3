@@ -8,7 +8,7 @@ class User extends ActiveRecord
 {
     // Base DE DATOS
     protected static $table = 'usuarios';
-    protected static $columnsDB = ['id', 'nombre', 'apellido', 'email','contraseña', 'token', 'verificado', 'destacamento_id', 'rol'];
+    protected static $columnsDB = ['id', 'nombre', 'apellido', 'email','contraseña', 'token', 'verificado', 'destacamento_id', 'rol', 'reset_password_token', 'reset_password_expires'];
 
     public $id;
     public $nombre;
@@ -19,6 +19,8 @@ class User extends ActiveRecord
     public $rol;
     public $token;
     public $verificado;
+    public $reset_password_token;
+    public $reset_password_expires;
 
     public function __construct($arg = [])
     {
@@ -31,6 +33,8 @@ class User extends ActiveRecord
         $this->rol = $arg['rol'] ?? '';
         $this->token = $arg['token'] ?? '';
         $this->verificado = $arg['verificado'] ?? 0;
+        $this->reset_password_token = $arg['reset_password_token'] ?? '';
+        $this->reset_password_expires = $arg['reset_password_expires'] ?? null;
     }
 
     public function validar()
@@ -136,7 +140,7 @@ class User extends ActiveRecord
     }
 
     public static function find_by_email($email) {
-        $query = "SELECT id FROM " . static::$table . " WHERE email = '" . self::$db->escape_string($email) . "'";
+        $query = "SELECT * FROM " . static::$table . " WHERE email = '" . self::$db->escape_string($email) . "'";
         $resultado = self::$db->query($query);
         return $resultado->fetch_assoc();
     }

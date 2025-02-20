@@ -50,18 +50,18 @@ class UserController
             //Intentar crear el recurso
             $result = $record->crear();
             //CUANDO TENGA DOMINIO IMPLEMENTAR EL ENVIO DE CORREOS
-             $result_email = self::sendVerificationEmail($record->email, $record->token);
+            $result_email = self::sendVerificationEmail($record->email, $record->token, $type='verification-user');
 
             if ($result && $result_email) {
                 http_response_code(201);
                 $response = [
-                    'mensaje' => 'Usuario creado exitosamente, email enviado exitosamente',
+                    'mensaje' => 'Usuario creado exitosamente, pide al nuevo usuario que revise su email para confirmar la cuenta.',
                 ];
                 echo json_encode($response);
             } else {
                 http_response_code(500);
                 $response = [
-                    'mensaje' => 'Error al crear usuario o enviar el correo. Intente nuevamente más tarde.'
+                    'mensaje' => 'Error al crear usuario o enviar el correo. Intente de nuevo más tarde.'
                 ];
                 echo json_encode($response);
             }
@@ -71,10 +71,9 @@ class UserController
         }
     }
 
-    public static function sendVerificationEmail($correo, $token)
+    public static function sendVerificationEmail($correo, $token, $type)
     {
         $mail = new PHPMailer();
-        // Configuración del servidor SMTP, CAMBIAR CREDENCIALES CUANDO TENGA DOMINIO
 
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
@@ -84,7 +83,8 @@ class UserController
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
-        $body = "
+        if ($type === "verification-user") {
+            $body = "
         <!DOCTYPE html>
         <html lang='es'>
         <head>
@@ -139,11 +139,86 @@ class UserController
                 <h1>¡Bienvenido a nuestro Sistema de Gestión de datos ERV Zona 3!</h1>
                 <p>Por favor, confirma tu cuenta haciendo clic en el siguiente enlace:</p>
                  <a href='" . getenv('API') . "/backend/users/verification?token=" . $token . "'>Confirma tu cuenta</a>
+                 <p>Atentamente,</p>
+                <p>E.R.V Zona 3.</p>
             </div>
         </body>
         </html>
         ";
-        $mail->Subject = "Confirma tu cuenta";
+            $mail->Subject = "Confirma tu cuenta";
+            $mail->SetFrom('tucorreo@gmail.com', 'Exploradores del Rey Zona 3');
+            $mail->AddAddress($correo, 'Querido Líder / comandante');
+            $mail->AddReplyTo('catherinr24@gmail.com', 'Catherin Romero');
+            $mail->isHTML(TRUE);
+            $mail->CharSet = 'UTF-8';
+            $mail->MsgHTML($body);
+
+        } elseif($type === 'reset-password'){
+            $body = "
+        <!DOCTYPE html>
+        <html lang='es'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Confirmación de Cuenta</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f2f2f2;
+                    margin: 0;
+                    padding: 20px;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: auto;
+                    background: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                }
+                h1 {
+                    color: #008080; /* Azul turquesa */
+                }
+                a {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    margin-top: 15px;
+                    text-decoration: none;
+                    color: white;
+                    background-color: #008080; /* Azul turquesa */
+                    border-radius: 5px;
+                    transition: background-color 0.3s;
+                }
+                a:hover {
+                    background-color: #006f6f; /* Color más oscuro al pasar el mouse */
+                }
+                p {
+                    color: #333;
+                    line-height: 1.5;
+                }
+                img {
+                  max-width: 100px;
+                    margin: 0 auto 20px;
+                    display: block;
+                }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <img src='" . getenv('API') . "/imagenes/logo.jpg' alt='Logo de la empresa'>
+                <h1>Hola, Recibimos una solicitud para restablecer la contraseña de tu cuenta. Si no realizaste esta solicitud, puedes ignorar este mensaje.</h1>
+                <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
+                 <a href='" . getenv('API') . "/backend/users/verification-token-reset?token=" . $token . "'>Reestablecer contraseña</a>
+                 <p>Este enlace expirará en 30 minutos por razones de seguridad.</p>
+                 <p>Si tienes problemas para acceder, copia y pega la siguiente URL en tu navegador: https://exploradoresz3.domcloud.dev/backend/users/verification-token-reset?token='" . $token . "'</p>
+                <p>Si no solicitaste este cambio, por favor, contacta a nuestro soporte de inmediato.</p>
+                <p>Atentamente,</p>
+                <p>E.R.V Zona 3.</p>
+                 </div>
+        </body>
+        </html>
+        ";
+        $mail->Subject = "Restablecimiento de tu contraseña";
         $mail->SetFrom('tucorreo@gmail.com', 'Exploradores del Rey Zona 3');
         $mail->AddAddress($correo, 'Querido Líder / comandante');
         $mail->AddReplyTo('catherinr24@gmail.com', 'Catherin Romero');
@@ -151,11 +226,13 @@ class UserController
         $mail->CharSet = 'UTF-8';
         $mail->MsgHTML($body);
 
+        }
+
         //envío el mensaje, comprobando si se envió correctamente
         if (!$mail->send()) {
             echo json_encode(['error' => $mail->ErrorInfo]);
         } else {
-            echo json_encode(['error' => 'Mensaje enviado!!']);
+            echo json_encode(['mensaje' => 'Mensaje enviado!!']);
         }
     }
 
@@ -252,7 +329,7 @@ class UserController
                         'email' => $email,           // ID del usuario
                         'role' => $user['rol'],
                         'destacamento' => $user['destacamento'],
-                        'destacamento_id' => $user['destacamento_id'] 
+                        'destacamento_id' => $user['destacamento_id']
                     ]
                 ];
                 $jwt = JWT::encode($payload, $jwtSecret, 'HS256');
@@ -302,11 +379,10 @@ class UserController
                 'access_token' => $newAccessToken
             ]);
             http_response_code(200);
-
         } catch (\Exception $e) {
 
             echo json_encode(['error' => $e . 'Invalid refresh token']);
-            http_response_code(401); 
+            http_response_code(401);
         }
     }
     private static function generateAccessToken($userData)
@@ -314,17 +390,17 @@ class UserController
         $jwtSecret = $_ENV['JWT_SECRET'];
 
         $payload = [
-            'iss' => getenv('API'), 
-            'aud' => getenv('API'), 
-            'iat' => time(),              
-            'exp' => time() + (14400),  
+            'iss' => getenv('API'),
+            'aud' => getenv('API'),
+            'iat' => time(),
+            'exp' => time() + (14400),
             'data' => [
                 'id' => $userData->id,
                 'nombre' => $userData->nombre,
                 'apellido' => $userData->apellido,
-                'email' => $userData->email,           
+                'email' => $userData->email,
                 'role' => $userData->role,
-                'destacamento' => $userData->destacamento       
+                'destacamento' => $userData->destacamento
             ]
         ];
         $jwt = JWT::encode($payload, $jwtSecret, 'HS256');
@@ -342,44 +418,86 @@ class UserController
             }
 
             $record = User::find_by_email($email);
+            
+         
 
             if (!$record) {
+                // http_response_code(200);
+                // echo json_encode(['mensaje' => 'Usuario encontrado exitosamente']);
                 http_response_code(404);
-                echo json_encode(['error' => $email . ' no encontrado']);
+                echo json_encode(['error' => 'El correo: ' . $email . ' no esta registrado.']);
+                return;
+            } 
+
+            $jwtSecret = getenv('JWT_SECRET');
+            $payload = [
+                'iat' => time(),        // Fecha de emisión
+                'exp' => time() + 14400 // Fecha de expiración
+            ];
+            $jwt = JWT::encode($payload, $jwtSecret, 'HS256');
+
+           
+            if(!$jwt) {
+                http_response_code(404);
+                echo json_encode(['error' => 'No se pudo generar el token.']);
                 return;
             }
-            echo json_encode($record);
+
+            // Decodificar el token
+            $decoded = JWT::decode($jwt, $jwtSecret, ['HS256']);
+
+            // Acceder a la fecha de expiración
+            $expirationDate = date('Y-m-d H:i:s', $decoded->exp);
+            $record['reset_password_token'] = $jwt;
+            $record['reset_password_expires'] = $expirationDate;
+            $usuario_act = new User($record);
+            
+            
+            $result = $usuario_act->actualizar();
+            if(!$result){
+                http_response_code(404);
+                echo json_encode(['error' => 'Hubo problemas guardando el token de recuperación de contraseña']);
+                return;
+            }
+            
+            $mail_token= self::sendVerificationEmail($email, $jwt, $type='reset-password');
+            
+            if($mail_token){
+                http_response_code(200);
+                echo json_encode(['mensaje' => 'Revise su correo electrónico y acceda al enlace']);
+            }else{
+                http_response_code(404);
+                echo json_encode(['error' => 'Hubo problemas guardando el token de recuperación de contraseña']);
+            }
+
         } catch (\Exception $e) {
             http_response_code($e->getCode() ?: 500);
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
 
-    public static function passwordReset(){
+    public static function passwordReset()
+    {
         header('Content-Type: application/json; charset=utf-8');
         $jsonInput = file_get_contents('php://input');
         $data = json_decode($jsonInput, true);
 
-        try{
-            $email= $data['email'];
+        try {
+            $email = $data['email'];
             if (!$email) {
                 http_response_code(400);
                 echo json_encode(['error' => 'email inválido']);
                 return;
             }
-    
+
             $record = User::find_by_email($email);
-    
-            if($record){
-                
+
+            if ($record) {
             }
-    
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
 
             echo json_encode(['error' => $e . 'Invalid refresh token']);
-            http_response_code(401); 
+            http_response_code(401);
         }
-       
-
     }
 }

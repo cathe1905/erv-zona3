@@ -86,7 +86,7 @@
             $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
             $query .= " LIMIT 1 "; 
             $resultado = self::$db->query($query);
-    
+            
             return $resultado;
         }
         public function sincronizar($args=[]) { 
