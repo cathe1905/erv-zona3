@@ -153,11 +153,14 @@ const CrearUsuario = () => {
     }
 
       if (respuesta.ok) {
-        const fetchId = async () => {
+      
           const result = await get_id();
-          setId(result.id);
-        };
-        fetchId();
+          if (result && result.id) {
+            setId(result.id); // Establecer el ID del usuario
+          } else {
+            errorSpecificQuery("No se pudo obtener el ID del usuario creado.");
+          }
+       
       } else {
         // const result = await respuesta.json();
         // const mensaje = result.error ;

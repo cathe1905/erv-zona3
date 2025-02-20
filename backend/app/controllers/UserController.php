@@ -232,18 +232,18 @@ class UserController
         if (!$mail->send()) {
             echo json_encode(['error' => $mail->ErrorInfo]);
         } else {
-            echo json_encode(['mensaje' => 'Mensaje enviado!!']);
+            return true;
         }
     }
 
     public static function verificationUser()
     {
-
+        header('Content-Type: application/json; charset=UTF-8');
         $token = $_GET['token'];
 
         if (!$token) {
             http_response_code(400);
-            echo json_encode(['error' => 'token inválido']);
+            echo json_encode(['error' => 'Token inválido']);
             return;
         }
 
@@ -461,7 +461,7 @@ class UserController
             }
             
             $mail_token= self::sendVerificationEmail($email, $jwt, $type='reset-password');
-            
+
             if($mail_token){
                 http_response_code(200);
                 echo json_encode(['mensaje' => 'Revise su correo electrónico y acceda al enlace']);
