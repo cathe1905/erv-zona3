@@ -160,6 +160,7 @@ const CrearUsuario = () => {
             setId(result.id); // Establecer el ID del usuario
           } else {
             errorSpecificQuery("No se pudo obtener el ID del usuario creado.");
+            navigate("/dashboard/admin/usuarios");
           }
        
       } else {
