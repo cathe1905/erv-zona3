@@ -49,7 +49,7 @@ class UserController
 
             //Intentar crear el recurso
             $result = $record->crear();
-            //CUANDO TENGA DOMINIO IMPLEMENTAR EL ENVIO DE CORREOS
+            
             $result_email = self::sendVerificationEmail($record->email, $record->token, $type='verification-user');
 
             if ($result && $result_email) {
@@ -100,6 +100,8 @@ class UserController
                 }
                 .container {
                     max-width: 600px;
+                    display: flex;
+                    justify-content: center;
                     margin: auto;
                     background: white;
                     padding: 20px;
@@ -107,7 +109,7 @@ class UserController
                     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
                 }
                 h1 {
-                    color: #008080; /* Azul turquesa */
+                    color: #008080;                    
                 }
                 a {
                     display: inline-block;
@@ -115,12 +117,12 @@ class UserController
                     margin-top: 15px;
                     text-decoration: none;
                     color: white;
-                    background-color: #008080; /* Azul turquesa */
+                    background-color: #008080; 
                     border-radius: 5px;
                     transition: background-color 0.3s;
                 }
                 a:hover {
-                    background-color: #006f6f; /* Color más oscuro al pasar el mouse */
+                    background-color: #006f6f; 
                 }
                 p {
                     color: #333;
@@ -170,6 +172,8 @@ class UserController
                 }
                 .container {
                     max-width: 600px;
+                    display: flex;
+                    justify-content: center;
                     margin: auto;
                     background: white;
                     padding: 20px;
@@ -177,7 +181,7 @@ class UserController
                     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
                 }
                 h1 {
-                    color: #008080; /* Azul turquesa */
+                    color: #008080; 
                 }
                 a {
                     display: inline-block;
@@ -185,12 +189,12 @@ class UserController
                     margin-top: 15px;
                     text-decoration: none;
                     color: white;
-                    background-color: #008080; /* Azul turquesa */
+                    background-color: #008080; 
                     border-radius: 5px;
                     transition: background-color 0.3s;
                 }
                 a:hover {
-                    background-color: #006f6f; /* Color más oscuro al pasar el mouse */
+                    background-color: #006f6f; 
                 }
                 p {
                     color: #333;
@@ -418,12 +422,8 @@ class UserController
             }
 
             $record = User::find_by_email($email);
-            
-         
 
             if (!$record) {
-                // http_response_code(200);
-                // echo json_encode(['mensaje' => 'Usuario encontrado exitosamente']);
                 http_response_code(404);
                 echo json_encode(['error' => 'El correo: ' . $email . ' no esta registrado.']);
                 return;
@@ -454,6 +454,7 @@ class UserController
             
             
             $result = $usuario_act->actualizar();
+
             if(!$result){
                 http_response_code(404);
                 echo json_encode(['error' => 'Hubo problemas guardando el token de recuperación de contraseña']);
@@ -464,10 +465,10 @@ class UserController
 
             if($mail_token){
                 http_response_code(200);
-                echo json_encode(['mensaje' => 'Revise su correo electrónico y acceda al enlace']);
+                echo json_encode(['mensaje' => 'Revise su correo electrónico y acceda al enlace para recuperar su contraseña.']);
             }else{
                 http_response_code(404);
-                echo json_encode(['error' => 'Hubo problemas guardando el token de recuperación de contraseña']);
+                echo json_encode(['error' => 'No se pudo enviar el correo de recuperación de contraseña.']);
             }
 
         } catch (\Exception $e) {
