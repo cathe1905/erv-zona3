@@ -116,6 +116,7 @@ const CrearUsuario = () => {
         const result = await query.json();
         const mensaje = result.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
+        return null;
       }
     } catch (error) {
       console.log(error);
@@ -145,12 +146,12 @@ const CrearUsuario = () => {
         body: JSON.stringify(data_enviar),
       });
 
-      let resultado = null;
-    try {
-      resultado = await respuesta.json(); // Intentamos parsear el JSON
-    } catch (jsonError) {
-      console.warn("La respuesta no es JSON válido:", jsonError);
-    }
+        let resultado = null;
+        try {
+          resultado = await respuesta.json(); // Intentamos parsear el JSON
+        } catch (jsonError) {
+          console.warn("La respuesta no es JSON válido:", jsonError);
+        }
 
       if (respuesta.ok) {
       
