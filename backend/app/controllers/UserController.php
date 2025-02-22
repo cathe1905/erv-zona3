@@ -100,10 +100,10 @@ class UserController
                 }
                 .container {
                     max-width: 600px;
+                    width: 100%;
                     display: flex;
-                    justify-content: center;
                     flex-direction: column;
-                    align-items: center; 
+                    justify-content: center;
                     margin: auto;
                     background: white;
                     padding: 20px;
@@ -172,11 +172,11 @@ class UserController
                     padding: 20px;
                 }
                 .container {
+                    width: 100%;
                     max-width: 600px;
                     display: flex;
-                    justify-content: center;
                     flex-direction: column; 
-                    align-items: center; 
+                    justify-content: center;
                     margin: auto;
                     background: white;
                     padding: 20px;
@@ -266,11 +266,9 @@ class UserController
         $result = $usuario_act->actualizar();
 
         if ($result) {
-            header("Location: " . getenv('FRONTEND_URL') . "/verificacion-exitosa");
+            header("Location: " . getenv('URL_FRONTEND') . "/verificacion-exitosa");
             exit();
         } else {
-            http_response_code(500);
-            echo json_encode(['mensaje' => 'Error al verificar el usuario']);
             header("Location: " . getenv('URL_FRONTEND') . "/verificacion-fallida");
             exit();
         }
