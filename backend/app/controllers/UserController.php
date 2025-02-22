@@ -85,70 +85,70 @@ class UserController
 
         if ($type === "verification-user") {
             $body = "
-        <!DOCTYPE html>
-        <html lang='es'>
-        <head>
-            <meta charset='UTF-8'>
-            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Confirmación de Cuenta</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    background-color: #f2f2f2;
-                    margin: 0;
-                    padding: 20px;
-                }
-                .container {
-                    max-width: 600px;
-                    width: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    margin: auto;
-                    background: white;
-                    padding: 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                }
-                h1 {
-                    color: #008080;                    
-                }
-                a {
-                    display: inline-block;
-                    padding: 10px 20px;
-                    margin-top: 15px;
-                    text-decoration: none;
-                    color: #ffffff;
-                    background-color: #008080; 
-                    border-radius: 5px;
-                    transition: background-color 0.3s;
-                }
-                a:hover {
-                    background-color: #006f6f; 
-                }
-                p {
-                    color: #333;
-                    line-height: 1.5;
-                }
-                img {
-                  max-width: 100px;
-                    margin: 0 auto 20px;
-                    display: block;
-                }
-            </style>
-        </head>
-        <body>
-            <div class='container'>
-                <img src='" . getenv('API') . "/imagenes/logo.jpg' alt='Logo de la empresa'>
-                <h1>¡Bienvenido a nuestro Sistema de Gestión de datos ERV Zona 3!</h1>
-                <p>Por favor, confirma tu cuenta haciendo clic en el siguiente enlace:</p>
-                 <a href='" . getenv('API') . "/backend/users/verification?token=" . $token . "'>Confirma tu cuenta</a>
-                 <p>Atentamente,</p>
-                <p>E.R.V Zona 3.</p>
-            </div>
-        </body>
-        </html>
-        ";
+            <!DOCTYPE html>
+            <html lang='es'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Confirmación de Cuenta</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f2f2f2;
+                        margin: 0;
+                        padding: 20px;
+                    }
+                    .container {
+                        max-width: 600px;
+                        width: 100%;
+                        margin: 0 auto;
+                        background: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                        text-align: center; /* Centrar el contenido */
+                    }
+                    h1 {
+                        color: #008080;
+                        margin: 0 0 20px 0; /* Espaciado inferior */
+                    }
+                    a {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        margin-top: 15px;
+                        text-decoration: none;
+                        color: #ffffff;
+                        background-color: #008080;
+                        border-radius: 5px;
+                        font-size: 16px;
+                    }
+                    a:hover {
+                        background-color: #006f6f;
+                    }
+                    p {
+                        color: #333;
+                        line-height: 1.5;
+                        margin: 0 0 20px 0; /* Espaciado inferior */
+                    }
+                    img {
+                        max-width: 100px;
+                        margin: 0 auto 20px;
+                        display: block;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class='container' style='max-width: 600px; width: 100%; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); text-align: center;'>
+                    <img src='" . getenv('API') . "/imagenes/logo.jpg' alt='Logo de la empresa' style='max-width: 100px; margin: 0 auto 20px; display: block;'>
+                    <h1 style='color: #008080; margin: 0 0 20px 0;'>¡Bienvenido a nuestro Sistema de Gestión de datos ERV Zona 3!</h1>
+                    <p style='color: #333; line-height: 1.5; margin: 0 0 20px 0;'>Por favor, confirma tu cuenta haciendo clic en el siguiente enlace:</p>
+                    <a href='" . getenv('API') . "/backend/users/verification?token=" . $token . "' style='display: inline-block; padding: 10px 20px; margin-top: 15px; text-decoration: none; color: #ffffff; background-color: #008080; border-radius: 5px; font-size: 16px;'>Confirma tu cuenta</a>
+                    <p style='color: #333; line-height: 1.5; margin: 20px 0 0 0;'>Atentamente,</p>
+                    <p style='color: #333; line-height: 1.5; margin: 0;'>E.R.V Zona 3.</p>
+                </div>
+            </body>
+            </html>
+            ";
             $mail->Subject = "Confirma tu cuenta";
             $mail->SetFrom('erv.zona3@gmail.com', 'Exploradores del Rey Zona 3');
             $mail->AddAddress($correo, 'Querido Líder / comandante');
@@ -158,73 +158,73 @@ class UserController
             $mail->MsgHTML($body);
         } elseif ($type === 'reset-password') {
             $body = "
-        <!DOCTYPE html>
-        <html lang='es'>
-        <head>
-            <meta charset='UTF-8'>
-            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Confirmación de Cuenta</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    background-color: #f2f2f2;
-                    margin: 0;
-                    padding: 20px;
-                }
-                .container {
-                    width: 100%;
-                    max-width: 600px;
-                    display: flex;
-                    flex-direction: column; 
-                    justify-content: center;
-                    margin: auto;
-                    background: white;
-                    padding: 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                }
-                h1 {
-                    color: #008080; 
-                }
-                a {
-                    display: inline-block;
-                    padding: 10px 20px;
-                    margin-top: 15px;
-                    text-decoration: none;
-                    color: #ffffff;
-                    background-color: #008080; 
-                    border-radius: 5px;
-                    transition: background-color 0.3s;
-                }
-                a:hover {
-                    background-color: #006f6f; 
-                }
-                p {
-                    color: #333;
-                    line-height: 1.5;
-                }
-                img {
-                  max-width: 100px;
-                    margin: 0 auto 20px;
-                    display: block;
-                }
-            </style>
-        </head>
-        <body>
-            <div class='container'>
-                <img src='" . getenv('API') . "/imagenes/logo.jpg' alt='Logo de la empresa'>
-                <h1>Hola, Recibimos una solicitud para restablecer la contraseña de tu cuenta. Si no realizaste esta solicitud, puedes ignorar este mensaje.</h1>
-                <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
-                 <a href='" . getenv('API') . "/backend/users/verification-token-reset?token=" . $token . "'>Reestablecer contraseña</a>
-                 <p>Este enlace expirará en 30 minutos por razones de seguridad.</p>
-                 <p>Si tienes problemas para acceder, copia y pega la siguiente URL en tu navegador: https://exploradoresz3.domcloud.dev/backend/users/verification-token-reset?token=" . $token . "</p>
-                <p>Si no solicitaste este cambio, por favor, contacta a nuestro soporte de inmediato.</p>
-                <p>Atentamente,</p>
-                <p>E.R.V Zona 3.</p>
-                 </div>
-        </body>
-        </html>
-        ";
+            <!DOCTYPE html>
+            <html lang='es'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Recuperar contraseña</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f2f2f2;
+                        margin: 0;
+                        padding: 20px;
+                    }
+                    .container {
+                        max-width: 600px;
+                        width: 100%;
+                        margin: 0 auto;
+                        background: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                        text-align: center; /* Centrar el contenido */
+                    }
+                    h1 {
+                        color: #008080;
+                        margin: 0 0 20px 0; /* Espaciado inferior */
+                    }
+                    a {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        margin-top: 15px;
+                        text-decoration: none;
+                        color: #ffffff;
+                        background-color: #008080;
+                        border-radius: 5px;
+                        font-size: 16px;
+                    }
+                    a:hover {
+                        background-color: #006f6f;
+                    }
+                    p {
+                        color: #333;
+                        line-height: 1.5;
+                        margin: 0 0 20px 0; /* Espaciado inferior */
+                    }
+                    img {
+                        max-width: 100px;
+                        margin: 0 auto 20px;
+                        display: block;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class='container' style='max-width: 600px; width: 100%; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); text-align: center;'>
+                    <img src='" . getenv('API') . "/imagenes/logo.jpg' alt='Logo de la empresa' style='max-width: 100px; margin: 0 auto 20px; display: block;'>
+                    <h1 style='color: #008080; margin: 0 0 20px 0;'>Hola, Recibimos una solicitud para restablecer la contraseña de tu cuenta. Si no realizaste esta solicitud, puedes ignorar este mensaje.</h1>
+                    <p style='color: #333; line-height: 1.5; margin: 0 0 20px 0;'>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
+                    <a href='" . getenv('API') . "/backend/users/verification-token-reset?token=" . $token . "' style='display: inline-block; padding: 10px 20px; margin-top: 15px; text-decoration: none; color: #ffffff; background-color: #008080; border-radius: 5px; font-size: 16px;'>Reestablecer contraseña</a>
+                    <p style='color: #333; line-height: 1.5; margin: 20px 0 0 0;'>Este enlace expirará en 30 minutos por razones de seguridad.</p>
+                    <p style='color: #333; line-height: 1.5; margin: 0 0 20px 0;'>Si tienes problemas para acceder, copia y pega la siguiente URL en tu navegador: https://exploradoresz3.domcloud.dev/backend/users/verification-token-reset?token=" . $token . "</p>
+                    <p style='color: #333; line-height: 1.5; margin: 0 0 20px 0;'>Si no solicitaste este cambio, por favor, contacta a nuestro soporte de inmediato.</p>
+                    <p style='color: #333; line-height: 1.5; margin: 0;'>Atentamente,</p>
+                    <p style='color: #333; line-height: 1.5; margin: 0;'>E.R.V Zona 3.</p>
+                </div>
+            </body>
+            </html>
+            ";
             $mail->Subject = "Restablecimiento de tu contraseña";
             $mail->SetFrom('erv.zona3@gmail.com', 'Exploradores del Rey Zona 3');
             $mail->AddAddress($correo, 'Querido Líder / comandante');
@@ -348,7 +348,7 @@ class UserController
             }
         } else {
             http_response_code(404);
-            echo json_encode(['error' => 'Este email no esta registrado, o aun no ha sido verificado través del email']);
+            echo json_encode(['error' => 'Este email no esta registrado, o aun no ha sido verificado a través del email']);
         }
     }
 
