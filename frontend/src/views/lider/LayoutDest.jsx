@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import { Outlet} from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { capitalize, getUserSession  } from "../../funciones";
+import { capitalize, getUserSession } from "../../funciones";
 import { useNavigate } from "react-router-dom";
 import GrowExample from "../../components/GrowExample";
 
@@ -46,19 +46,22 @@ const LayoutDest = () => {
   const [destacamento, setDestacamento] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     const data = getUserSession();
     if (!data) {
       navigate("/");
-    } 
-      setDestacamento(data); 
-    
-    setLoading(false); 
+    }
+    setDestacamento(data);
+
+    setLoading(false);
   }, [navigate]);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const retroceder = () => {
+    navigate(-1);
+  };
 
   const getTitulo = () => {
     switch (location.pathname) {
@@ -66,7 +69,7 @@ const LayoutDest = () => {
         return "Bienvenido";
       case "/dashboard/dest/explo":
         return "Exploradores";
-        case "/dashboard/dest/explo/crear":
+      case "/dashboard/dest/explo/crear":
         return "Exploradores";
       default:
         return "";
@@ -76,16 +79,14 @@ const LayoutDest = () => {
   if (loading)
     return (
       <div className="text-center">
-      <table>
-        <tbody>
-          <tr>
-            <td colSpan="12">
-              {GrowExample()}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <table>
+          <tbody>
+            <tr>
+              <td colSpan="12">{GrowExample()}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     );
 
   return (
@@ -100,9 +101,24 @@ const LayoutDest = () => {
         </div>
         <div className="col-md-10 p-md-4 margen">
           <div className="d-flex flex-row justify-content-between mx-md-3 my-md-2">
-            <h1 className="d-none d-md-block titulo_principal text-start">
-              {getTitulo()}
-            </h1>
+            {location.pathname !== "/dashboard/dest" ? (
+              <div className="d-flex align-items-center gap-3">
+                <a
+                  onClick={retroceder}
+                  className="fs-3 text-black cursor-pointer"
+                  style={{ cursor: "pointer" }}
+                >
+                  <i className="bi bi-arrow-left-circle-fill"></i>
+                </a>
+                <h1 className="d-none d-md-block titulo_principal text-start">
+                  {getTitulo()}
+                </h1>
+              </div>
+            ) : (
+              <h1 className="d-none d-md-block titulo_principal text-start">
+                {getTitulo()}
+              </h1>
+            )}
             <div className="d-flex justify-content-center align-items-center">
               <i className="bi bi-person me-2 fs-4 rounded-circle bg-secondary px-2"></i>
               <div>
@@ -137,9 +153,25 @@ const LayoutDest = () => {
             </div>
           </div>
         </div>
-        <h1 className="d-md-none mx-4 mt-4 titulo_principal_mobile text-start">
-          {getTitulo()}
-        </h1>
+        {location.pathname !== "/dashboard/dest" ? (
+          <div className="d-flex align-items-center gap-3 my-3">
+          <a
+            onClick={retroceder}
+            className="fs-3 text-black cursor-pointer ms-3"
+            style={{ cursor: "pointer" }}
+          >
+            <i className="bi bi-arrow-left-circle-fill"></i>
+          </a>
+          <h1 className="d-md-none mb-0 titulo_principal_mobile text-start">
+            {getTitulo()}
+          </h1>
+        </div>
+        ) : (
+          <h1 className="d-md-none mb-0 mx-4 mt-4 titulo_principal_mobile text-start">
+            {getTitulo()}
+          </h1>
+        )}
+
 
         <Offcanvas
           className="d-md-none p-3 fondo-menu"

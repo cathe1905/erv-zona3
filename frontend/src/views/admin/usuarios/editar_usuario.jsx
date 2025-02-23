@@ -78,7 +78,8 @@ const EditarUsuario = () => {
     getUserById();
     const dataUserSession = getUserSession();
     setIdUserSession(dataUserSession.id);
-  }, [data, id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   useEffect(() => {
     if (log.admin_id !== "" || log.action !== "" || log.target_id !== "" || log.details !== "") {

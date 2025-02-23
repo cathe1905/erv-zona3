@@ -149,7 +149,7 @@ function LoginPage() {
           </div>
         </form>
         <footer className="mt-4 text-center">
-          <p className="text-muted letra_muy_pequeña">© {new Date().getFullYear()} E.R.V Zona 3, buit by <span><a className="bw-bold text-decoration-underline text-muted fst-italic" href="https://personal-portfolio-eta-ashy.vercel.app/">Catherin Romero</a></span></p>
+          <p className="text-muted letra_muy_pequeña">© {new Date().getFullYear()} E.R.V Zona 3, Desarrollado por: <span><a className="bw-bold fw-bold text-decoration-underline text-muted fst-italic" href="https://personal-portfolio-eta-ashy.vercel.app/">Catherin Romero</a></span></p>
         </footer>
       </div>
     </div>

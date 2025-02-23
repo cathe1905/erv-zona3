@@ -200,9 +200,6 @@ const Layout = () => {
             {Titulo()}
           </h1>
         )}
-        {/* <h1 className="d-md-none mx-4 mt-4 titulo_principal_mobile text-start">
-          {Titulo()}
-        </h1> */}
 
         <Offcanvas
           className="d-md-none p-3 fondo-menu"

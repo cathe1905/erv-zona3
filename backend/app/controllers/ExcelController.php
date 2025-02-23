@@ -132,8 +132,11 @@ class ExcelController
             $sheet->setCellValue('A' . strval($contador_celda), $contador_general);
             foreach ($record as $key => $value) {
                 if($key !== 'id' && $key !== 'foto'){
-                $sheet->setCellValue($letras[$contador_letras] . strval($contador_celda), $value);
-
+                    if (is_numeric($value) && strlen($value) > 10) {
+                        $sheet->setCellValueExplicit($letras[$contador_letras] . strval($contador_celda), $value, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                    } else {
+                        $sheet->setCellValue($letras[$contador_letras] . strval($contador_celda), $value);
+                    }
                 $contador_letras++;
                 }
             }
