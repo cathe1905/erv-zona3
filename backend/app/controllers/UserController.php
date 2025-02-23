@@ -217,7 +217,6 @@ class UserController
                     <p style='color: #333; line-height: 1.5; margin: 0 0 20px 0;'>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
                     <a href='" . getenv('API') . "/backend/users/verification-token-reset?token=" . $token . "' style='display: inline-block; padding: 10px 20px; margin-top: 15px; text-decoration: none; color: #ffffff; background-color: #008080; border-radius: 5px; font-size: 16px;'>Reestablecer contraseña</a>
                     <p style='color: #333; line-height: 1.5; margin: 20px 0 0 0;'>Este enlace expirará en 30 minutos por razones de seguridad.</p>
-                    <p style='color: #333; line-height: 1.5; margin: 0 0 20px 0;'>Si tienes problemas para acceder, copia y pega la siguiente URL en tu navegador: https://exploradoresz3.domcloud.dev/backend/users/verification-token-reset?token=" . $token . "</p>
                     <p style='color: #333; line-height: 1.5; margin: 0 0 20px 0;'>Si no solicitaste este cambio, por favor, contacta a nuestro soporte de inmediato.</p>
                     <p style='color: #333; line-height: 1.5; margin: 0;'>Atentamente,</p>
                     <p style='color: #333; line-height: 1.5; margin: 0;'>E.R.V Zona 3.</p>
