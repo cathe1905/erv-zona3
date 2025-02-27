@@ -58,9 +58,10 @@ $router->post('/backend/users/eliminar', [UserController::class, 'deleteUser']);
 $router->post('/backend/users/auth', [UserController::class, 'authUser']);
 $router->post('/backend/users/refresh', [UserController::class, 'refreshToken']);
 $router->get('/backend/user/email', [UserController::class, 'getUserEmail']); 
-$router->get('/backend/user/solicitud-recuperacion-contrasena', [UserController::class, 'recoverPassword']); // paso 1, enviar email al backend, el frontend recibe respuesta positiva o negativa, luego envia el correo
-$router->get('/backend/users/verification-token-reset', [UserController::class, 'verificationUser']); //paso 2, 
-$router->post('/backend/password-reset/request', [UserController::class, 'passwordReset']);
+$router->get('/backend/user/solicitud-recuperacion-contrasena', [UserController::class, 'recoverPassword']);
+$router->get('/backend/users/verification-token-reset', [UserController::class, 'verificationTokenRecoverPassword']);
+$router->get('/backend/user/is-token-valid', [UserController::class, 'isTokenValid']); 
+// $router->post('/backend/password-reset/request', [UserController::class, 'passwordReset']);
 
 $router->get('/backend/excel', [ExcelController::class, 'descargarExcel']);
 

@@ -49,7 +49,6 @@ class UserController
 
             //Intentar crear el recurso
             $result = $record->crear();
-            
             $result_email = self::sendVerificationEmail($record->email, $record->token, 'verification-user');
 
             if ($result && $result_email) {
@@ -412,33 +411,33 @@ class UserController
 
     public static function getUserEmail()
     {
-       try{
-        $email = $_GET['email'];
-        if (!$email) {
-            http_response_code(400);
-            echo json_encode(['error' => 'email inválido']);
-            return;
-        }
+        try {
+            $email = $_GET['email'];
+            if (!$email) {
+                http_response_code(400);
+                echo json_encode(['error' => 'email inválido']);
+                return;
+            }
 
-        $record = User::find_by_email($email);
+            $record = User::find_by_email($email);
 
-        if (!$record) {
-            http_response_code(404);
-            echo json_encode(['error' => 'El correo: ' . $email . ' no esta registrado.']);
-            return;
-        }else{
-            http_response_code(200);
-            echo json_encode(['id' => $record['id']]);
-        }
-
-       }catch (\Exception $e) {
+            if (!$record) {
+                http_response_code(404);
+                echo json_encode(['error' => 'El correo: ' . $email . ' no esta registrado.']);
+                return;
+            } else {
+                http_response_code(200);
+                echo json_encode(['id' => $record['id']]);
+            }
+        } catch (\Exception $e) {
             http_response_code($e->getCode() ?: 500);
             echo json_encode(['error' => $e->getMessage()]);
         }
-    
     }
 
-    public static function recoverPassword(){
+    public static function recoverPassword()
+    {
+        header('Content-Type: application/json; charset=utf-8');
         try {
             $email = $_GET['email'];
             if (!$email) {
@@ -458,7 +457,10 @@ class UserController
             $jwtSecret = getenv('JWT_SECRET');
             $payload = [
                 'iat' => time(),        // Fecha de emisión
-                'exp' => time() + 14400 // Fecha de expiración
+                'exp' => time() + 14400, // Fecha de expiración
+                'data' => [
+                    'email' => $email,    //Email del usuario que solicito el cambio de contraseña
+                ]
             ];
             $jwt = JWT::encode($payload, $jwtSecret, 'HS256');
 
@@ -502,28 +504,104 @@ class UserController
         }
     }
 
-    public static function passwordReset()
-    {
-        header('Content-Type: application/json; charset=utf-8');
-        $jsonInput = file_get_contents('php://input');
-        $data = json_decode($jsonInput, true);
+    // public static function passwordReset()
+    // {
+    //     header('Content-Type: application/json; charset=utf-8');
+    //     $jsonInput = file_get_contents('php://input');
+    //     $data = json_decode($jsonInput, true);
 
+    //     try {
+    //         $email = $data['email'];
+    //         if (!$email) {
+    //             http_response_code(400);
+    //             echo json_encode(['error' => 'email inválido']);
+    //             return;
+    //         }
+
+    //         $record = User::find_by_email($email);
+
+    //         if ($record) {
+    //         }
+    //     } catch (\Exception $e) {
+
+    //         echo json_encode(['error' => $e . 'Invalid refresh token']);
+    //         http_response_code(401);
+    //     }
+    // }
+
+    public static function verificationTokenRecoverPassword()
+    {
+        header('Content-Type: application/json; charset=UTF-8');
+        $jwtSecret = getenv('JWT_SECRET');
         try {
-            $email = $data['email'];
-            if (!$email) {
+            $token = $_GET['token'];
+
+            if (!$token) {
                 http_response_code(400);
-                echo json_encode(['error' => 'email inválido']);
+                echo json_encode(['error' => 'Token no recibido.']);
                 return;
             }
 
-            $record = User::find_by_email($email);
+            //verificamos que el token corresponda al email
+            $usuarioByToken = User::find_field_record('usuarios', 'reset_password_token', $token);
 
-            if ($record) {
+            if (!$usuarioByToken) {
+                http_response_code(404);
+                echo json_encode(['error' => 'No se encontró el token.']);
+                return;
             }
-        } catch (\Exception $e) {
 
-            echo json_encode(['error' => $e . 'Invalid refresh token']);
-            http_response_code(401);
+            $decoded = JWT::decode($token, $jwtSecret, ['HS256']);
+          
+            // Acceder a la fecha y hora de la creación
+            $creationDate = $decoded->iat;
+            $currentTime = time();
+            $expirationTime = 1800;
+
+            if (($currentTime - $creationDate) > $expirationTime) {
+                http_response_code(401); 
+                echo json_encode(['error' => 'El token ha expirado, puedes solicitar otro nuevamente.']);
+                return;
+            }else{
+                header("Location: " . getenv('URL_FRONTEND') . "/ingresar-nueva-contraseña?token=" . $token);
+            }
+
+        } catch (\Exception $e) {
+            http_response_code($e->getCode() ?: 500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public static function isTokenValid(){
+        $jwtSecret = getenv('JWT_SECRET');
+        try {
+            $token = $_GET['token'];
+
+            if (!$token) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Token no recibido.']);
+                return;
+            }
+
+            $decoded = JWT::decode($token, $jwtSecret, ['HS256']);
+          
+            // Acceder a la fecha y hora de la creación
+            $creationDate = $decoded->iat;
+            $currentTime = time();
+            $expirationTime = 1800;
+
+            if (($currentTime - $creationDate) > $expirationTime) {
+                http_response_code(401); 
+                echo json_encode(['error' => 'El token ha expirado, puedes solicitar otro nuevamente.']);
+                return;
+            }else{
+                http_response_code(200);
+                echo json_encode(['mensaje' => 'Token verificado exitosamente.']);
+            }
+
+        } catch (\Exception $e) {
+            http_response_code($e->getCode() ?: 500);
+            echo json_encode(['error' => $e->getMessage()]);
         }
     }
 }

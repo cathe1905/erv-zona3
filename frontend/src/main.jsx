@@ -24,6 +24,8 @@ import Usuarios from "./views/admin/usuarios/usuarios.jsx";
 import CrearUsuario from "./views/admin/usuarios/crear_usuario.jsx";
 import EditarUsuario from "./views/admin/usuarios/editar_usuario.jsx";
 import { SuccessVerification, FailedVerification } from "./views/auth/UserVerification.jsx";
+import RecuperarContraseña from "./views/auth/recuperar-contraseña.jsx";
+import IngresarNuevaContraseña from "./views/auth/nueva-contraseña.jsx";
 import Logs from "./views/admin/logs.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
@@ -31,12 +33,14 @@ import './index.css';
 export const UserContext = React.createContext();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  // <React.StrictMode>
+  <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/verificacion-exitosa" element={<SuccessVerification />} />
         <Route path="/verificacion-fallida" element={<FailedVerification />} />
+        <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
+        <Route path="/ingresar-nueva-contraseña" element={<IngresarNuevaContraseña />} />
 
         <Route element={<RequireAuth role={1} />}>
           <Route element={<Layout />}>
@@ -69,5 +73,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </Route>
       </Routes>
     </BrowserRouter>
-// </React.StrictMode>
+   </React.StrictMode>
 );

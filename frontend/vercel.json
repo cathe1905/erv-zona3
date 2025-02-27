@@ -2,7 +2,9 @@
     "rewrites": [
       { "source": "/dashboard/:path*", "destination": "/index.html" },
       { "source": "/verificacion-exitosa", "destination": "/index.html" },
-      { "source": "/verificacion-fallida", "destination": "/index.html" }
+      { "source": "/verificacion-fallida", "destination": "/index.html" },
+      { "source": "/recuperar-contraseña", "destination": "/index.html" },
+      { "source": "/ingresar-nueva-contraseña", "destination": "/index.html" }
     ]
   }
   
