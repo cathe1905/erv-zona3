@@ -1,7 +1,36 @@
-const RecuperarContraseña = () => {
-    const sendRequest = () =>{
+import { useState } from "react";
+import {
+  api,
+  errorGeneralQuery,
+  errorSpecificQuery,
+  exitSpecificQuery,
+} from "../../funciones";
 
+const RecuperarContraseña = () => {
+  const [email, setEmail] = useState("");
+
+  const handleChange = (e) => {
+    setEmail(e.target.value);
+  };
+  const sendRequest = async (e) => {
+    e.preventDefault();
+    try {
+      const query = await fetch(
+        `${api}backend/user/solicitud-recuperacion-contrasena?email=${email}`
+      );
+      const data = await query.json();
+
+      if (query.ok) {
+        exitSpecificQuery(data.mensaje);
+      } else {
+        errorSpecificQuery(data.error);
+      }
+    } catch (error) {
+      console.log(error);
+      errorGeneralQuery();
     }
+  };
+
   return (
     <div className="fondo-login">
       <div className="container d-flex flex-column justify-content-center align-items-center min-vh-100 sombra login-container ">
@@ -36,17 +65,18 @@ const RecuperarContraseña = () => {
                 type="email"
                 id="email"
                 name="email"
+                onChange={handleChange}
                 className="form-control"
+                value={email}
                 placeholder="Tu Email"
                 required
               />
             </div>
           </div>
-          
+
           <button type="submit" className="btn btn-success w-100">
             Enviar enlace de recuperación
           </button>
-
         </form>
         <footer className="mt-4 text-center">
           <p className="text-muted letra_muy_pequeña">

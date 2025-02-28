@@ -493,7 +493,7 @@ class UserController
 
             if ($mail_token) {
                 http_response_code(200);
-                echo json_encode(['mensaje' => 'Revise su correo electrónico y acceda al enlace para recuperar su contraseña.']);
+                echo json_encode(['mensaje' => 'Revise su correo electrónico y acceda al enlace para recuperar su contraseña. Podría tardar unos minutos.']);
             } else {
                 http_response_code(404);
                 echo json_encode(['error' => 'No se pudo enviar el correo de recuperación de contraseña.']);
