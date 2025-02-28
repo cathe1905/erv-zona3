@@ -65,8 +65,6 @@ function LoginPage() {
         } else if (user.role === 2) {
           navigate(`/dashboard/dest?destacamento=${user.destacamento}`);
         }
-      } else {
-        console.log("no hay token");
       }
     };
     evaluateUser();
