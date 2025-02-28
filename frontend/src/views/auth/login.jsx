@@ -141,7 +141,7 @@ function LoginPage() {
             Ingresar
           </button>
           <div className="text-center mt-3">
-            <a href="#" className="text-decoration-none">
+            <a href="/recuperar-contraseña" className="text-decoration-none">
               ¿Olvidaste tu contraseña?
             </a>
           </div>

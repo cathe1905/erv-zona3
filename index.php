@@ -61,7 +61,7 @@ $router->get('/backend/user/email', [UserController::class, 'getUserEmail']);
 $router->get('/backend/user/solicitud-recuperacion-contrasena', [UserController::class, 'recoverPassword']);
 $router->get('/backend/users/verification-token-reset', [UserController::class, 'verificationTokenRecoverPassword']);
 $router->get('/backend/user/is-token-valid', [UserController::class, 'isTokenValid']); 
-// $router->post('/backend/password-reset/request', [UserController::class, 'passwordReset']);
+$router->post('/backend/password-reset', [UserController::class, 'passwordReset']);
 
 $router->get('/backend/excel', [ExcelController::class, 'descargarExcel']);
 

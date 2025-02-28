@@ -504,30 +504,64 @@ class UserController
         }
     }
 
-    // public static function passwordReset()
-    // {
-    //     header('Content-Type: application/json; charset=utf-8');
-    //     $jsonInput = file_get_contents('php://input');
-    //     $data = json_decode($jsonInput, true);
+    public static function passwordReset()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        $jsonInput = file_get_contents('php://input');
+        $data = json_decode($jsonInput, true);
+        $jwtSecret = getenv('JWT_SECRET');
+        try {
+            $token = $data['token'];
+            $newPassword= $data['password'];
 
-    //     try {
-    //         $email = $data['email'];
-    //         if (!$email) {
-    //             http_response_code(400);
-    //             echo json_encode(['error' => 'email inválido']);
-    //             return;
-    //         }
+            if (!$token || !$newPassword) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Token o nueva contraseña ausentes.']);
+                return;
+            }
 
-    //         $record = User::find_by_email($email);
+            $decoded = JWT::decode($token, $jwtSecret, ['HS256']);
+          
+            
+            $creationDate = $decoded->iat;
+            $currentTime = time();
+            $expirationTime = 1800;
 
-    //         if ($record) {
-    //         }
-    //     } catch (\Exception $e) {
+            if (($currentTime - $creationDate) > $expirationTime) {
+                http_response_code(401); 
+                echo json_encode(['error' => 'El token ha expirado, puedes solicitar otro nuevamente.']);
+                return;
+            }
 
-    //         echo json_encode(['error' => $e . 'Invalid refresh token']);
-    //         http_response_code(401);
-    //     }
-    // }
+            $usuario = User::find_field_record('usuarios', 'reset_password_token', $token);
+
+            if (!$usuario) {
+                http_response_code(400);
+                echo json_encode(['error' => 'El token no esta vinculado a ningún usuario en nuestra Base de datos.']);
+                return;
+            }
+
+            $password_protegida = password_hash($newPassword, PASSWORD_DEFAULT);
+
+            $usuario['contraseña'] = $password_protegida;
+            $usuario_act = new User($usuario);
+            $result = $usuario_act->actualizar();
+
+            if (!$result) {
+                http_response_code(404);
+                echo json_encode(['error' => 'Hubo problemas actualizando la contraseña.']);
+                return;
+            }else{
+                http_response_code(200);
+                echo json_encode(['mensaje' => 'Contraseña cambiada exitosamente']);
+            }
+
+
+        } catch (\Exception $e) {
+            http_response_code($e->getCode() ?: 500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
 
     public static function verificationTokenRecoverPassword()
     {
@@ -579,7 +613,7 @@ class UserController
 
             if (!$token) {
                 http_response_code(400);
-                echo json_encode(['error' => 'Token no recibido.']);
+                echo json_encode(['error' => 'Enlace no permitido']);
                 return;
             }
 
