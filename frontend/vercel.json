@@ -4,7 +4,8 @@
       { "source": "/ingresar-nueva-contraseña", "destination": "/index.html" },
       { "source": "/dashboard/:path*", "destination": "/index.html" },
       { "source": "/verificacion-exitosa", "destination": "/index.html" },
-      { "source": "/verificacion-fallida", "destination": "/index.html" }
+      { "source": "/verificacion-fallida", "destination": "/index.html" },
+      { "source": "/(.*)", "destination": "/index.html" }
       
     ]
   }
