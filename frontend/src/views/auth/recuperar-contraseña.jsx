@@ -25,6 +25,8 @@ const RecuperarContraseña = () => {
       } else {
         errorSpecificQuery(data.error);
       }
+
+      setEmail('');
     } catch (error) {
       console.log(error);
       errorGeneralQuery();

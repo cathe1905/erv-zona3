@@ -1,21 +1,89 @@
 import { BiShow, BiHide } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { jwtDecode } from "jwt-decode";
-// import { getUserSession } from "../../funciones";
-// import { errorGeneralQuery, errorSpecificQuery, api } from "../../funciones";
+import {
+  errorGeneralQuery,
+  errorSpecificQuery,
+  api,
+  exitSpecificQuery,
+} from "../../funciones";
+import { useSearchParams } from "react-router-dom";
 
 const IngresarNuevaContraseña = () => {
   // eslint-disable-next-line no-unused-vars
   const [loged, setLoged] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState();
   const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConf, setShowPasswordConf] = useState(false);
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
+  const [params, setParams] = useSearchParams();
+  const token = params.get("token");
+  const [data, setData] = useState({
+    token: "",
+    password: "",
+  });
 
-  const sendNewPassword = (e) => {
+  useEffect(() => {
+    if (!token) {
+      errorSpecificQuery("Enlace no disponible");
+      navigate("/");
+      return;
+    }
+
+    const isTokenValid = async () => {
+      try {
+        const query = await fetch(
+          `${api}backend/user/is-token-valid?token=${token}`
+        );
+
+        const data = await query.json();
+
+        if (!query.ok) {
+          errorSpecificQuery(data.error);
+          navigate("/");
+        }
+        setData((prevData) => ({
+          ...prevData,
+          token: token,
+        }));
+      } catch (error) {
+        console.log(error);
+        errorGeneralQuery();
+      }
+    };
+    isTokenValid();
+  }, [navigate, token]);
+
+
+  const handleOnchange = (e) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
+  
+  const sendNewPassword = async (e) => {
     e.preventDefault();
+
+    try {
+      const query = await fetch(`${api}backend/password-reset`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const respuesta = await query.json();
+        if (query.ok) {
+          exitSpecificQuery(respuesta.mensaje);
+          navigate('/')
+        } else {
+          errorSpecificQuery(respuesta.error);
+        }
+    } catch (error) {
+      console.log(error);
+      errorGeneralQuery();
+    }
   };
 
   return (
@@ -51,9 +119,11 @@ const IngresarNuevaContraseña = () => {
               </span>
               <input
                 type={showPassword ? "text" : "password"}
-                id="contraseña"
-                name="contraseña"
+                id="password"
+                name="password"
                 className="form-control"
+                value={data.password}
+                onChange={handleOnchange}
                 placeholder="Tu Contraseña"
                 required
               />
@@ -63,31 +133,6 @@ const IngresarNuevaContraseña = () => {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <BiHide /> : <BiShow />}
-              </button>
-            </div>
-          </div>
-          <div className="mb-4">
-            <label htmlFor="contraseña" className="form-label">
-              Confirma tu Contraseña
-            </label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-lock-fill"></i>
-              </span>
-              <input
-                type={showPassword ? "text" : "password"}
-                id="contraseña"
-                name="contraseña"
-                className="form-control"
-                placeholder="Tu Contraseña"
-                required
-              />
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => setShowPasswordConf(!showPasswordConf)}
-              >
-                {showPasswordConf ? <BiHide /> : <BiShow />}
               </button>
             </div>
           </div>
