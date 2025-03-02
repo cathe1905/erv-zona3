@@ -3,15 +3,18 @@ import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery, api} from "..
 import { useNavigate } from "react-router-dom"
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import GrowExample from "../../../components/GrowExample";
 
 const CrearAscenso =() =>{
     const navigate= useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState({
         nombre: "",
         rama: ""
     })
 
     const handleSubmit= async (e) =>{
+      setIsLoading(true)
         e.preventDefault();
         const data_enviar= {
             ascenso: {...data}
@@ -33,9 +36,11 @@ const CrearAscenso =() =>{
             })
 
             if(respuesta.ok){
+              setIsLoading(false)
                 exitSpecificQuery('Ascenso creado exitosamente')
                 navigate('/dashboard/admin/ascensos')
             } else{
+              setIsLoading(false)
                 const result = await respuesta.json();
                 const mensaje= result.error || "Error al procesar la solicitud.";
                 errorSpecificQuery(mensaje)
@@ -57,6 +62,12 @@ const CrearAscenso =() =>{
 
     return (
         <>
+         {isLoading ? (
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{height: '25rem'}}>
+          {GrowExample()}
+          <p className="mt-3">Espere un momento</p>
+        </div>
+      ) : (
           <form 
             onSubmit={handleSubmit} 
             className="container mt-4 p-4 rounded shadow-sm bg-light"
@@ -116,6 +127,7 @@ const CrearAscenso =() =>{
               </div>
             </div>
           </form>
+           )}
         </>
       );
       

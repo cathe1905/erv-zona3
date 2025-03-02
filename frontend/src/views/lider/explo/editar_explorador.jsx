@@ -5,9 +5,11 @@ import { getUserSession } from "../../../funciones";
 import { useSearchParams } from "react-router-dom"
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import GrowExample from "../../../components/GrowExample";
 
 const EditarExplorador =() =>{
     const navigate= useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const [params, setParams] = useSearchParams();
     const id= parseInt(params.get('id'), 10) || null;
@@ -72,6 +74,7 @@ const EditarExplorador =() =>{
       }, []);
 
     const handleSubmit= async (e) =>{
+      setIsLoading(true)
         e.preventDefault();
         const data_enviar= {
             explorador: {...data}
@@ -97,9 +100,11 @@ const EditarExplorador =() =>{
         })
 
         if(respuesta.ok){
+          setIsLoading(false)
             exitSpecificQuery('Explorador actualizado exitosamente')
             navigate(`/dashboard/dest/explo?destacamento=${destacamento}`)
         }else{
+          setIsLoading(false)
           const result = await respuesta.json();
           const mensaje= result.error || "Error al procesar la solicitud.";
           errorSpecificQuery(mensaje)
@@ -119,6 +124,12 @@ const EditarExplorador =() =>{
     }
     return (
       <>
+       {isLoading ? (
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{height: '25rem'}}>
+          {GrowExample()}
+          <p className="mt-3">Espere un momento</p>
+        </div>
+      ) : (
         <form 
           onSubmit={handleSubmit} 
           className="container mt-0 mt-md-4 p-4 rounded shadow-sm bg-light"
@@ -293,6 +304,7 @@ const EditarExplorador =() =>{
             </div>
           </div>
         </form>
+        )}
       </>
     );    
 

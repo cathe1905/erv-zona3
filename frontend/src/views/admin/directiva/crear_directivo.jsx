@@ -5,10 +5,12 @@ import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api, getDesta
 import { useNavigate } from "react-router-dom";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import GrowExample from "../../../components/GrowExample";
 
 const CrearDirectiva = () => {
   const navigate = useNavigate();
   const [destacamentos, setDestacamentos] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [ascensos, setAscensos] = useState(null);
   const [data, setData] = useState({
     nombres: "",
@@ -37,6 +39,7 @@ const CrearDirectiva = () => {
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true)
     e.preventDefault();
     const data_enviar = {
       directiva: { ...data },
@@ -58,9 +61,11 @@ const CrearDirectiva = () => {
       });
 
       if (result.ok) {
+        setIsLoading(false)
         exitSpecificQuery("Directivo guardado exitosamente");
         navigate("/dashboard/admin/directiva");
       } else {
+        setIsLoading(false)
         const resultado = await result.json();
         const mensaje = resultado.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
@@ -94,6 +99,12 @@ const CrearDirectiva = () => {
 
   return (
     <>
+        {isLoading ? (
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{height: '25rem'}}>
+          {GrowExample()}
+          <p className="mt-3">Espere un momento</p>
+        </div>
+      ) : (
     <form 
         onSubmit={handleSubmit} 
         className="container mt-0 mt-md-4 p-4 rounded shadow-sm bg-light"
@@ -242,6 +253,7 @@ const CrearDirectiva = () => {
         </div>
       </div>
     </form>
+    )}
   </>
   
   );

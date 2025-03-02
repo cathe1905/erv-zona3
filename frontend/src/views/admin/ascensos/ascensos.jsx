@@ -34,6 +34,7 @@ const Ascensos = () => {
     window.location.href = url;
   };
   const eliminarRegistro = async () => {
+    setIsLoading(true)
     const id = { id: idEliminar };
     try {
       const query = await fetch(`${api}backend/ascensos/eliminar`, {
@@ -44,13 +45,14 @@ const Ascensos = () => {
         body: JSON.stringify(id),
       });
       if (query.ok) {
+        setIsLoading(false)
         exitSpecificQuery("Ascenso eliminado exitosamente")
         setShow(false);
         getData();
       }else{
-        const respuesta = await query.json();
-        const mensaje= respuesta.error || "Error al procesar la solicitud.";
-        errorSpecificQuery(mensaje)
+        setIsLoading(false)
+        setShow(false);
+        errorSpecificQuery("Error al procesar la solicitud.")
       }
     } catch (error) {
       console.log(error);
@@ -149,6 +151,7 @@ const Ascensos = () => {
           <Modal.Title>Eliminar Ascenso</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          Para borrar un ascenso debes asegurarte que ningún explorador esta registrado con este ascenso. De lo contrario no podrás eliminarlo.
           ¿Estás seguro(a) que deseas eliminar el ascenso {nombreEliminar}?
         </Modal.Body>
         <Modal.Footer>

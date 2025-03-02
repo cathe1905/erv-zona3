@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { getUserSession } from "../../funciones";
 import { errorGeneralQuery, errorSpecificQuery, api } from "../../funciones";
 import { BiShow, BiHide } from "react-icons/bi";
+import GrowExample from "../../components/GrowExample";
 
 function LoginPage() {
   // eslint-disable-next-line no-unused-vars
@@ -12,8 +13,10 @@ function LoginPage() {
   const [error, setError] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const logIn = async (e) => {
+    setIsLoading(true)
     e.preventDefault();
     const datos = {
       email: e.target.email.value,
@@ -31,6 +34,7 @@ function LoginPage() {
       });
       const data = await respuesta.json();
       if (respuesta.ok) {
+        setIsLoading(false)
         setLoged(true);
         
         localStorage.setItem("token", data.token);
@@ -45,6 +49,7 @@ function LoginPage() {
           );
         }
       } else {
+        setIsLoading(false)
         setError("Error al iniciar sesión");
         errorSpecificQuery(data.error);
         return;
@@ -71,10 +76,19 @@ function LoginPage() {
   }, [navigate]);
 
   return (
+    <>
+     {isLoading ? (
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{height: '25rem'}}>
+          {GrowExample()}
+          <p className="mt-3">Espere un momento</p>
+        </div>
+      ) : (
     <div className="fondo-login">
+
       <div
         className="container d-flex flex-column justify-content-center align-items-center min-vh-100 sombra login-container"
       >
+       
         <form
           onSubmit={logIn}
           className="card py-3 px-4 shadow-lg sombra2"
@@ -149,8 +163,11 @@ function LoginPage() {
         <footer className="mt-4 text-center">
           <p className="text-muted letra_muy_pequeña">© {new Date().getFullYear()} E.R.V Zona 3, Desarrollado por: <span><a className="bw-bold fw-bold text-decoration-underline text-muted fst-italic" href="https://personal-portfolio-eta-ashy.vercel.app/">Catherin Romero</a></span></p>
         </footer>
+        
       </div>
     </div>
+      )}
+    </>
   );
 }
 
