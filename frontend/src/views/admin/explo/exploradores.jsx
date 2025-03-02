@@ -108,8 +108,7 @@ const Explo = () => {
       page: 1,
     });
   }
-  // const url = `${api}backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=false`;
-  // console.log(url)
+
   const dowload= (all) =>{
     
       const url = `${api}backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;

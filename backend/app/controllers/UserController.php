@@ -580,8 +580,9 @@ class UserController
             $usuarioByToken = User::find_field_record('usuarios', 'reset_password_token', $token);
 
             if (!$usuarioByToken) {
-                http_response_code(404);
-                echo json_encode(['error' => 'No se encontró el token.']);
+                header("Location: " . getenv('URL_FRONTEND') . "/token-invalido");
+                // http_response_code(404);
+                // echo json_encode(['error' => 'No se encontró el token.']);
                 return;
             }
 
@@ -593,8 +594,9 @@ class UserController
             $expirationTime = 1800;
 
             if (($currentTime - $creationDate) > $expirationTime) {
-                http_response_code(401); 
-                echo json_encode(['error' => 'El token ha expirado, puedes solicitar otro nuevamente.']);
+                header("Location: " . getenv('URL_FRONTEND') . "/token-invalido");
+                // http_response_code(401); 
+                // echo json_encode(['error' => 'El token ha expirado, puedes solicitar otro nuevamente.']);
                 return;
             }else{
                 header("Location: " . getenv('URL_FRONTEND') . "/ingresar-nueva-contraseña?token=" . $token);

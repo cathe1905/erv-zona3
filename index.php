@@ -1,7 +1,57 @@
 <?php
 
 header('Content-Type: application/json; charset=UTF-8');
-header("Access-Control-Allow-Origin: *");
+
+$excludedEndpoints = [
+    '/backend/users/verification',
+	'/backend/users/verification-token-reset',
+];
+
+// Obtener la ruta solicitada
+$requestUri = $_SERVER['REQUEST_URI'];
+
+// Verificar si la ruta solicitada incluye alguno de los endpoints exentos
+$isExcluded = false;
+foreach ($excludedEndpoints as $endpoint) {
+    if (strpos($requestUri, $endpoint) !== false) {
+        $isExcluded = true;
+        break;
+    }
+}
+
+// Aplicar lógica de CORS basada en si el endpoint está exento o no
+if ($isExcluded) {
+    // Permitir cualquier origen para estos endpoints
+    header("Access-Control-Allow-Origin: *");
+} else {
+    // Restringir el acceso solo a tu dominio frontend
+    $allowedOrigin = 'https://erv-zona3.vercel.app';
+    if (isset($_SERVER['HTTP_ORIGIN'])) {
+        $origin = $_SERVER['HTTP_ORIGIN'];
+        if ($origin === $allowedOrigin) {
+            header("Access-Control-Allow-Origin: $origin");
+        } else {
+            // Si el origen no es permitido, devolver un error 403
+            http_response_code(403);
+            echo json_encode(['error' => 'Acceso denegado: Origen no permitido']);
+            exit;
+        }
+    } else {
+        // Si no hay encabezado Origin, denegar el acceso
+        http_response_code(403);
+        echo json_encode(['error' => 'Acceso denegado: Origen no especificado']);
+        exit;
+    }
+}
+
+// Manejar solicitudes OPTIONS (preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    http_response_code(204);
+    exit;
+}
+
 header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE');
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
