@@ -191,15 +191,14 @@ const CrearUsuario = () => {
   return (
     <>
       {isLoading ? (
-        <tr>
-          <td colSpan="12" className="text-center">
-            {GrowExample()}
-          </td>
-        </tr>
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{height: '25rem'}}>
+          {GrowExample()}
+          <p className="mt-3">Espere un momento</p>
+        </div>
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="container mt-4 p-4 rounded shadow-sm bg-light"
+          className="container mt-0 mt-md-4 p-4 rounded shadow-sm bg-light"
           style={{ maxWidth: "600px" }}
         >
           <h2 className="text-center mb-4">Crear un nuevo Usuario</h2>

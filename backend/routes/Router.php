@@ -20,7 +20,6 @@ namespace MVC;
             $current_url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/backend');
             $method= $_SERVER['REQUEST_METHOD'];
 
-            // debuguear($this->postRoutes);
             if($method === 'GET'){
                 $fn= $this->getRoutes[$current_url] ?? null;
             } elseif($method === 'POST'){

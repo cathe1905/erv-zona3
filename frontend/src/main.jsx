@@ -24,6 +24,7 @@ import Usuarios from "./views/admin/usuarios/usuarios.jsx";
 import CrearUsuario from "./views/admin/usuarios/crear_usuario.jsx";
 import EditarUsuario from "./views/admin/usuarios/editar_usuario.jsx";
 import { SuccessVerification, FailedVerification } from "./views/auth/UserVerification.jsx";
+import FailedToken from "./views/auth/falloToken.jsx";
 import RecuperarContraseña from "./views/auth/recuperar-contraseña.jsx";
 import IngresarNuevaContraseña from "./views/auth/nueva-contraseña.jsx";
 import Logs from "./views/admin/logs.jsx";
@@ -41,6 +42,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/verificacion-fallida" element={<FailedVerification />} />
         <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
         <Route path="/ingresar-nueva-contraseña" element={<IngresarNuevaContraseña />} />
+        <Route path="/token-invalido" element={<FailedToken />} />
 
         <Route element={<RequireAuth role={1} />}>
           <Route element={<Layout />}>
