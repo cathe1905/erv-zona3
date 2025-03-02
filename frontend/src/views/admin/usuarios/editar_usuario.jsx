@@ -6,12 +6,14 @@ import { useSearchParams } from "react-router-dom";
 import { getUserSession } from "../../../funciones";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import GrowExample from "../../../components/GrowExample";
 
 
 const EditarUsuario = () => {
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
   const [params, setParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
   const id = parseInt(params.get("id"), 10) || null;
   const [destacamentos, setDestacamentos] = useState(null);
   const [data, setData] = useState({
@@ -158,6 +160,7 @@ const EditarUsuario = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const data_enviar = {
       usuario: { ...data },
     };
@@ -181,8 +184,10 @@ const EditarUsuario = () => {
       );
 
       if (respuesta.ok) {
+        setIsLoading(false)
         evaluacionCambios();
       }else{
+        setIsLoading(false)
         const result = await respuesta.json();
         const mensaje= result.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje)
@@ -203,6 +208,12 @@ const EditarUsuario = () => {
 
   return (
     <>
+      {isLoading ? (
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{height: '25rem'}}>
+          {GrowExample()}
+          <p className="mt-3">Espere un momento</p>
+        </div>
+      ) : (
       <form 
         onSubmit={handleSubmit} 
         className="container mt-0 mt-md-4 p-4 rounded shadow-sm bg-light"
@@ -320,6 +331,7 @@ const EditarUsuario = () => {
           </div>
         </div>
       </form>
+      )}
     </>
   );
   

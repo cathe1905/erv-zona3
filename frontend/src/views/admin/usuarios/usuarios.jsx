@@ -87,10 +87,12 @@ const Usuarios = () => {
             body: JSON.stringify(log_data_enviar),
           });
           if (query.ok) {
+            setIsLoading(false);
             exitSpecificQuery("Usuario eliminado exitosamente");
             setShow(false);
             getUsers();
           } else {
+            setIsLoading(false);
             const respuesta = await query.json();
             const mensaje =
               respuesta.error || "Error al procesar la solicitud.";
@@ -108,6 +110,7 @@ const Usuarios = () => {
   }, [apellidoEliminar, idEliminar, idUserSession, nombreEliminar, sent]);
 
   const eliminarRegistro = async () => {
+    setIsLoading(true);
     const id = { id: idEliminar };
     try {
       const query = await fetch(`${api}backend/users/eliminar`, {

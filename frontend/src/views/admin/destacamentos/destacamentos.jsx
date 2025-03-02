@@ -31,6 +31,7 @@ const Destacamentos = () => {
   };
 
   const eliminarRegistro = async () => {
+    setIsLoading(true)
     try {
       const id = { id: idEliminar };
       const result = await fetch(
@@ -45,14 +46,15 @@ const Destacamentos = () => {
       );
 
       if (result.ok) {
+        setIsLoading(false)
         exitSpecificQuery("Destacamento eliminado exitosamente")
         setShow(false);
         const respuesta = await getDestacamentos();
         setData(respuesta);
       }else{
-        const respuesta = await result.json();
-        const mensaje= respuesta.error || "Error al procesar la solicitud.";
-        errorSpecificQuery(mensaje)
+        setIsLoading(false)
+        errorSpecificQuery("Error al procesar la solicitud.")
+        setShow(false);
       }
     } catch (error) {
       console.error("Hubo un problema con la solicitud", error);
@@ -183,6 +185,7 @@ const Destacamentos = () => {
           <Modal.Title>Eliminar Destacamento</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+        Para borrar un destacamento debes asegurarte que ningún explorador o usuario esta registrado con este destacamento. De lo contrario no podrás eliminarlo.
           ¿Estás seguro(a) que deseas eliminar el destacamento {nombreEliminar}?
         </Modal.Body>
         <Modal.Footer>

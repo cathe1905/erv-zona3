@@ -131,6 +131,7 @@ const Explo_dest = () => {
   };
 
   const eliminarRegistro = async () => {
+    setIsLoading(true)
     const id = { id: idEliminar };
     try {
       const query = await fetch(`${api}backend/explo/eliminar`, {
@@ -141,10 +142,13 @@ const Explo_dest = () => {
         body: JSON.stringify(id),
       });
       if (query.ok) {
+        setIsLoading(false)
         exitSpecificQuery("Explorador eliminado exitosamente");
         setShow(false);
         getExploradores();
       } else {
+        setIsLoading(false)
+        setShow(false);
         const respuesta = await query.json();
         const mensaje = respuesta.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);

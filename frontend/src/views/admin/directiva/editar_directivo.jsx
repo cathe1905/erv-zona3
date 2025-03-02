@@ -6,9 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import GrowExample from "../../../components/GrowExample";
 
 const EditarDirectiva = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [params, setParams] = useSearchParams();
   const id = parseInt(params.get("id"), 10) || null;
@@ -43,6 +45,7 @@ const EditarDirectiva = () => {
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true)
     e.preventDefault();
     const data_enviar = {
       directiva: { ...data },
@@ -67,9 +70,11 @@ const EditarDirectiva = () => {
       );
 
       if (result.ok) {
+        setIsLoading(false)
         exitSpecificQuery("Directivo actualizado exitosamente");
         navigate("/dashboard/admin/directiva");
       } else {
+        setIsLoading(false)
         const resultado = await result.json();
         const mensaje = resultado.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
@@ -126,6 +131,12 @@ const EditarDirectiva = () => {
 
   return (
     <>
+     {isLoading ? (
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{height: '25rem'}}>
+          {GrowExample()}
+          <p className="mt-3">Espere un momento</p>
+        </div>
+      ) : (
       <form 
         onSubmit={handleSubmit} 
         className="container mt-0 mt-md-4 p-4 rounded shadow-sm bg-light"
@@ -285,6 +296,7 @@ const EditarDirectiva = () => {
           </div>
         </div>
       </form>
+       )}
     </>
   );
   
