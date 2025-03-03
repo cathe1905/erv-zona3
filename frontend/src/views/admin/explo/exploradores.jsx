@@ -39,7 +39,7 @@ const Explo = () => {
           setError("Error al cargar los datos.");
         }
       } catch (error) {
-        
+        setIsLoading(false)
         console.error("Hubo un problema con la solicitud", error);
         console.log(error);
         return;

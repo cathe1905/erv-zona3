@@ -66,6 +66,7 @@ const Ascensos = () => {
         setIsLoading(false)
         setError(null); 
       }else{
+        setIsLoading(false)
         setError("Error al cargar los datos.");
         setIsLoading(false)
       }

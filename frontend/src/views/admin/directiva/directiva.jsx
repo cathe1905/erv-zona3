@@ -75,6 +75,7 @@ const Directiva = () => {
         errorSpecificQuery(mensaje)
       }
     } catch (error) {
+      setIsLoading(false)
       console.error("Hubo un problema con la solicitud", error);
       console.log(error);
       errorGeneralQuery();

@@ -141,25 +141,30 @@ function editRecord($class, $type){
             }
             //se hace el mismo procedimiento de crear a imagen ya que todo se reescribe
             if($type === 'directiva'){
+
                 $base64String= $data[$type]['foto'];
-                // Verificar si la cadena contiene el prefijo adecuado
+                
+                if(!terminaEnJpg($base64String)){
+                     // Verificar si la cadena contiene el prefijo adecuado
                 if (strpos($base64String, 'data:image/') !== false) {
-                // Eliminar el prefijo
-                $base64String = preg_replace('/^data:image\/\w+;base64,/', '', $base64String);
+                    // Eliminar el prefijo
+                    $base64String = preg_replace('/^data:image\/\w+;base64,/', '', $base64String);
+                    }
+                    // Decodificar la imagen
+                    $image_data = base64_decode($base64String);
+                    if ($image_data === false) {
+                        echo json_encode(['error' => 'La cadena Base64 no se pudo decodificar']);
+                        return;
+                    }
+                    $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg";
+        
+                   if($image_data){
+                    $imagen= Image::make($image_data);
+                    $record->setImagen($nombreImagen, $postDecode['foto']);
+                    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+                   }
                 }
-                // Decodificar la imagen
-                $image_data = base64_decode($base64String);
-                if ($image_data === false) {
-                    echo json_encode(['error' => 'La cadena Base64 no se pudo decodificar']);
-                    return;
-                }
-                $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg";
-    
-               if($image_data){
-                $imagen= Image::make($image_data);
-                $record->setImagen($nombreImagen, $postDecode['foto']);
-                $imagen->save(CARPETA_IMAGENES . $nombreImagen);
-               }
+               
             }
           
             $result = $record->actualizar();
@@ -218,6 +223,15 @@ function loadEnv($filePath) {
             putenv("$key=$value");
         }
     }
+}
+
+function terminaEnJpg($cadena) {
+    // Convertir la cadena a minúsculas para hacer la comparación insensible a mayúsculas/minúsculas
+    $cadena = strtolower($cadena);
+    // Obtener los últimos 4 caracteres de la cadena
+    $extension = substr($cadena, -4);
+    // Verificar si la extensión es ".jpg"
+    return $extension === '.jpg';
 }
 
 
