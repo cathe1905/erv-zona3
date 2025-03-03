@@ -30,6 +30,7 @@ const Directiva = () => {
   };
 
   const eliminarRegistro= async () =>{
+    setShow(false)
     setIsLoading(true)
     try {
       const id= {id: idEliminar}
@@ -40,15 +41,13 @@ const Directiva = () => {
             },
             body: JSON.stringify(id)
       });
-      console.log(result);
+
       if (result.ok) {
         setIsLoading(false)
-        exitSpecificQuery("Directivo eliminado exitosamente")
-        setShow(false)
+        exitSpecificQuery("Directivo eliminado exitosamente")     
         getDirectiva();
       }else{
         setIsLoading(false)
-        setShow(false)
         const respuesta = await result.json();
         const mensaje= respuesta.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje)

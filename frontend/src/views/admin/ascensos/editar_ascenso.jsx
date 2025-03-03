@@ -70,8 +70,8 @@ const EditarAscenso = () => {
       });
 
       if (respuesta.ok) {
-        setIsLoading(false)
         exitSpecificQuery("Ascenso actualizado exitosamente");
+        setIsLoading(false)
         navigate("/dashboard/admin/ascensos");
       } else {
         setIsLoading(false)

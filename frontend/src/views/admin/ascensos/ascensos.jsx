@@ -34,6 +34,7 @@ const Ascensos = () => {
     window.location.href = url;
   };
   const eliminarRegistro = async () => {
+    setShow(false);
     setIsLoading(true)
     const id = { id: idEliminar };
     try {
@@ -46,12 +47,10 @@ const Ascensos = () => {
       });
       if (query.ok) {
         setIsLoading(false)
-        exitSpecificQuery("Ascenso eliminado exitosamente")
-        setShow(false);
+        exitSpecificQuery("Ascenso eliminado exitosamente")      
         getData();
-      }else{
+      }else{      
         setIsLoading(false)
-        setShow(false);
         errorSpecificQuery("Error al procesar la solicitud.")
       }
     } catch (error) {
