@@ -105,7 +105,7 @@ const EditarAscenso = () => {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="container mt-4 p-4 rounded shadow-sm bg-light"
+          className="container mt-0 mt-4 p-4 rounded shadow-sm bg-light"
           style={{ maxWidth: "600px" }}
         >
           <h2 className="text-center mb-4">Editar Ascenso</h2>
