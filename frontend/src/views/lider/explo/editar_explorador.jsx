@@ -59,7 +59,7 @@ const EditarExplorador =() =>{
             
         }
         getExploById();
-    },[data, id])
+    },[id])
 
       useEffect(() => {
         async function getdataAscensos() {

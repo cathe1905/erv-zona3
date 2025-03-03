@@ -91,10 +91,10 @@ function LoginPage() {
        
         <form
           onSubmit={logIn}
-          className="card py-3 px-4 shadow-lg sombra2 mt-3"
+          className="card py-3 px-4 shadow-lg sombra2"
           style={{ maxWidth: "400px", width: "100%" }}
         >
-          <div className="text-center mb-3">
+          <div className="text-center mb-2">
             <img
               src="/logo.jpg"
               alt="Logo"
