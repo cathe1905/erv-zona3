@@ -91,7 +91,7 @@ function LoginPage() {
        
         <form
           onSubmit={logIn}
-          className="card py-3 px-4 shadow-lg sombra2"
+          className="card py-3 px-4 shadow-lg sombra2 mt-3"
           style={{ maxWidth: "400px", width: "100%" }}
         >
           <div className="text-center mb-3">
@@ -160,8 +160,8 @@ function LoginPage() {
             </a>
           </div>
         </form>
-        <footer className="mt-4 text-center">
-          <p className="text-muted letra_muy_pequeña">© {new Date().getFullYear()} E.R.V Zona 3, Desarrollado por: <span><a className="bw-bold fw-bold text-decoration-underline text-muted fst-italic" href="https://personal-portfolio-eta-ashy.vercel.app/">Catherin Romero</a></span></p>
+        <footer className="mt-2 text-center">
+          <p className="text-muted letra_muy_pequeña">© {new Date().getFullYear()} E.R.V Zona 3, Creado por: <span><a className="bw-bold fw-bold text-decoration-underline text-muted fst-italic" href="https://personal-portfolio-eta-ashy.vercel.app/">Catherin Romero</a></span></p>
         </footer>
         
       </div>

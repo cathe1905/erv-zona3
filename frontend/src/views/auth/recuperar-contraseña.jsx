@@ -5,14 +5,17 @@ import {
   errorSpecificQuery,
   exitSpecificQuery,
 } from "../../funciones";
+import GrowExample from "../../components/GrowExample";
 
 const RecuperarContraseña = () => {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
   };
   const sendRequest = async (e) => {
+    setIsLoading(true)
     e.preventDefault();
     try {
       const query = await fetch(
@@ -22,8 +25,10 @@ const RecuperarContraseña = () => {
 
       if (query.ok) {
         exitSpecificQuery(data.mensaje);
+        setIsLoading(false)
       } else {
         errorSpecificQuery(data.error);
+        setIsLoading(false)
       }
 
       setEmail('');
@@ -34,6 +39,13 @@ const RecuperarContraseña = () => {
   };
 
   return (
+    <>
+            {isLoading ? (
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{height: '25rem'}}>
+          {GrowExample()}
+          <p className="mt-3">Espere un momento</p>
+        </div>
+      ) : (
     <div className="fondo-login">
       <div className="container d-flex flex-column justify-content-center align-items-center min-vh-100 sombra login-container ">
         <form
@@ -82,7 +94,7 @@ const RecuperarContraseña = () => {
         </form>
         <footer className="mt-4 text-center">
           <p className="text-muted letra_muy_pequeña">
-            © {new Date().getFullYear()} E.R.V Zona 3, Desarrollado por:{" "}
+            © {new Date().getFullYear()} E.R.V Zona 3, Creado por:{" "}
             <span>
               <a
                 className="bw-bold fw-bold text-decoration-underline text-muted fst-italic"
@@ -95,6 +107,8 @@ const RecuperarContraseña = () => {
         </footer>
       </div>
     </div>
+     )}
+    </>
   );
 };
 

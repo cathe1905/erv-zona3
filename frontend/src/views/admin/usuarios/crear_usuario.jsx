@@ -68,7 +68,7 @@ const CrearUsuario = () => {
           });
           if (query.ok) {
             setIsLoading(false);
-            exitSpecificQuery("Usuario guardado exitosamente");
+            exitSpecificQuery("Usuario guardado exitosamente, pide al usuario que confirme su cuenta a través del mail enviado a su correo.");
             navigate("/dashboard/admin/usuarios");
           } else {
             setIsLoading(false);

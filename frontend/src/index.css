@@ -4,6 +4,7 @@
 }
 body {
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 .roboto-thin {
   font-family: "Roboto", sans-serif;

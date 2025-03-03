@@ -142,7 +142,7 @@ const IngresarNuevaContraseña = () => {
         </form>
         <footer className="mt-4 text-center">
           <p className="text-muted letra_muy_pequeña">
-            © {new Date().getFullYear()} E.R.V Zona 3, Desarrollado por:{" "}
+            © {new Date().getFullYear()} E.R.V Zona 3, Creado por:{" "}
             <span>
               <a
                 className="bw-bold fw-bold text-decoration-underline text-muted fst-italic"
