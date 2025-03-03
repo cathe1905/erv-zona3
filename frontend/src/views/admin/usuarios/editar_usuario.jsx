@@ -99,8 +99,10 @@ const EditarUsuario = () => {
           })
           if (query.ok) {
             exitSpecificQuery('Usuario actualizado exitosamente')
+            setIsLoading(false)
             navigate("/dashboard/admin/usuarios");
           }else{
+            setIsLoading(false)
             const result = await query.json();
             const mensaje= result.error || "Error al procesar la solicitud.";
             errorSpecificQuery(mensaje)
@@ -183,8 +185,7 @@ const EditarUsuario = () => {
         }
       );
 
-      if (respuesta.ok) {
-        setIsLoading(false)
+      if (respuesta.ok) {       
         evaluacionCambios();
       }else{
         setIsLoading(false)

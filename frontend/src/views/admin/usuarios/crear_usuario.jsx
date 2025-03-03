@@ -67,11 +67,11 @@ const CrearUsuario = () => {
             body: JSON.stringify(log_data_enviar),
           });
           if (query.ok) {
-            setIsLoading(false)
+            setIsLoading(false);
             exitSpecificQuery("Usuario guardado exitosamente");
             navigate("/dashboard/admin/usuarios");
           } else {
-            setIsLoading(false)
+            setIsLoading(false);
             const result = await query.json();
             const mensaje = result.error || "Error al procesar la solicitud.";
             errorSpecificQuery(mensaje);
@@ -156,7 +156,7 @@ const CrearUsuario = () => {
 
       let resultado = null;
       try {
-        resultado = await respuesta.json(); 
+        resultado = await respuesta.json();
       } catch (jsonError) {
         console.warn("La respuesta no es JSON válido:", jsonError);
       }
@@ -164,13 +164,12 @@ const CrearUsuario = () => {
       if (respuesta.ok) {
         const result = await get_id();
         if (result && result.id) {
-          setId(result.id); 
+          setId(result.id);
         } else {
           errorSpecificQuery("No se pudo obtener el ID del usuario creado.");
           navigate("/dashboard/admin/usuarios");
         }
       } else {
-
         errorSpecificQuery(
           resultado?.errores || "Error al procesar la solicitud."
         );
@@ -190,7 +189,15 @@ const CrearUsuario = () => {
   };
   return (
     <>
-     
+      {isLoading ? (
+        <div
+          className="d-flex flex-column justify-content-center align-items-center"
+          style={{ height: "25rem" }}
+        >
+          {GrowExample()}
+          <p className="mt-3">Espere un momento</p>
+        </div>
+      ) : (
         <form
           onSubmit={handleSubmit}
           className="container mt-0 mt-md-4 p-4 rounded shadow-sm bg-light"
