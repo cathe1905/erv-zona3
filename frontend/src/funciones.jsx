@@ -111,5 +111,39 @@ export async function getAscensos() {
   }
 }
 
+export const downloadExcel = async (url) => {
+  const token = import.meta.env.EXCEL_FRONTEND; // Token de autorización
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al descargar el archivo");
+    }
+
+    // Convertir la respuesta a un blob
+    const blob = await response.blob();
+
+    // Crear un enlace para descargar el archivo
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = "listado.xlsx"; // Nombre del archivo
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // Liberar el objeto URL
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("No se pudo descargar el archivo");
+  }
+};
+
 export const api= import.meta.env.VITE_API_URL;
 
