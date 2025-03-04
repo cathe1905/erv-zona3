@@ -112,13 +112,10 @@ export async function getAscensos() {
 }
 
 export const downloadExcel = async (url) => {
-  const token = import.meta.env.EXCEL_FRONTEND; // Token de autorización
+
   try {
     const response = await fetch(url, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     if (!response.ok) {
@@ -141,7 +138,7 @@ export const downloadExcel = async (url) => {
     window.URL.revokeObjectURL(downloadUrl);
   } catch (error) {
     console.error("Error:", error);
-    alert("No se pudo descargar el archivo");
+    throw error;
   }
 };
 

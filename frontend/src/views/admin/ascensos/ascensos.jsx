@@ -31,14 +31,16 @@ const Ascensos = () => {
   };
   const dowload = async () => {
     try {
-      setIsLoading(true); 
+      setIsLoading(true); // Activar estado de carga
       await downloadExcel(`${api}backend/excel?categoria=ascensos`);
-      exitSpecificQuery("Archivo descargado exitosamente"); 
+      
+      // Si no hubo errores, la descarga fue exitosa
+      exitSpecificQuery("Archivo descargado exitosamente"); // Mensaje de éxito
     } catch (error) {
       console.error("Error en la descarga:", error);
-      errorSpecificQuery("No se pudo descargar el archivo");
+      errorSpecificQuery("No se pudo descargar el archivo"); // Mensaje de error
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false); // Desactivar estado de carga
     }
   };
   const eliminarRegistro = async () => {
