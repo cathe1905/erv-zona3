@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import GrowExample from "../../../components/GrowExample";
 import { capitalize, api } from "../../../funciones";
-import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, getAscensos} from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, getAscensos, downloadExcel} from "../../../funciones";
 
 
 const Ascensos = () => {
@@ -29,9 +29,17 @@ const Ascensos = () => {
     setNombreEliminar(nombre);
     setShow(true);
   };
-  const dowload = () => {
-    const url = `${api}backend/excel?categoria=ascensos`;
-    window.location.href = url;
+  const dowload = async () => {
+    try {
+      setIsLoading(true); 
+      await downloadExcel(`${api}backend/excel?categoria=ascensos`);
+      exitSpecificQuery("Archivo descargado exitosamente"); 
+    } catch (error) {
+      console.error("Error en la descarga:", error);
+      errorSpecificQuery("No se pudo descargar el archivo");
+    } finally {
+      setIsLoading(false); 
+    }
   };
   const eliminarRegistro = async () => {
     setShow(false);

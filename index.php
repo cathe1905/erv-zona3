@@ -1,5 +1,7 @@
 <?php
-
+require_once __DIR__ . '/backend/includes/funciones.php';
+use function Controllers\loadEnv;
+loadEnv(__DIR__ . '/.env');
 header('Content-Type: application/json; charset=UTF-8');
 
 $excludedEndpoints = [
@@ -19,10 +21,24 @@ foreach ($excludedEndpoints as $endpoint) {
     }
 }
 
+// Endpoint especial para descargar Excel
+$isExcelEndpoint = strpos($requestUri, '/backend/excel') !== false;
+
 // Aplicar lógica de CORS basada en si el endpoint está exento o no
 if ($isExcluded) {
     // Permitir cualquier origen para estos endpoints
     header("Access-Control-Allow-Origin: *");
+} elseif ($isExcelEndpoint) {
+    // Permitir el acceso al endpoint de Excel solo con un token válido
+    $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    if ($token === 'Bearer ' . getenv('EXCEL_TOKEN')) {
+        header("Access-Control-Allow-Origin: *"); // Permitir cualquier origen
+    } else {
+        // Si el token no es válido, denegar el acceso
+        http_response_code(403);
+        echo json_encode(['error' => 'Acceso denegado: Token no válido']);
+        exit;
+    }
 } else {
     // Restringir el acceso solo a tu dominio frontend
     $allowedOrigin = 'https://erv-zona3.vercel.app';
@@ -31,13 +47,12 @@ if ($isExcluded) {
         if ($origin === $allowedOrigin) {
             header("Access-Control-Allow-Origin: $origin");
         } else {
-            // Si el origen no es permitido, devolver un error 403
+           
             http_response_code(403);
             echo json_encode(['error' => 'Acceso denegado: Origen no permitido']);
             exit;
         }
     } else {
-        // Si no hay encabezado Origin, denegar el acceso
         http_response_code(403);
         echo json_encode(['error' => 'Acceso denegado: Origen no especificado']);
         exit;
@@ -55,9 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE');
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-require_once __DIR__ . '/backend/includes/funciones.php';
-use function Controllers\loadEnv;
-loadEnv(__DIR__ . '/.env');
+
 
 require_once __DIR__ . '/backend/app/app.php';
 
