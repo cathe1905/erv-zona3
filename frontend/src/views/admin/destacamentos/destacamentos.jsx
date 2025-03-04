@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { capitalize, errorGeneralQuery, errorSpecificQuery, exitSpecificQuery} from "../../../funciones";
+import { capitalize, errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, downloadExcel} from "../../../funciones";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
@@ -79,10 +79,19 @@ const Destacamentos = () => {
     fetchData();
   }, []);
 
-  const dowload = () => {
-    const url = `${api}backend/excel?categoria=destacamentos`;
-    window.location.href = url;
-  };
+    const dowload = async () => {
+      try {
+        setIsLoading(true); 
+        await downloadExcel(`${api}backend/excel?categoria=destacamentos`);
+        
+        exitSpecificQuery("Archivo descargado exitosamente"); 
+      } catch (error) {
+        console.error("Error en la descarga:", error);
+        errorSpecificQuery("No se pudo descargar el archivo"); 
+      } finally {
+        setIsLoading(false); 
+      }
+    };
 
   return (
     <>

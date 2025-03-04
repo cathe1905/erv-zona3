@@ -2,9 +2,15 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PaginationGeneral from "../../../components/Pagination";
-import { capitalize,  api } from "../../../funciones";
+import {
+  capitalize,
+  api,
+  errorSpecificQuery,
+  exitSpecificQuery,
+  downloadExcel,
+} from "../../../funciones";
 import GrowExample from "../../../components/GrowExample";
-import { Table } from 'react-bootstrap';
+import { Table } from "react-bootstrap";
 
 const Explo = () => {
   const [params, setParams] = useSearchParams();
@@ -17,7 +23,7 @@ const Explo = () => {
   const [data, setData] = useState(null);
   const [total, setTotal] = useState(null);
   const [destacamentos, setDestacamentos] = useState(null);
-  const [ascensos, setAscensos]= useState(null);
+  const [ascensos, setAscensos] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
@@ -31,15 +37,15 @@ const Explo = () => {
 
         if (result.ok) {
           const respuesta = await result.json();
-          setIsLoading(false)
+          setIsLoading(false);
           setData(respuesta.exploradores);
           setTotal(respuesta.total);
-        }else{
-          setIsLoading(false)
+        } else {
+          setIsLoading(false);
           setError("Error al cargar los datos.");
         }
       } catch (error) {
-        setIsLoading(false)
+        setIsLoading(false);
         console.error("Hubo un problema con la solicitud", error);
         console.log(error);
         return;
@@ -97,23 +103,33 @@ const Explo = () => {
     });
   };
 
-  const handleAllFilters= () =>{
+  const handleAllFilters = () => {
     setParams({
       ...Object.fromEntries(params),
       destacamento: "",
       rama: "",
       query: "",
       ascenso: "",
-      limit:10,
+      limit: 10,
       page: 1,
     });
-  }
+  };
 
-  const dowload= (all) =>{
-    
-      const url = `${api}backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
-      window.open(url, "_blank"); 
-  }
+  const dowload = async (all) => {
+    try {
+      setIsLoading(true);
+      await downloadExcel(
+        `${api}backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`
+      );
+
+      exitSpecificQuery("Archivo descargado exitosamente");
+    } catch (error) {
+      console.error("Error en la descarga:", error);
+      errorSpecificQuery("No se pudo descargar el archivo");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="container-fluid letra_muy_pequeña">
@@ -123,7 +139,9 @@ const Explo = () => {
             <select
               className="form-select letra_muy_pequeña"
               value={destacamento}
-              onChange={(e) => handleFilterChange('destacamento', e.target.value)}
+              onChange={(e) =>
+                handleFilterChange("destacamento", e.target.value)
+              }
             >
               <option value="">Todos los Destacamentos</option>
               {destacamentos &&
@@ -139,7 +157,7 @@ const Explo = () => {
             <select
               className="form-select letra_muy_pequeña"
               value={rama}
-              onChange={(e) => handleFilterChange('rama', e.target.value)}
+              onChange={(e) => handleFilterChange("rama", e.target.value)}
             >
               <option value="">Todas las ramas</option>
               <option value="pre-junior">Pre-junior y Pre-Joyas</option>
@@ -153,7 +171,7 @@ const Explo = () => {
             <select
               className="form-select letra_muy_pequeña"
               value={limit}
-              onChange={(e) => handleFilterChange('limit', e.target.value)}
+              onChange={(e) => handleFilterChange("limit", e.target.value)}
             >
               <option value="10">10</option>
               <option value="25">25</option>
@@ -169,7 +187,10 @@ const Explo = () => {
               className="form-control letra_muy_pequeña"
               placeholder="Buscar por un nombre"
               onChange={(e) =>
-                handleFilterChange('query', e.target.value.trim() === '' ? '' : e.target.value)
+                handleFilterChange(
+                  "query",
+                  e.target.value.trim() === "" ? "" : e.target.value
+                )
               }
               value={query}
             />
@@ -179,7 +200,7 @@ const Explo = () => {
             <select
               className="form-select letra_muy_pequeña"
               value={ascenso}
-              onChange={(e) => handleFilterChange('ascenso', e.target.value)}
+              onChange={(e) => handleFilterChange("ascenso", e.target.value)}
             >
               <option value="">Todos los ascensos</option>
               {ascensos &&
@@ -192,14 +213,20 @@ const Explo = () => {
           </div>
 
           <div className="col-md-4 col-lg-2">
-            <button className="btn btn-outline-secondary w-100 letra_muy_pequeña" onClick={handleAllFilters}>
+            <button
+              className="btn btn-outline-secondary w-100 letra_muy_pequeña"
+              onClick={handleAllFilters}
+            >
               Limpiar filtros
             </button>
           </div>
         </div>
       </div>
 
-      <div className="table-responsive overflow-y-scroll" style={{ maxHeight: "400px"}}>
+      <div
+        className="table-responsive overflow-y-scroll"
+        style={{ maxHeight: "400px" }}
+      >
         <Table bordered hover>
           <thead className="table-light">
             <tr>
@@ -264,16 +291,21 @@ const Explo = () => {
       )}
 
       <div className="d-flex justify-content-end gap-2">
-        <button className="btn btn-outline-primary letra_muy_pequeña" onClick={() => dowload('false')}>
+        <button
+          className="btn btn-outline-primary letra_muy_pequeña"
+          onClick={() => dowload("false")}
+        >
           Descargar registros en pantalla
         </button>
-        <button className="btn btn-primary letra_muy_pequeña" onClick={() => dowload('true')}>
+        <button
+          className="btn btn-primary letra_muy_pequeña"
+          onClick={() => dowload("true")}
+        >
           Descargar toda la selección: {total}
         </button>
       </div>
     </div>
   );
-}
-
+};
 
 export default Explo;

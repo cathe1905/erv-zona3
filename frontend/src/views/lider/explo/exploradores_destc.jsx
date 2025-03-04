@@ -8,6 +8,7 @@ import {
   exitSpecificQuery,
   api,
   getUserSession,
+  downloadExcel,
 } from "../../../funciones";
 import GrowExample from "../../../components/GrowExample";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -131,7 +132,7 @@ const Explo_dest = () => {
   };
 
   const eliminarRegistro = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const id = { id: idEliminar };
     try {
       const query = await fetch(`${api}backend/explo/eliminar`, {
@@ -142,12 +143,12 @@ const Explo_dest = () => {
         body: JSON.stringify(id),
       });
       if (query.ok) {
-        setIsLoading(false)
+        setIsLoading(false);
         exitSpecificQuery("Explorador eliminado exitosamente");
         setShow(false);
         getExploradores();
       } else {
-        setIsLoading(false)
+        setIsLoading(false);
         setShow(false);
         const respuesta = await query.json();
         const mensaje = respuesta.error || "Error al procesar la solicitud.";
@@ -159,9 +160,20 @@ const Explo_dest = () => {
     }
   };
 
-  const dowload = (all) => {
-    const url = `${api}backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`;
-    window.location.href = url;
+  const dowload = async (all) => {
+    try {
+      setIsLoading(true);
+      await downloadExcel(
+        `${api}backend/excel?categoria=exploradores&destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}&all=${all}`
+      );
+
+      exitSpecificQuery("Archivo descargado exitosamente");
+    } catch (error) {
+      console.error("Error en la descarga:", error);
+      errorSpecificQuery("No se pudo descargar el archivo");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -382,7 +394,11 @@ const Explo_dest = () => {
               </Tooltip>
             }
           >
-            <Button variant="primary" className="btn letra_muy_pequeña" onClick={() => dowload("false")}>
+            <Button
+              variant="primary"
+              className="btn letra_muy_pequeña"
+              onClick={() => dowload("false")}
+            >
               Descargar
             </Button>
           </OverlayTrigger>
@@ -394,11 +410,14 @@ const Explo_dest = () => {
               </Tooltip>
             }
           >
-            <Button variant="primary" className="btn letra_muy_pequeña" onClick={() => dowload("true")}>
-            Descargar todo: {total}
+            <Button
+              variant="primary"
+              className="btn letra_muy_pequeña"
+              onClick={() => dowload("true")}
+            >
+              Descargar todo: {total}
             </Button>
           </OverlayTrigger>
-          
         </div>
       </div>
     </div>
