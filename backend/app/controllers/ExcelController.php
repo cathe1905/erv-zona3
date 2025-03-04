@@ -83,10 +83,10 @@ class ExcelController
                 'Num',
                 'Nombres',
                 'Apellidos',
-                'Ascenso',
                 'Cargo',
                 'Telefono',
-                'Destacamento'
+                'Destacamento',
+                'Ascenso'
             ];
             $filename = 'Registro_directiva.xlsx'; 
         }
@@ -105,6 +105,8 @@ class ExcelController
             $data= User::all();
             $columnas= [
                 'Num',
+                'Nombre',
+                'Apellido',
                 'Email',
                 'Destacamento',
                 'Rol'
@@ -131,7 +133,7 @@ class ExcelController
         foreach ($data as $record) {
             $sheet->setCellValue('A' . strval($contador_celda), $contador_general);
             foreach ($record as $key => $value) {
-                if($key !== 'id' && $key !== 'foto'){
+                if($key !== 'id'){
                     if (is_numeric($value) && strlen($value) > 10) {
                         $sheet->setCellValueExplicit($letras[$contador_letras] . strval($contador_celda), $value, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
                     } else {
