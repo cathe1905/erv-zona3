@@ -85,6 +85,7 @@ class ExcelController
                 'Apellidos',
                 'Cargo',
                 'Telefono',
+                'Foto',
                 'Destacamento',
                 'Ascenso'
             ];
