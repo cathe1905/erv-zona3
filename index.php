@@ -4,9 +4,10 @@ use function Controllers\loadEnv;
 loadEnv(__DIR__ . '/.env');
 header('Content-Type: application/json; charset=UTF-8');
 
+// Rutas excluidas (accesibles desde cualquier origen)
 $excludedEndpoints = [
     '/backend/users/verification',
-	'/backend/users/verification-token-reset',
+    '/backend/users/verification-token-reset'
 ];
 
 // Obtener la ruta solicitada
@@ -21,33 +22,33 @@ foreach ($excludedEndpoints as $endpoint) {
     }
 }
 
-// Endpoint especial para descargar Excel
-$isExcelEndpoint = strpos($requestUri, '/backend/excel') !== false;
+// Manejar solicitudes OPTIONS (preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    if ($isExcluded) {
+        // Permitir cualquier origen para endpoints excluidos
+        header("Access-Control-Allow-Origin: *");
+    } else {
+        // Restringir a tu dominio frontend para las demás rutas
+        header("Access-Control-Allow-Origin: " . getenv('URL_FRONTEND'));
+    }
+    header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    http_response_code(204);
+    exit;
+}
 
 // Aplicar lógica de CORS basada en si el endpoint está exento o no
 if ($isExcluded) {
     // Permitir cualquier origen para estos endpoints
     header("Access-Control-Allow-Origin: *");
-} elseif ($isExcelEndpoint) {
-    // Permitir el acceso al endpoint de Excel solo con un token válido
-    $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    if ($token === 'Bearer ' . getenv('EXCEL_TOKEN')) {
-        header("Access-Control-Allow-Origin: *"); // Permitir cualquier origen
-    } else {
-        // Si el token no es válido, denegar el acceso
-        http_response_code(403);
-        echo json_encode(['error' => 'Acceso denegado: Token no válido']);
-        exit;
-    }
 } else {
     // Restringir el acceso solo a tu dominio frontend
-    $allowedOrigin = 'https://erv-zona3.vercel.app';
+    $allowedOrigin = getenv('URL_FRONTEND');
     if (isset($_SERVER['HTTP_ORIGIN'])) {
         $origin = $_SERVER['HTTP_ORIGIN'];
         if ($origin === $allowedOrigin) {
             header("Access-Control-Allow-Origin: $origin");
         } else {
-           
             http_response_code(403);
             echo json_encode(['error' => 'Acceso denegado: Origen no permitido']);
             exit;
@@ -59,17 +60,10 @@ if ($isExcluded) {
     }
 }
 
-// Manejar solicitudes OPTIONS (preflight)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization");
-    http_response_code(204);
-    exit;
-}
 
+// Cabeceras comunes para todas las respuestas
 header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE');
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
 
 
 require_once __DIR__ . '/backend/app/app.php';

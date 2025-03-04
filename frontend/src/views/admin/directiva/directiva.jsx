@@ -5,7 +5,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api} from "../../../funciones";
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api, downloadExcel} from "../../../funciones";
 import GrowExample from "../../../components/GrowExample";
 
 const Directiva = () => {
@@ -86,10 +86,20 @@ const Directiva = () => {
     getDirectiva();
   }, []);
 
-  const dowload= () =>{
-    const url = 'http://erv-zona3/backend/excel?categoria=directiva';
-    window.location.href = url; 
-}
+    const dowload = async () => {
+      try {
+        setIsLoading(true); 
+        await downloadExcel(`${api}backend/excel?categoria=directiva`);
+        
+        exitSpecificQuery("Archivo descargado exitosamente"); 
+      } catch (error) {
+        console.error("Error en la descarga:", error);
+        errorSpecificQuery("No se pudo descargar el archivo"); 
+      } finally {
+        setIsLoading(false); 
+      }
+    };
+    
   return (
     <>
     {error && <p className="error-message">{error}</p>}

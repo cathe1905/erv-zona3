@@ -9,9 +9,10 @@ import {
   exitSpecificQuery,
   errorSpecificQuery,
   errorGeneralQuery,
+  api,
+  downloadExcel,
 } from "../../../funciones";
 import { getUserSession } from "../../../funciones";
-import {api} from "../../../funciones";
 import GrowExample from "../../../components/GrowExample";
 
 const Usuarios = () => {
@@ -27,9 +28,18 @@ const Usuarios = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const dowload = () => {
-    const url = `${api}backend/excel?categoria=usuarios`;
-    window.location.href = url;
+  const dowload = async () => {
+    try {
+      setIsLoading(true);
+      await downloadExcel(`${api}backend/excel?categoria=usuarios`);
+
+      exitSpecificQuery("Archivo descargado exitosamente");
+    } catch (error) {
+      console.error("Error en la descarga:", error);
+      errorSpecificQuery("No se pudo descargar el archivo");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClose = () => {
@@ -138,7 +148,10 @@ const Usuarios = () => {
   return (
     <>
       {error && <p className="error-message text-center">{error}</p>}
-      <div className="table-responsive d-flex justify-content-center overflow-y-scroll" style={{ maxHeight: "400px"}}>
+      <div
+        className="table-responsive d-flex justify-content-center overflow-y-scroll"
+        style={{ maxHeight: "400px" }}
+      >
         <div className="col-12 col-md-10">
           <table className="table table-bordered table-hover letra_muy_pequeña">
             <thead className="table-light">
