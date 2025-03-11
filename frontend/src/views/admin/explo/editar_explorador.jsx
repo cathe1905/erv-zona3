@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   errorGeneralQuery,
   errorSpecificQuery,
@@ -6,16 +6,15 @@ import {
   api,
   capitalize,
   getAscensos,
-  calcularEdad,
+  getDestacamentos,
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
-import { getUserSession } from "../../../funciones";
 import { useSearchParams } from "react-router-dom";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import GrowExample from "../../../components/GrowExample";
 
-const EditarExplorador = () => {
+export const EditarExploAdmin = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -24,7 +23,8 @@ const EditarExplorador = () => {
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [ascensos, setAscensos] = useState(null);
-  const [destacamento, setDestacamento] = useState("");
+  const [destacamentos, setDestacamentos] = useState(null);
+//   const [destacamento, setDestacamento] = useState("");
   const [data, setData] = useState({
     nombres: "",
     apellidos: "",
@@ -37,13 +37,6 @@ const EditarExplorador = () => {
     email: "",
     destacamento_id: "",
   });
-
-  useEffect(() => {
-    const userData = getUserSession();
-    if (userData) {
-      setDestacamento(userData.destacamento);
-    }
-  }, []);
 
   useEffect(() => {
     const getExploById = async () => {
@@ -78,9 +71,16 @@ const EditarExplorador = () => {
       }
     }
     getdataAscensos();
+    const fetch_destacamento = async () => {
+      const result = await getDestacamentos();
+      setDestacamentos(result);
+    };
+    fetch_destacamento();
   }, []);
 
   const handleSubmit = async (e) => {
+
+    
     setIsLoading(true);
     e.preventDefault();
     const data_enviar = {
@@ -108,7 +108,7 @@ const EditarExplorador = () => {
       if (respuesta.ok) {
         setIsLoading(false);
         exitSpecificQuery("Explorador actualizado exitosamente");
-        navigate(`/dashboard/dest/explo?destacamento=${destacamento}`);
+        navigate('/dashboard/admin/explo');
       } else {
         setIsLoading(false);
         const result = await respuesta.json();
@@ -127,12 +127,6 @@ const EditarExplorador = () => {
       [name]: value,
     });
   };
-  const edad = useMemo(() => {
-    if (data.fecha_nacimiento !== "") {
-      return calcularEdad(data.fecha_nacimiento);
-    }
-    return null;
-  }, [data.fecha_nacimiento]);
 
   return (
     <>
@@ -203,55 +197,54 @@ const EditarExplorador = () => {
                 />
               </FloatingLabel>
             </div>
-            {edad >= 18 ? (
-              <div className="col-12">
-                <FloatingLabel
-                  controlId="floatingAscenso"
-                  label="Ascenso"
-                  className="mb-3"
+
+            <div className="col-12">
+              <FloatingLabel
+                controlId="floatingAscenso"
+                label="Ascenso"
+                className="mb-3"
+              >
+                <Form.Control
+                  as="select"
+                  name="ascenso_id"
+                  value={data.ascenso_id}
+                  onChange={handleOnchange}
+                  required
                 >
-                  <Form.Control
-                    as="select"
-                    name="ascenso_id"
-                    value={data.ascenso_id}
-                    onChange={handleOnchange}
-                    disabled
-                  >
-                    <option value="">Seleccione un ascenso</option>
-                    {ascensos &&
-                      ascensos.map((ascenso) => (
-                        <option key={ascenso.id} value={ascenso.id}>
-                          {capitalize(ascenso.nombre)}
-                        </option>
-                      ))}
-                  </Form.Control>
-                </FloatingLabel>
-              </div>
-            ) : (
-              <div className="col-12">
-                <FloatingLabel
-                  controlId="floatingAscenso"
-                  label="Ascenso"
-                  className="mb-3"
+                  <option value="">Seleccione un ascenso</option>
+                  {ascensos &&
+                    ascensos.map((ascenso) => (
+                      <option key={ascenso.id} value={ascenso.id}>
+                        {capitalize(ascenso.nombre)}
+                      </option>
+                    ))}
+                </Form.Control>
+              </FloatingLabel>
+            </div>
+             <div className="col-12">
+                <FloatingLabel 
+                controlId="floatingDestacamento"
+                label="Destacamento"
+                className="mb-3"
                 >
-                  <Form.Control
-                    as="select"
-                    name="ascenso_id"
-                    value={data.ascenso_id}
-                    onChange={handleOnchange}
+                <Form.Control 
+                    as="select" 
+                    name="destacamento_id" 
+                    value={data.destacamento_id} 
+                    onChange={handleOnchange} 
                     required
-                  >
-                    <option value="">Seleccione un ascenso</option>
-                    {ascensos &&
-                      ascensos.map((ascenso) => (
-                        <option key={ascenso.id} value={ascenso.id}>
-                          {capitalize(ascenso.nombre)}
+                >
+                    <option value="">Seleccione un destacamento</option>
+                    {destacamentos &&
+                    destacamentos.map((destacamento) => (
+                        <option key={destacamento.id} value={destacamento.id}>
+                        {capitalize(destacamento.nombre)}
                         </option>
-                      ))}
-                  </Form.Control>
+                    ))}
+                </Form.Control>
                 </FloatingLabel>
-              </div>
-            )}
+                </div>
+  
 
             <div className="col-12">
               <FloatingLabel
@@ -348,5 +341,3 @@ const EditarExplorador = () => {
     </>
   );
 };
-
-export default EditarExplorador;

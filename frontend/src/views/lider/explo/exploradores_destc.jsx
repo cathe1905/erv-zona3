@@ -264,6 +264,7 @@ const Explo_dest = () => {
               <th>Apellidos</th>
               <th>Fecha de Nacimiento</th>
               <th>Edad</th>
+              <th>Fecha de Promesación</th>
               <th>Rama</th>
               <th>Ascenso</th>
               <th>Cargo</th>
@@ -289,6 +290,7 @@ const Explo_dest = () => {
                   <td>{capitalize(explo.apellidos)}</td>
                   <td>{explo.fecha_nacimiento}</td>
                   <td>{explo.edad}</td>
+                  <td>{explo.fecha_promesacion}</td>
                   <td>{capitalize(explo.rama)}</td>
                   <td>{explo.ascenso}</td>
                   <td>{explo.cargo}</td>
@@ -316,20 +318,22 @@ const Explo_dest = () => {
                         >
                           Editar
                         </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() =>
-                            handleShow({
-                              id: explo.id,
-                              nombre:
-                                capitalize(explo.nombres) +
-                                " " +
-                                capitalize(explo.apellidos),
-                            })
-                          }
-                          eventKey="2"
-                        >
-                          Eliminar
-                        </Dropdown.Item>
+                        {explo.edad <= 18 && (
+                          <Dropdown.Item
+                            onClick={() =>
+                              handleShow({
+                                id: explo.id,
+                                nombre:
+                                  capitalize(explo.nombres) +
+                                  " " +
+                                  capitalize(explo.apellidos),
+                              })
+                            }
+                            eventKey="2"
+                          >
+                            Eliminar
+                          </Dropdown.Item>
+                        )}
                       </Dropdown.Menu>
                     </Dropdown>
                   </td>

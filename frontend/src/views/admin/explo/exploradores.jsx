@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -6,11 +7,16 @@ import {
   capitalize,
   api,
   errorSpecificQuery,
+  errorGeneralQuery,
   exitSpecificQuery,
   downloadExcel,
 } from "../../../funciones";
 import GrowExample from "../../../components/GrowExample";
 import { Table } from "react-bootstrap";
+import Dropdown from "react-bootstrap/Dropdown";
+import { useNavigate } from "react-router-dom";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 const Explo = () => {
   const [params, setParams] = useSearchParams();
@@ -25,32 +31,46 @@ const Explo = () => {
   const [destacamentos, setDestacamentos] = useState(null);
   const [ascensos, setAscensos] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [idEliminar, setIdEliminar] = useState(null);
+  const [nombreEliminar, setNombreEliminar] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
+  const [show, setShow] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const getExploradores = async () => {
-      try {
-        const result = await fetch(
-          `${api}backend/explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
-        );
+  const handleClose = () => {
+    setIdEliminar(null);
+    setNombreEliminar(null);
+    setShow(false);
+  };
+  const handleShow = ({ id, nombre }) => {
+    setIdEliminar(id);
+    setNombreEliminar(nombre);
+    setShow(true);
+  };
+  const getExploradores = async () => {
+    try {
+      const result = await fetch(
+        `${api}backend/explo?destacamento=${destacamento}&rama=${rama}&query=${query}&ascenso=${ascenso}&page=${page}&limit=${limit}`
+      );
 
-        if (result.ok) {
-          const respuesta = await result.json();
-          setIsLoading(false);
-          setData(respuesta.exploradores);
-          setTotal(respuesta.total);
-        } else {
-          setIsLoading(false);
-          setError("Error al cargar los datos.");
-        }
-      } catch (error) {
+      if (result.ok) {
+        const respuesta = await result.json();
         setIsLoading(false);
-        console.error("Hubo un problema con la solicitud", error);
-        console.log(error);
-        return;
+        setData(respuesta.exploradores);
+        setTotal(respuesta.total);
+      } else {
+        setIsLoading(false);
+        setError("Error al cargar los datos.");
       }
-    };
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Hubo un problema con la solicitud", error);
+      console.log(error);
+      return;
+    }
+  };
+  useEffect(() => {
     getExploradores();
   }, [destacamento, rama, query, ascenso, page, limit]);
 
@@ -128,6 +148,35 @@ const Explo = () => {
       errorSpecificQuery("No se pudo descargar el archivo");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const eliminarRegistro = async () => {
+    setIsLoading(true);
+    const id = { id: idEliminar };
+    try {
+      const query = await fetch(`${api}backend/explo/eliminar`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(id),
+      });
+      if (query.ok) {
+        setIsLoading(false);
+        exitSpecificQuery("Explorador eliminado exitosamente");
+        setShow(false);
+        getExploradores();
+      } else {
+        setIsLoading(false);
+        setShow(false);
+        const respuesta = await query.json();
+        const mensaje = respuesta.error || "Error al procesar la solicitud.";
+        errorSpecificQuery(mensaje);
+      }
+    } catch (error) {
+      console.log(error);
+      errorGeneralQuery();
     }
   };
 
@@ -242,6 +291,7 @@ const Explo = () => {
               <th>Teléfono</th>
               <th>Email</th>
               <th>Destacamento</th>
+              <th>Acción</th>
             </tr>
           </thead>
           <tbody>
@@ -266,6 +316,43 @@ const Explo = () => {
                   <td>{explo.telefono}</td>
                   <td>{explo.email}</td>
                   <td>{capitalize(explo.destacamento)}</td>
+                  <td>
+                    <Dropdown drop="start">
+                      <Dropdown.Toggle
+                        as="span"
+                        id="dropdown-custom-trigger"
+                        className="action"
+                      >
+                        . . .
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          onClick={() =>
+                            navigate(
+                              `/dashboard/admin/explo/editar?id=${explo.id}`
+                            )
+                          }
+                          eventKey="1"
+                        >
+                          Editar
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() =>
+                            handleShow({
+                              id: explo.id,
+                              nombre:
+                                capitalize(explo.nombres) +
+                                " " +
+                                capitalize(explo.apellidos),
+                            })
+                          }
+                          eventKey="2"
+                        >
+                          Eliminar
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </td>
                 </tr>
               ))
             ) : (
@@ -278,7 +365,27 @@ const Explo = () => {
           </tbody>
         </Table>
       </div>
-
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Eliminar explorador</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          ¿Estás seguro(a) que deseas eliminar a: {nombreEliminar}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button onClick={eliminarRegistro} variant="primary">
+            Si
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {total > 0 && (
         <div className="d-flex justify-content-end">
           <PaginationGeneral
@@ -289,20 +396,28 @@ const Explo = () => {
           />
         </div>
       )}
+      <div className="d-flex flex-column flex-md-row align-items-end justify-content-md-end gap-2 pb-2">
+        <button
+          className="btn btn-secondary letra_muy_pequeña "
+          onClick={() => navigate("/dashboard/admin/explo/crear")}
+        >
+          Crear nuevo explorador
+        </button>
 
-      <div className="d-flex justify-content-end gap-2">
-        <button
-          className="btn btn-outline-primary letra_muy_pequeña"
-          onClick={() => dowload("false")}
-        >
-          Descargar registros en pantalla
-        </button>
-        <button
-          className="btn btn-primary letra_muy_pequeña"
-          onClick={() => dowload("true")}
-        >
-          Descargar toda la selección: {total}
-        </button>
+        <div className="d-flex justify-content-end gap-2">
+          <button
+            className="btn btn-outline-primary letra_muy_pequeña"
+            onClick={() => dowload("false")}
+          >
+            Descargar registros en pantalla
+          </button>
+          <button
+            className="btn btn-primary letra_muy_pequeña"
+            onClick={() => dowload("true")}
+          >
+            Descargar toda la selección: {total}
+          </button>
+        </div>
       </div>
     </div>
   );

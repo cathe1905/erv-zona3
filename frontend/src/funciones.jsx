@@ -142,5 +142,54 @@ export const downloadExcel = async (url) => {
   }
 };
 
+export const calcularEdad = (fechaNacimiento) => {
+  // Verificar que la fecha tenga el formato correcto
+  if (!fechaNacimiento || typeof fechaNacimiento !== 'string' || fechaNacimiento.length !== 10) {
+    console.error("Formato de fecha inválido. Debe ser YYYY-MM-DD.");
+    return null;
+  }
+
+  // Dividir la cadena de fecha en año, mes y día
+  const [anio, mes, dia] = fechaNacimiento.split('-').map(Number);
+
+  // Validar que los valores sean números válidos
+  if (isNaN(dia) || isNaN(mes) || isNaN(anio)) {
+    console.error("La fecha de nacimiento contiene valores no numéricos.");
+    return null;
+  }
+
+  // Crear un objeto Date con la fecha de nacimiento
+  const fechaNac = new Date(anio, mes - 1, dia); // Los meses en Date son 0-indexados (0 = enero)
+
+  // Validar que la fecha sea válida
+  if (
+    fechaNac.getFullYear() !== anio ||
+    fechaNac.getMonth() + 1 !== mes ||
+    fechaNac.getDate() !== dia
+  ) {
+    console.error("Fecha de nacimiento inválida.");
+    return null;
+  }
+
+  // Obtener la fecha actual
+  const fechaActual = new Date();
+
+  // Calcular la diferencia de años
+  let edad = fechaActual.getFullYear() - fechaNac.getFullYear();
+
+  // Ajustar la edad si el cumpleaños aún no ha ocurrido este año
+  const mesActual = fechaActual.getMonth();
+  const diaActual = fechaActual.getDate();
+
+  if (
+    mesActual < fechaNac.getMonth() ||
+    (mesActual === fechaNac.getMonth() && diaActual < fechaNac.getDate())
+  ) {
+    edad--; // Restar 1 si el cumpleaños aún no ha pasado
+  }
+
+  return edad;
+};
+
 export const api= import.meta.env.VITE_API_URL;
 
