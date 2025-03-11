@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   errorGeneralQuery,
   errorSpecificQuery,
@@ -6,25 +6,20 @@ import {
   api,
   capitalize,
   getAscensos,
-  calcularEdad,
+  getDestacamentos
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
-import { getUserSession } from "../../../funciones";
-import { useSearchParams } from "react-router-dom";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import GrowExample from "../../../components/GrowExample";
 
-const EditarExplorador = () => {
+export const CrearExploAdmin = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [params, setParams] = useSearchParams();
-  const id = parseInt(params.get("id"), 10) || null;
+  const [destacamentos, setDestacamentos] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [ascensos, setAscensos] = useState(null);
-  const [destacamento, setDestacamento] = useState("");
   const [data, setData] = useState({
     nombres: "",
     apellidos: "",
@@ -38,35 +33,6 @@ const EditarExplorador = () => {
     destacamento_id: "",
   });
 
-  useEffect(() => {
-    const userData = getUserSession();
-    if (userData) {
-      setDestacamento(userData.destacamento);
-    }
-  }, []);
-
-  useEffect(() => {
-    const getExploById = async () => {
-      try {
-        const query = await fetch(`${api}backend/explo/actualizar?id=${id}`);
-        if (query.ok) {
-          const result = await query.json();
-          setData({
-            ...data,
-            ...result,
-          });
-        } else {
-          const result = await query.json();
-          const mensaje = result.error || "Error al procesar la solicitud.";
-          errorSpecificQuery(mensaje);
-        }
-      } catch (error) {
-        console.log(error);
-        errorGeneralQuery();
-      }
-    };
-    getExploById();
-  }, [id]);
 
   useEffect(() => {
     async function getdataAscensos() {
@@ -97,7 +63,7 @@ const EditarExplorador = () => {
       }
     }
     try {
-      const respuesta = await fetch(`${api}backend/explo/actualizar`, {
+      const respuesta = await fetch(`${api}backend/explo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,8 +73,8 @@ const EditarExplorador = () => {
 
       if (respuesta.ok) {
         setIsLoading(false);
-        exitSpecificQuery("Explorador actualizado exitosamente");
-        navigate(`/dashboard/dest/explo?destacamento=${destacamento}`);
+        exitSpecificQuery("Explorador creado exitosamente");
+        navigate('/dashboard/admin/explo');
       } else {
         setIsLoading(false);
         const result = await respuesta.json();
@@ -127,12 +93,19 @@ const EditarExplorador = () => {
       [name]: value,
     });
   };
-  const edad = useMemo(() => {
-    if (data.fecha_nacimiento !== "") {
-      return calcularEdad(data.fecha_nacimiento);
-    }
-    return null;
-  }, [data.fecha_nacimiento]);
+    useEffect(() => {
+      const fetch_destacamento = async () => {
+        const result = await getDestacamentos();
+        setDestacamentos(result);
+      };
+      fetch_destacamento();
+  
+      const fetch_ascensos = async () => {
+        const result = await getAscensos();
+        setAscensos(result);
+      };
+      fetch_ascensos();
+    }, []);
 
   return (
     <>
@@ -150,7 +123,7 @@ const EditarExplorador = () => {
           className="container mt-0 mt-md-4 p-4 rounded shadow-sm bg-light"
           style={{ maxWidth: "600px" }}
         >
-          <h2 className="text-center mb-4">Editar explorador</h2>
+          <h2 className="text-center mb-4">Crear nuevo explorador</h2>
 
           <div className="row gy-3">
             <div className="col-12">
@@ -203,55 +176,53 @@ const EditarExplorador = () => {
                 />
               </FloatingLabel>
             </div>
-            {edad >= 18 ? (
-              <div className="col-12">
-                <FloatingLabel
-                  controlId="floatingAscenso"
-                  label="Ascenso"
-                  className="mb-3"
+            <div className="col-12">
+              <FloatingLabel
+                controlId="floatingDestacamento"
+                label="Destacamento"
+                className="mb-3"
+              >
+                <Form.Control
+                  as="select"
+                  name="destacamento_id"
+                  value={data.destacamento_id}
+                  onChange={handleOnchange}
+                  required
                 >
-                  <Form.Control
-                    as="select"
-                    name="ascenso_id"
-                    value={data.ascenso_id}
-                    onChange={handleOnchange}
-                    disabled
-                  >
-                    <option value="">Seleccione un ascenso</option>
-                    {ascensos &&
-                      ascensos.map((ascenso) => (
-                        <option key={ascenso.id} value={ascenso.id}>
-                          {capitalize(ascenso.nombre)}
-                        </option>
-                      ))}
-                  </Form.Control>
-                </FloatingLabel>
-              </div>
-            ) : (
-              <div className="col-12">
-                <FloatingLabel
-                  controlId="floatingAscenso"
-                  label="Ascenso"
-                  className="mb-3"
+                  <option value="">Seleccione un destacamento</option>
+                  {destacamentos &&
+                    destacamentos.map((destacamento) => (
+                      <option key={destacamento.id} value={destacamento.id}>
+                        {capitalize(destacamento.nombre)}
+                      </option>
+                    ))}
+                </Form.Control>
+              </FloatingLabel>
+            </div>
+
+            <div className="col-12">
+              <FloatingLabel
+                controlId="floatingAscenso"
+                label="Ascenso"
+                className="mb-3"
+              >
+                <Form.Control
+                  as="select"
+                  name="ascenso_id"
+                  value={data.ascenso_id}
+                  onChange={handleOnchange}
+                  required
                 >
-                  <Form.Control
-                    as="select"
-                    name="ascenso_id"
-                    value={data.ascenso_id}
-                    onChange={handleOnchange}
-                    required
-                  >
-                    <option value="">Seleccione un ascenso</option>
-                    {ascensos &&
-                      ascensos.map((ascenso) => (
-                        <option key={ascenso.id} value={ascenso.id}>
-                          {capitalize(ascenso.nombre)}
-                        </option>
-                      ))}
-                  </Form.Control>
-                </FloatingLabel>
-              </div>
-            )}
+                  <option value="">Seleccione un ascenso</option>
+                  {ascensos &&
+                    ascensos.map((ascenso) => (
+                      <option key={ascenso.id} value={ascenso.id}>
+                        {capitalize(ascenso.nombre)}
+                      </option>
+                    ))}
+                </Form.Control>
+              </FloatingLabel>
+            </div>
 
             <div className="col-12">
               <FloatingLabel
@@ -338,7 +309,7 @@ const EditarExplorador = () => {
             <div className="col-12">
               <div className="d-grid">
                 <button type="submit" className="btn btn-primary">
-                  Guardar cambios
+                  Crear explorador
                 </button>
               </div>
             </div>
@@ -348,5 +319,3 @@ const EditarExplorador = () => {
     </>
   );
 };
-
-export default EditarExplorador;

@@ -28,6 +28,8 @@ import FailedToken from "./views/auth/falloToken.jsx";
 import RecuperarContraseña from "./views/auth/recuperar-contraseña.jsx";
 import IngresarNuevaContraseña from "./views/auth/nueva-contraseña.jsx";
 import Logs from "./views/admin/logs.jsx";
+import { EditarExploAdmin } from "./views/admin/explo/editar_explorador.jsx";
+import { CrearExploAdmin } from "./views/admin/explo/crear_explo_admin.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
@@ -48,6 +50,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route element={<Layout />}>
             <Route path="/dashboard/admin" element={<Dashboard />} />
             <Route path="/dashboard/admin/explo" element={<Explo />} />
+            <Route path="/dashboard/admin/explo/crear" element={<CrearExploAdmin />} />
+            <Route path="/dashboard/admin/explo/editar" element={<EditarExploAdmin />} />
             <Route path="/dashboard/admin/destacamentos" element={<Destacamentos />} />
             <Route path="/dashboard/admin/destacamentos/crear" element={<CrearDestacamento />} />
             <Route path="/dashboard/admin/destacamentos/editar" element={<EditarDestacamento />} />
