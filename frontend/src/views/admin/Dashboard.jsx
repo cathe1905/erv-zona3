@@ -146,7 +146,7 @@ const Dashboard = () => {
                 <p className="col-12 m-1">Directiva Zonal</p>
               </div>
               <a
-                href="/dashboard/admin/explo"
+                href="/dashboard/admin/directiva"
                 className="text-decoration-none d-flex justify-content-center align-items-center text-white fondo_verde_oscuro m-0 p-2 rounded-bottom-2 letra_muy_pequeña text-center"
               >
                 <p className="mb-0 me-2">Mas información</p>
