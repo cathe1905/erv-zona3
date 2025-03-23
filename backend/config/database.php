@@ -1,13 +1,34 @@
 <?php
 
-function dbConnection(): mysqli {
-    // Configuración de producción
+function dbConnection(): mysqli
+{
+    $environment = getenv('APP_ENV'); 
+
     $dbConfig = [
-        'host' => 'sao.domcloud.co',
-        'user' => 'exploradoresz3',
-        'password' => getenv('DATA_BASE'), // Obtiene la contraseña del archivo .env
-        'db_name' => 'exploradoresz3_db'
+        'host' => '',
+        'user' => '',
+        'password' => '',
+        'db_name' => ''
     ];
+
+    if ($environment === 'production') {
+        $dbConfig['host'] = 'sao.domcloud.co';
+        $dbConfig['user'] = 'exploradoresz3';
+        $dbConfig['password'] = getenv('DATA_BASE');
+        $dbConfig['db_name'] = 'exploradoresz3_db';
+
+    } elseif ($environment === 'development') {
+        $dbConfig['host'] = 'sao.domcloud.co';
+        $dbConfig['user'] = 'ervzona3';
+        $dbConfig['password'] = getenv('DATA_BASE');
+        $dbConfig['db_name'] = 'ervzona3_db';
+
+    } else { // local
+        $dbConfig['host'] = 'localhost';
+        $dbConfig['user'] = 'root';
+        $dbConfig['password'] = '';
+        $dbConfig['db_name'] = 'erv_zona3';
+    }
 
     // Conexión a la base de datos
     $db = new mysqli(
@@ -26,4 +47,4 @@ function dbConnection(): mysqli {
     return $db;
 }
 
-?>
+
