@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Aplicar lógica de CORS basada en si el endpoint está exento o no
 if ($isExcluded) {
     // Permitir cualquier origen para estos endpoints
-    header("Access-Control-Allow-Origin: *");
+ header("Access-Control-Allow-Origin: *");
 } else {
     // Restringir el acceso solo a tu dominio frontend
     $allowedOrigin = getenv('URL_FRONTEND');
@@ -77,6 +77,9 @@ use Controllers\RankController;
 use Controllers\StatisticsController;
 use Controllers\UserController;
 use Controllers\LogController;
+use Controllers\PaymentsRequestsController;
+use Controllers\PaymentsController;
+use Controllers\PaymentsHistoryController;
 
 $router= new Router();
 
@@ -124,6 +127,19 @@ $router->get('/backend/excel', [ExcelController::class, 'descargarExcel']);
 
 $router->get('/backend/logs', [LogController::class, 'get_logs']);
 $router->post('/backend/logs', [LogController::class, 'save_log']);
+
+$router->get('/backend/solicitud_pagos', [PaymentsRequestsController::class, 'get_payments_requests']);
+$router->post('/backend/solicitud_pagos', [PaymentsRequestsController::class, 'create_payment_request']);
+$router->get('/backend/solicitud_pagos/actualizar', [PaymentsRequestsController::class, 'edit_payment_request']);
+$router->post('/backend/solicitud_pagos/actualizar', [PaymentsRequestsController::class, 'edit_payment_request']);
+$router->post('/backend/rechazar-solicitud', [PaymentsRequestsController::class, 'reject_request']);
+
+$router->get('/backend/pagos', [PaymentsController::class, 'get_payments']);
+$router->post('/backend/aprobar-pagos', [PaymentsController::class, 'set_payments']);
+
+$router->get('/backend/historial-solicitudes', [PaymentsHistoryController::class, 'get_all_history']);
+
+
 
 $router->comprobarRutas();
 

@@ -21,6 +21,7 @@ function newRecord($class, $type)
         $jsonInput = file_get_contents('php://input');
         // Decodificar el JSON a un array asociativo
         $data = json_decode($jsonInput, true);
+
         $imagen = null;
 
         if (isset($data[$type])) {
@@ -32,14 +33,20 @@ function newRecord($class, $type)
                 http_response_code(400);
                 $response = [
                     'errores' => $errores,
-                    'mensaje' => 'No se pudo crear el ' .  $type . 'debido a errores en la entrada.',
+                    'mensaje' => 'No se pudo crear el ' .  $type . ' debido a errores en la entrada.',
                 ];
                 echo json_encode($response);
                 return;
             }
 
-            if ($type === 'directiva') {
-                $base64String = $data[$type]['foto'];
+            if ($type === 'directiva' || $type === 'solicitudes') {
+                $base64String= "";
+                if($type === 'directiva'){
+                    $base64String = $data[$type]['foto'];
+                }else{
+                    $base64String = $data[$type]['comprobante_imagen'];
+                }
+               
                 // Verificar si la cadena contiene el prefijo adecuado
                 if (strpos($base64String, 'data:image/') !== false) {
                     // Eliminar el prefijo
@@ -62,10 +69,11 @@ function newRecord($class, $type)
                     $urlImagen = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/imagenes/' . $nombreImagen;
                 }
             }
+
             //Intentar crear el recurso
             $result = $record->crear();
 
-            if ($result) {
+            if ($result === 'success') {
                 http_response_code(201);
                 $response = [
                     'mensaje' => $type . ' creado exitosamente.',
@@ -147,10 +155,15 @@ function editRecord($class, $type)
                 echo json_encode(['errores' => $errores]);
                 return;
             }
-            //se hace el mismo procedimiento de crear a imagen ya que todo se reescribe
-            if ($type === 'directiva') {
+            //se hace el mismo procedimiento de crear la imagen ya que todo se reescribe
+            if ($type === 'directiva' || $type === 'solicitudes') {
 
-                $base64String = $data[$type]['foto'];
+                $base64String= "";
+                if($type === 'directiva'){
+                    $base64String = $data[$type]['foto'];
+                }else{
+                    $base64String = $data[$type]['comprobante_imagen'];
+                }
 
                 if (!terminaEnJpg($base64String)) {
                     // Verificar si la cadena contiene el prefijo adecuado
@@ -167,8 +180,14 @@ function editRecord($class, $type)
                     $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
 
                     if ($image_data) {
+                        
                         $imagen = Image::make($image_data);
-                        $record->setImagen($nombreImagen, $postDecode['foto']);
+                        if($type === 'directiva'){
+                            $record->setImagen($nombreImagen, $postDecode['foto']);
+                        }elseif($type === 'solicitudes'){
+                            $record->setImagen($nombreImagen, $postDecode['comprobante_imagen']);
+                        }
+                        
                         $imagen->save(CARPETA_IMAGENES . $nombreImagen);
                     }
                 }

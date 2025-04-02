@@ -2,8 +2,6 @@
 
 namespace Model;
 
-use function Controllers\debuguear;
-
 class Explo extends ActiveRecord
 {
 
