@@ -216,7 +216,6 @@ class ActiveRecord
 
         if ($request->num_rows > 0) {
             $user = $request->fetch_assoc(); // Retorna los datos del registro
-
             return $user;
         } else {
             return false; // Retorna falso si no encontró ningún registro

@@ -6,8 +6,8 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import GrowExample from "../../../components/GrowExample";
 import { capitalize, api } from "../../../funciones";
-import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, getAscensos, downloadExcel} from "../../../funciones";
-
+import { errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, downloadExcel} from "../../../funciones";
+import { useExplo } from "../../../hook/useExplo";
 
 const Ascensos = () => {
   const [data, setData] = useState(null);
@@ -16,8 +16,9 @@ const Ascensos = () => {
   const [idEliminar, setIdEliminar] = useState(null);
   const [nombreEliminar, setNombreEliminar] = useState(null);
   const [show, setShow] = useState(false);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const {state, dispatch} = useExplo();
 
   const handleClose = () => {
     setIdEliminar(null);
@@ -29,20 +30,20 @@ const Ascensos = () => {
     setNombreEliminar(nombre);
     setShow(true);
   };
+
   const dowload = async () => {
     try {
-      setIsLoading(true); // Activar estado de carga
+      setIsLoading(true); 
       await downloadExcel(`${api}backend/excel?categoria=ascensos`);
-      
-      // Si no hubo errores, la descarga fue exitosa
-      exitSpecificQuery("Archivo descargado exitosamente"); // Mensaje de éxito
+      exitSpecificQuery("Archivo descargado exitosamente"); 
     } catch (error) {
       console.error("Error en la descarga:", error);
-      errorSpecificQuery("No se pudo descargar el archivo"); // Mensaje de error
+      errorSpecificQuery("No se pudo descargar el archivo"); 
     } finally {
-      setIsLoading(false); // Desactivar estado de carga
+      setIsLoading(false); 
     }
   };
+
   const eliminarRegistro = async () => {
     setShow(false);
     setIsLoading(true)
@@ -56,36 +57,25 @@ const Ascensos = () => {
         body: JSON.stringify(id),
       });
       if (query.ok) {
-        setIsLoading(false)
         exitSpecificQuery("Ascenso eliminado exitosamente")      
-        getData();
+        dispatch({type: "change_ascensos"})
       }else{      
-        setIsLoading(false)
         errorSpecificQuery("Error al procesar la solicitud.")
       }
     } catch (error) {
       console.log(error);
       errorGeneralQuery();
+    }finally{
+      setIsLoading(false)
     }
   };
 
-  async function getData() {
-      const respuesta = await getAscensos();
-      if(respuesta){
-        setData(respuesta);
-        setIsLoading(false)
-        setError(null); 
-      }else{
-        setIsLoading(false)
-        setError("Error al cargar los datos.");
-        setIsLoading(false)
-      }
-    } 
-  
-
   useEffect(() => {
-    getData();
-  }, []);
+    if(state.ascensos){
+      setIsLoading(false)
+      setData(state.ascensos)
+    }
+  }, [state.ascensos]);
 
   return (
     <>

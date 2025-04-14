@@ -1,5 +1,4 @@
-import Swal from 'sweetalert2'
-import { jwtDecode } from "jwt-decode";
+import { toast } from 'react-toastify';
 
 export function capitalize(str) {
   if (!str || str.charAt(0) === str.charAt(0).toUpperCase()) {
@@ -25,30 +24,15 @@ export const findRama = (tipo, data) => {
 };
 
 export function errorGeneralQuery(){
-  return Swal.fire({
-    title: "Error inesperado",
-    text: "No se pudo conectar con el servidor. Por favor, intenta más tarde.",
-    icon: "error",
-    confirmButtonText: "Ok",
-  });
+  return toast.error("No se pudo conectar con el servidor. Por favor, intenta más tarde.")
 }
 
 export function errorSpecificQuery(mensaje){
-  return Swal.fire({
-    title: "Error",
-    text: mensaje,
-    icon: "error",
-    confirmButtonText: "Ok",
-  });
+  return toast.error(mensaje)
 }
 
 export function exitSpecificQuery(mensaje){
-  Swal.fire({
-    title: "Exito",
-    text: mensaje,
-    icon: "success",
-    confirmButtonText: "Ok",
-  });
+  return toast.success(mensaje)
 }
 
 export const find_names_by_ids = (key, value, obj) => {
@@ -60,56 +44,6 @@ export const find_names_by_ids = (key, value, obj) => {
   }
 };
 
-export const getUserSession = () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    return null;
-  }
- 
-  try {
-    const destacamento = jwtDecode(token);
-    return destacamento.data;
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    return null;
-  }
-};
-export async function getDestacamentos() {
-  try {
-    const result = await fetch(`${api}backend/destacamentos`);
-
-    if (result.ok) {
-      const respuesta = await result.json();
-      return respuesta;
-    }else{
-      const respuesta = await result.json();
-      const mensaje= respuesta.error || "Error al procesar la solicitud.";
-      errorSpecificQuery(mensaje)
-    }
-  } catch (error) {
-    console.error("Hubo un problema con la solicitud", error);
-    console.log(error);
-    errorGeneralQuery();
-  }
-}
-
-export async function getAscensos() {
-  try {
-    const result = await fetch(`${api}backend/ascensos`);
-    if (result.ok) {
-      const respuesta = await result.json();
-      return respuesta;
-    }else{
-      const respuesta = await result.json();
-      const mensaje= respuesta.error || "Error al procesar la solicitud.";
-      errorSpecificQuery(mensaje)
-    }
-  } catch (error) {
-    console.error("Hubo un problema con la solicitud", error);
-    console.log(error);
-    errorGeneralQuery();
-  }
-}
 
 export const downloadExcel = async (url) => {
 
@@ -190,6 +124,9 @@ export const calcularEdad = (fechaNacimiento) => {
 
   return edad;
 };
+
+
+
 
 export const api= import.meta.env.VITE_API_URL;
 

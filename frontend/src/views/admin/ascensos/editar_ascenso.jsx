@@ -11,17 +11,18 @@ import { useSearchParams } from "react-router-dom";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import GrowExample from "../../../components/GrowExample";
+import { useExplo } from "../../../hook/useExplo";
 
 const EditarAscenso = () => {
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const id = parseInt(params.get("id"), 10) || null;
   const navigate = useNavigate();
   const [data, setData] = useState({
     nombre: "",
     rama: "",
   });
+  const {dispatch} = useExplo();
 
   useEffect(() => {
     const getAscensoById = async () => {
@@ -44,7 +45,7 @@ const EditarAscenso = () => {
       }
     };
     getAscensoById();
-  }, []);
+  }, [id]);
 
   const handleSubmit = async (e) => {
     setIsLoading(true)
@@ -71,10 +72,9 @@ const EditarAscenso = () => {
 
       if (respuesta.ok) {
         exitSpecificQuery("Ascenso actualizado exitosamente");
-        setIsLoading(false)
+        dispatch({type: "change_ascensos"})
         navigate("/dashboard/admin/ascensos");
       } else {
-        setIsLoading(false)
         const result = await respuesta.json();
         const mensaje = result.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
@@ -82,6 +82,8 @@ const EditarAscenso = () => {
     } catch (error) {
       console.log(error);
       errorGeneralQuery();
+    }finally{
+      setIsLoading(false)
     }
   };
   const handleOnchange = (e) => {

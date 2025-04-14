@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import GrowExample from "../../../components/GrowExample";
+import {useExplo} from "../../../hook/useExplo"
 
 const CrearDestacamento = () => {
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ const CrearDestacamento = () => {
     capellan: "",
     zona_id: "3",
   });
+
+  const {dispatch} = useExplo()
 
   const handleSubmit = async (e) => {
     setIsLoading(true)
@@ -50,11 +53,10 @@ const CrearDestacamento = () => {
         body: JSON.stringify(datosParaEnviar),
       });
       if (respuesta.ok) {
-        setIsLoading(false)
         exitSpecificQuery("Destacamento guardado exitosamente");
+        dispatch({type: "change_destacamentos"})
         navigate("/dashboard/admin/destacamentos");
       } else {
-        setIsLoading(false)
         const result = await respuesta.json();
         const mensaje = result.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
@@ -62,6 +64,8 @@ const CrearDestacamento = () => {
     } catch (error) {
       console.log(error);
       errorGeneralQuery();
+    }finally{
+      setIsLoading(false)
     }
   };
   const handleChange = (e) => {

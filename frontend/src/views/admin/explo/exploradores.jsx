@@ -17,6 +17,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import {useExplo} from '../../../hook/useExplo'
 
 const Explo = () => {
   const [params, setParams] = useSearchParams();
@@ -28,7 +29,7 @@ const Explo = () => {
   const limit = parseInt(params.get("limit") || "10", 10);
   const [data, setData] = useState(null);
   const [total, setTotal] = useState(null);
-  const [destacamentos, setDestacamentos] = useState(null);
+  const [destacamentos, setDestacamentos] = useState([]);
   const [ascensos, setAscensos] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [idEliminar, setIdEliminar] = useState(null);
@@ -37,6 +38,8 @@ const Explo = () => {
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
+
+  const {state} = useExplo()
 
   const handleClose = () => {
     setIdEliminar(null);
@@ -75,38 +78,15 @@ const Explo = () => {
   }, [destacamento, rama, query, ascenso, page, limit]);
 
   useEffect(() => {
-    const getDestacamentos = async () => {
-      try {
-        const result = await fetch(`${api}backend/destacamentos`);
-        if (result.ok) {
-          const respuesta = await result.json();
-          setDestacamentos(respuesta);
-        }
-      } catch (error) {
-        console.error("Hubo un problema con la solicitud", error);
-        console.log(error);
-        return;
-      }
-    };
-    getDestacamentos();
-  }, []);
+    if(state.destacamentos){
+      setDestacamentos(state.destacamentos)
+    }
+  }, [state.destacamentos]);
 
   useEffect(() => {
-    const getAscensos = async () => {
-      try {
-        const result = await fetch(`${api}backend/ascensos`);
-        if (result.ok) {
-          const respuesta = await result.json();
-          setAscensos(respuesta);
-        }
-      } catch (error) {
-        console.error("Hubo un problema con la solicitud", error);
-        console.log(error);
-        return;
-      }
-    };
-    getAscensos();
-  }, []);
+    if(state.ascensos)
+      setAscensos(state.ascensos);
+  }, [state.ascensos]);
 
   const handleFilterChange = (key, value) => {
     setParams({
@@ -193,7 +173,7 @@ const Explo = () => {
               }
             >
               <option value="">Todos los Destacamentos</option>
-              {destacamentos &&
+              {destacamentos.length &&
                 destacamentos.map((dest) => (
                   <option key={dest.id} value={dest.id}>
                     {capitalize(dest.nombre)}

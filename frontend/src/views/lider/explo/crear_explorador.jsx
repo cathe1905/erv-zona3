@@ -5,19 +5,17 @@ import {
   exitSpecificQuery,
   api,
   capitalize,
-  getAscensos,
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
-import { getUserSession } from "../../../funciones";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import GrowExample from "../../../components/GrowExample";
+import { useExplo } from "../../../hook/useExplo";
 
 const CrearExplorador = () => {
+  const {state} = useExplo()
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState(null);
   const [ascensos, setAscensos] = useState(null);
   const [idDestacamento, setIdDestacamento] = useState("");
   const [destacamento, setDestacamento] = useState("");
@@ -35,12 +33,11 @@ const CrearExplorador = () => {
   });
 
   useEffect(() => {
-    const userData = getUserSession();
-    if (userData) {
-      setIdDestacamento(userData.destacamento_id);
-      setDestacamento(userData.destacamento);
+    if (state.user_info) {
+      setIdDestacamento(state.user_info.destacamento_id);
+      setDestacamento(state.user_info.destacamento);
     }
-  }, []);
+  }, [state.user_info]);
 
   useEffect(() => {
     setData((prevData) => ({
@@ -50,16 +47,9 @@ const CrearExplorador = () => {
   }, [idDestacamento]);
 
   useEffect(() => {
-    async function getdataAscensos() {
-      const respuesta = await getAscensos();
-      if (respuesta) {
-        setAscensos(respuesta);
-      } else {
-        setError("Error al cargar los ascensos");
-      }
-    }
-    getdataAscensos();
-  }, []);
+    if(state.ascensos)
+      setAscensos(state.ascensos);
+  }, [state.ascensos]);
 
   const handleSubmit = async (e) => {
     setIsLoading(true)
@@ -87,11 +77,9 @@ const CrearExplorador = () => {
       });
 
       if (respuesta.ok) {
-        setIsLoading(false)
         exitSpecificQuery("Explorador creado exitosamente");
         navigate(`/dashboard/dest/explo?destacamento=${destacamento}`);
       } else {
-        setIsLoading(false)
         const result = await respuesta.json();
         const mensaje = result.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
@@ -99,8 +87,11 @@ const CrearExplorador = () => {
     } catch (error) {
       console.log(error);
       errorGeneralQuery();
+    }finally{
+      setIsLoading(false)
     }
   };
+
   const handleOnchange = (e) => {
     const { name, value } = e.target;
     setData({
@@ -108,6 +99,7 @@ const CrearExplorador = () => {
       [name]: value,
     });
   };
+  
   return (
     <>
       {isLoading ? (

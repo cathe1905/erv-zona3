@@ -6,12 +6,12 @@ import { useSearchParams } from "react-router-dom";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import GrowExample from "../../../components/GrowExample";
+import {useExplo} from "../../../hook/useExplo"
 
 const EditarDestacamento = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const id = parseInt(params.get("id"), 10) || null;
   const [data, setData] = useState({
     nombre: "",
@@ -27,6 +27,8 @@ const EditarDestacamento = () => {
     capellan: "",
     zona_id: "3",
   });
+
+  const {dispatch} = useExplo()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,11 +83,10 @@ const EditarDestacamento = () => {
         }
       );
       if (respuesta.ok) {
-        setIsLoading(false)
         exitSpecificQuery("Destacamento actualizado exitosamente");
+        dispatch({type: "change_destacamentos"})
         navigate("/dashboard/admin/destacamentos");
       } else {
-        setIsLoading(false)
         const result = await respuesta.json();
         const mensaje = result.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
@@ -93,6 +94,8 @@ const EditarDestacamento = () => {
     } catch (error) {
       console.log(error);
       errorGeneralQuery();
+    }finally{
+      setIsLoading(false)
     }
   };
   const handleChange = (e) => {

@@ -2,16 +2,13 @@
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { capitalize, getUserSession } from "../../funciones";
+import { capitalize} from "../../funciones";
 import { useNavigate } from "react-router-dom";
 import GrowExample from "../../components/GrowExample";
-
-const Logout = () => {
-  localStorage.removeItem("token");
-  location.href = "/";
-};
+import { useExplo } from "../../hook/useExplo";
 
 const Menu = ({ destacamento }) => {
+  const {Logout} = useExplo()
   return (
     <>
       <nav className="row d-flex flex-column roboto-regular text-white mx-md-2">
@@ -42,6 +39,7 @@ const Menu = ({ destacamento }) => {
 };
 
 const LayoutDest = () => {
+  const {state} = useExplo()
   const [show, setShow] = useState(false);
   const [destacamento, setDestacamento] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,14 +48,13 @@ const LayoutDest = () => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    const data = getUserSession();
-    if (!data) {
+    if (!state.user_info) {
       navigate("/");
     }
-    setDestacamento(data);
+    setDestacamento(state.user_info);
 
     setLoading(false);
-  }, [navigate]);
+  }, [navigate, state.user_info]);
 
   const retroceder = () => {
     navigate(-1);

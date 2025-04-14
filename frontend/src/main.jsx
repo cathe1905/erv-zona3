@@ -1,4 +1,3 @@
-import App from "./App.jsx";
 import Dashboard from "./views/admin/Dashboard.jsx";
 import Dashboard_dest from "./views/lider/Dashboard_dest.jsx";
 import RequireAuth from "./components/requireAuth.jsx";
@@ -32,52 +31,69 @@ import { EditarExploAdmin } from "./views/admin/explo/editar_explorador.jsx";
 import { CrearExploAdmin } from "./views/admin/explo/crear_explo_admin.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import { ToastContainer } from 'react-toastify';
+import ListadoPagos from "./views/admin/treasury/ListadoPagos.jsx";
+import ListadoSolicitudes from "./views/admin/treasury/ListadoSolicitudes.jsx";
+import { ExploProvider } from "./context/ExploContext.tsx";
+import LoginPage from "./views/auth/login.jsx";
+import CrearSolicitud from "./views/admin/treasury/CrearSolicitud.jsx";
 
-export const UserContext = React.createContext();
+// export const UserContext = React.createContext();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
+  
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/verificacion-exitosa" element={<SuccessVerification />} />
-        <Route path="/verificacion-fallida" element={<FailedVerification />} />
-        <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
-        <Route path="/ingresar-nueva-contraseña" element={<IngresarNuevaContraseña />} />
-        <Route path="/token-invalido" element={<FailedToken />} />
+    <ExploProvider>
+        <ToastContainer />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/verificacion-exitosa" element={<SuccessVerification />} />
+                <Route path="/verificacion-fallida" element={<FailedVerification />} />
+                <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
+                <Route path="/ingresar-nueva-contraseña" element={<IngresarNuevaContraseña />} />
+                <Route path="/token-invalido" element={<FailedToken />} />
 
-        <Route element={<RequireAuth role={1} />}>
-          <Route element={<Layout />}>
-            <Route path="/dashboard/admin" element={<Dashboard />} />
-            <Route path="/dashboard/admin/explo" element={<Explo />} />
-            <Route path="/dashboard/admin/explo/crear" element={<CrearExploAdmin />} />
-            <Route path="/dashboard/admin/explo/editar" element={<EditarExploAdmin />} />
-            <Route path="/dashboard/admin/destacamentos" element={<Destacamentos />} />
-            <Route path="/dashboard/admin/destacamentos/crear" element={<CrearDestacamento />} />
-            <Route path="/dashboard/admin/destacamentos/editar" element={<EditarDestacamento />} />
-            <Route path="/dashboard/admin/ascensos" element={<Ascensos />} />
-            <Route path="/dashboard/admin/ascensos/crear" element={<CrearAscenso />} />
-            <Route path="/dashboard/admin/ascensos/editar" element={<EditarAscenso />} />
-            <Route path="/dashboard/admin/directiva" element={<Directiva />} />
-            <Route path="/dashboard/admin/directiva/crear" element={<CrearDirectiva />} />
-            <Route path="/dashboard/admin/directiva/editar" element={<EditarDirectiva />} />
-            <Route path="/dashboard/admin/usuarios" element={<Usuarios />} />
-            <Route path="/dashboard/admin/usuarios/crear" element={<CrearUsuario />} />
-            <Route path="/dashboard/admin/usuarios/editar" element={<EditarUsuario />} />
-            <Route path="/dashboard/admin/logs" element={<Logs />} />
-          </Route>
-        </Route>
+                <Route element={<RequireAuth role={[1,3]} />}>
+                  <Route element={<Layout />}>
+                    <Route path="/dashboard/admin" element={<Dashboard />} />
+                    <Route path="/dashboard/admin/explo" element={<Explo />} />
+                    <Route path="/dashboard/admin/explo/crear" element={<CrearExploAdmin />} />
+                    <Route path="/dashboard/admin/explo/editar" element={<EditarExploAdmin />} />
+                    <Route path="/dashboard/admin/destacamentos" element={<Destacamentos />} />
+                    <Route path="/dashboard/admin/destacamentos/crear" element={<CrearDestacamento />} />
+                    <Route path="/dashboard/admin/destacamentos/editar" element={<EditarDestacamento />} />
+                    <Route path="/dashboard/admin/ascensos" element={<Ascensos />} />
+                    <Route path="/dashboard/admin/ascensos/crear" element={<CrearAscenso />} />
+                    <Route path="/dashboard/admin/ascensos/editar" element={<EditarAscenso />} />
+                    <Route path="/dashboard/admin/directiva" element={<Directiva />} />
+                    <Route path="/dashboard/admin/directiva/crear" element={<CrearDirectiva />} />
+                    <Route path="/dashboard/admin/directiva/editar" element={<EditarDirectiva />} />
+                    <Route path="/dashboard/admin/usuarios" element={<Usuarios />} />
+                    <Route path="/dashboard/admin/usuarios/crear" element={<CrearUsuario />} />
+                    <Route path="/dashboard/admin/usuarios/editar" element={<EditarUsuario />} />
+                    <Route path="/dashboard/admin/logs" element={<Logs />} />
+                  </Route>
+                </Route>
 
-        <Route element={<RequireAuth role={2} />}>
-          <Route element={<LayoutDest />}>
-            <Route path="/dashboard/dest" element={<Dashboard_dest />} />
-            <Route path="/dashboard/dest/explo" element={<Explo_dest />} />
-            <Route path="/dashboard/dest/explo/crear" element={<CrearExplorador />} />
-            <Route path="/dashboard/dest/explo/editar" element={<EditarExplorador />} />
-          </Route>
-
-        </Route>
-      </Routes>
-    </BrowserRouter>
+                <Route element={<RequireAuth role={3} />}>
+                  <Route element={<Layout />}>
+                    <Route path="/dashboard/admin/tesoreria/solicitudes" element={<ListadoSolicitudes/>} />
+                    <Route path="/dashboard/admin/tesoreria/pagos" element={<ListadoPagos />} />
+                    <Route path="/dashboard/admin/tesoreria/solicitudes/crear" element={<CrearSolicitud />} />
+                  </Route>
+                </Route>
+                
+                <Route element={<RequireAuth role={2} />}>
+                  <Route element={<LayoutDest />}>
+                    <Route path="/dashboard/dest" element={<Dashboard_dest />} />
+                    <Route path="/dashboard/dest/explo" element={<Explo_dest />} />
+                    <Route path="/dashboard/dest/explo/crear" element={<CrearExplorador />} />
+                    <Route path="/dashboard/dest/explo/editar" element={<EditarExplorador />} />
+                </Route>
+                </Route>
+            </Routes>
+          </BrowserRouter>
+      </ExploProvider>
    </React.StrictMode>
 );

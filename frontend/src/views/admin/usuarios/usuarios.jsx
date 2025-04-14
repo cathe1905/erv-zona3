@@ -12,10 +12,11 @@ import {
   api,
   downloadExcel,
 } from "../../../funciones";
-import { getUserSession } from "../../../funciones";
 import GrowExample from "../../../components/GrowExample";
+import { useExplo } from "../../../hook/useExplo";
 
 const Usuarios = () => {
+    const {state} = useExplo()
   const [data, setData] = useState(null);
   const navigate = useNavigate();
   let contador = 1;
@@ -73,9 +74,8 @@ const Usuarios = () => {
 
   useEffect(() => {
     getUsers();
-    const dataUserSession = getUserSession();
-    setIdUserSession(dataUserSession.id);
-  }, []);
+    setIdUserSession(state.user_info.id);
+  }, [state.user_info.id]);
 
   useEffect(() => {
     if (sent === true) {

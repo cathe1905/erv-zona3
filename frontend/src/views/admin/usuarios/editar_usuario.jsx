@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery, getDestacamentos} from "../../../funciones";
+import { exitSpecificQuery, errorSpecificQuery, errorGeneralQuery} from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { capitalize, api, find_names_by_ids } from "../../../funciones";
 import { useSearchParams } from "react-router-dom";
-import { getUserSession } from "../../../funciones";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import GrowExample from "../../../components/GrowExample";
-
+import { useExplo } from "../../../hook/useExplo";
 
 const EditarUsuario = () => {
+  const {state} = useExplo()
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
   const [params, setParams] = useSearchParams();
@@ -39,11 +39,6 @@ const EditarUsuario = () => {
   const [idUserSession, setIdUserSession] = useState(null);
 
   useEffect(() => {
-    const fetchDestacamentos = async () => {
-      const result = await getDestacamentos();
-      setDestacamentos(result);
-    };
-    fetchDestacamentos();
     const getUserById = async () => {
       try {
         const query = await fetch(
@@ -78,10 +73,16 @@ const EditarUsuario = () => {
       }
     };
     getUserById();
-    const dataUserSession = getUserSession();
-    setIdUserSession(dataUserSession.id);
+
+    setIdUserSession(state.user_info.id);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    if(state.destacamentos){
+      setDestacamentos(state.destacamentos)
+    }
+  }, [state.destacamentos])
 
   useEffect(() => {
     if (log.admin_id !== "" || log.action !== "" || log.target_id !== "" || log.details !== "") {
@@ -99,10 +100,8 @@ const EditarUsuario = () => {
           })
           if (query.ok) {
             exitSpecificQuery('Usuario actualizado exitosamente')
-            setIsLoading(false)
             navigate("/dashboard/admin/usuarios");
           }else{
-            setIsLoading(false)
             const result = await query.json();
             const mensaje= result.error || "Error al procesar la solicitud.";
             errorSpecificQuery(mensaje)
@@ -110,6 +109,8 @@ const EditarUsuario = () => {
         } catch (error) {
           console.log(error);
           errorGeneralQuery();
+        }finally{
+          setIsLoading(false);
         }
       }
       save_log();

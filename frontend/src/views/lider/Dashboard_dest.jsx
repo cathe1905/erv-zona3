@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getUserSession } from "../../funciones";
 import {
   errorSpecificQuery,
   errorGeneralQuery,
@@ -11,8 +10,10 @@ import { findRama } from "../../funciones";
 import Number from "../../components/Animation";
 import BarChart from "../../components/BarChart";
 import GrowExample from "../../components/GrowExample";
+import { useExplo } from "../../hook/useExplo";
 
 const Dashboard_dest = () => {
+  const {state} = useExplo()
   const [param, setParam] = useSearchParams();
   const [data, setData] = useState(null);
   const destacamento = param.get("destacamento") || "";
@@ -21,14 +22,8 @@ const Dashboard_dest = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const evaluateUser = async () => {
-      const user = await getUserSession();
-      if (user) {
-        setUser(user);
-      }
-    };
-    evaluateUser();
-  }, []);
+      setUser(state.user_info);
+  }, [state.user_info]);
 
   const getStadisticas = useCallback(async () => {
     if (!user) {

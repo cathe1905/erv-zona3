@@ -5,24 +5,21 @@ import {
   exitSpecificQuery,
   api,
   capitalize,
-  getAscensos,
   calcularEdad,
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
-import { getUserSession } from "../../../funciones";
 import { useSearchParams } from "react-router-dom";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import GrowExample from "../../../components/GrowExample";
+import { useExplo } from "../../../hook/useExplo";
 
 const EditarExplorador = () => {
+  const {state} = useExplo()
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const id = parseInt(params.get("id"), 10) || null;
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState(null);
   const [ascensos, setAscensos] = useState(null);
   const [destacamento, setDestacamento] = useState("");
   const [data, setData] = useState({
@@ -39,11 +36,10 @@ const EditarExplorador = () => {
   });
 
   useEffect(() => {
-    const userData = getUserSession();
-    if (userData) {
-      setDestacamento(userData.destacamento);
+    if (state.user_info) {
+      setDestacamento(state.user_info.destacamento);
     }
-  }, []);
+  }, [state.user_info]);
 
   useEffect(() => {
     const getExploById = async () => {
@@ -69,16 +65,9 @@ const EditarExplorador = () => {
   }, [id]);
 
   useEffect(() => {
-    async function getdataAscensos() {
-      const respuesta = await getAscensos();
-      if (respuesta) {
-        setAscensos(respuesta);
-      } else {
-        setError("Error al cargar los ascensos");
-      }
-    }
-    getdataAscensos();
-  }, []);
+    if(state.ascensos)
+      setAscensos(state.ascensos);
+  }, [state.ascensos]);
 
   const handleSubmit = async (e) => {
     setIsLoading(true);
@@ -106,11 +95,9 @@ const EditarExplorador = () => {
       });
 
       if (respuesta.ok) {
-        setIsLoading(false);
         exitSpecificQuery("Explorador actualizado exitosamente");
         navigate(`/dashboard/dest/explo?destacamento=${destacamento}`);
       } else {
-        setIsLoading(false);
         const result = await respuesta.json();
         const mensaje = result.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
@@ -118,8 +105,11 @@ const EditarExplorador = () => {
     } catch (error) {
       console.log(error);
       errorGeneralQuery();
+    }finally{
+      setIsLoading(false);
     }
   };
+
   const handleOnchange = (e) => {
     const { name, value } = e.target;
     setData({
@@ -127,6 +117,7 @@ const EditarExplorador = () => {
       [name]: value,
     });
   };
+  
   const edad = useMemo(() => {
     if (data.fecha_nacimiento !== "") {
       return calcularEdad(data.fecha_nacimiento);

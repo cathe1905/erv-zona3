@@ -4,11 +4,13 @@ import Number from "../../components/Animation";
 import { errorSpecificQuery, errorGeneralQuery, api } from "../../funciones";
 import BarChart from "../../components/BarChart";
 import GrowExample from "../../components/GrowExample";
+// import { useExplo } from "../../hook/useExplo";
 
 const Dashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  // const {state} = useExplo();
+  // console.log(state)
   const getEstadisticas = async () => {
     
     try {

@@ -5,20 +5,17 @@ import {
   exitSpecificQuery,
   api,
   capitalize,
-  getAscensos,
-  getDestacamentos
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import GrowExample from "../../../components/GrowExample";
+import { useExplo } from "../../../hook/useExplo";
 
 export const CrearExploAdmin = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [destacamentos, setDestacamentos] = useState(null);
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState(null);
   const [ascensos, setAscensos] = useState(null);
   const [data, setData] = useState({
     nombres: "",
@@ -32,19 +29,13 @@ export const CrearExploAdmin = () => {
     email: "",
     destacamento_id: "",
   });
-
+  const {state} = useExplo()
 
   useEffect(() => {
-    async function getdataAscensos() {
-      const respuesta = await getAscensos();
-      if (respuesta) {
-        setAscensos(respuesta);
-      } else {
-        setError("Error al cargar los ascensos");
-      }
+    if(state.ascensos){
+      setAscensos(state.ascensos);
     }
-    getdataAscensos();
-  }, []);
+  }, [state.ascensos]);
 
   const handleSubmit = async (e) => {
     setIsLoading(true);
@@ -72,11 +63,9 @@ export const CrearExploAdmin = () => {
       });
 
       if (respuesta.ok) {
-        setIsLoading(false);
         exitSpecificQuery("Explorador creado exitosamente");
         navigate('/dashboard/admin/explo');
       } else {
-        setIsLoading(false);
         const result = await respuesta.json();
         const mensaje = result.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
@@ -84,6 +73,8 @@ export const CrearExploAdmin = () => {
     } catch (error) {
       console.log(error);
       errorGeneralQuery();
+    }finally{
+      setIsLoading(false)
     }
   };
   const handleOnchange = (e) => {
@@ -93,19 +84,12 @@ export const CrearExploAdmin = () => {
       [name]: value,
     });
   };
+
     useEffect(() => {
-      const fetch_destacamento = async () => {
-        const result = await getDestacamentos();
-        setDestacamentos(result);
-      };
-      fetch_destacamento();
-  
-      const fetch_ascensos = async () => {
-        const result = await getAscensos();
-        setAscensos(result);
-      };
-      fetch_ascensos();
-    }, []);
+      if(state.destacamentos){
+        setDestacamentos(state.destacamentos)
+      }
+    }, [state.destacamentos]);
 
   return (
     <>

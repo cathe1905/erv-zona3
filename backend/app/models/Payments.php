@@ -121,45 +121,44 @@ class Payments extends ActiveRecord
                         'monto', p.monto,
                         'responsable_id', p.responsable_id,
                         'solicitud_id', p.solicitud_id,
-                        'año', YEAR(p.mes)
+                        'año', YEAR(p.mes),
+                        'responsable', CONCAT(r.nombres, ' ', r.apellidos)
                     )
                 )
                 FROM pagos p
+                JOIN exploradores r ON p.responsable_id = r.id
                 WHERE p.oficial_id = e.id
-                AND p.destacamento_id = d.id";
-
-        if ($año !== null) {
-            $query .= " AND YEAR(p.mes) = " . static::$db->escape_string($año);
-        }
-
-        $query .= "), '[]') AS meses_pagados
+                AND p.destacamento_id = d.id
+                AND YEAR(p.mes) = " . static::$db->escape_string($año) . "
+            ), '[]') AS meses_pagados
         FROM exploradores e
-        JOIN destacamentos d ON e.destacamento_id = d.id";
-
+        JOIN destacamentos d ON e.destacamento_id = d.id
+        WHERE TIMESTAMPDIFF(YEAR, e.fecha_nacimiento, CURDATE()) >= 18";
+    
         $whereConditions = [];
-
+    
         if ($destacamento_id !== null) {
             $whereConditions[] = "e.destacamento_id = " . static::$db->escape_string($destacamento_id);
         }
-
+    
         if ($nombre !== null) {
             $whereConditions[] = "(e.nombres LIKE '%" . static::$db->escape_string($nombre) . "%' OR e.apellidos LIKE '%" . static::$db->escape_string($nombre) . "%')";
         }
-
+    
         if (!empty($whereConditions)) {
-            $query .= " WHERE " . implode(" AND ", $whereConditions);
+            $query .= " AND " . implode(" AND ", $whereConditions);
         }
-
+    
         $query .= " ORDER BY e.apellidos, e.nombres";
-
+    
         if ($limit !== null) {
             $offset = ($page - 1) * $limit;
             $query .= " LIMIT " . static::$db->escape_string($offset) . ", " . static::$db->escape_string($limit);
         }
-
+    
         $result = static::$db->query($query);
         $pagos = [];
-
+    
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 $row['meses_pagados'] = json_decode($row['meses_pagados'], true) ?? [];
@@ -169,6 +168,37 @@ class Payments extends ActiveRecord
         } else {
             error_log('Error en SQL: ' . static::$db->error . "\nConsulta: " . $query);
             return ['error' => 'Error al obtener pagos', 'details' => static::$db->error];
+        }
+    }
+    
+    public static function all_payments_count($año, $destacamento_id, $nombre) {
+        $query = "SELECT COUNT(*) AS total
+        FROM exploradores e
+        JOIN destacamentos d ON e.destacamento_id = d.id
+        WHERE TIMESTAMPDIFF(YEAR, e.fecha_nacimiento, CURDATE()) >= 18";
+    
+        $whereConditions = [];
+    
+        if ($destacamento_id !== null) {
+            $whereConditions[] = "e.destacamento_id = " . static::$db->escape_string($destacamento_id);
+        }
+    
+        if ($nombre !== null) {
+            $whereConditions[] = "(e.nombres LIKE '%" . static::$db->escape_string($nombre) . "%' OR e.apellidos LIKE '%" . static::$db->escape_string($nombre) . "%')";
+        }
+    
+        if (!empty($whereConditions)) {
+            $query .= " AND " . implode(" AND ", $whereConditions);
+        }
+    
+        $result = static::$db->query($query);
+    
+        if ($result) {
+            $cuenta = $result->fetch_assoc();
+            return $cuenta['total'];
+        } else {
+            error_log('Error en SQL: ' . static::$db->error . "\nConsulta: " . $query);
+            return ['error' => 'Error al obtener conteo de exploradores', 'details' => static::$db->error];
         }
     }
 }

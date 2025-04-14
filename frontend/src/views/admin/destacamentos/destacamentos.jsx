@@ -6,18 +6,21 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import GrowExample from "../../../components/GrowExample";
-import { api, getDestacamentos } from "../../../funciones";
+import { api} from "../../../funciones";
+import {useExplo} from "../../../hook/useExplo"
 
 
 const Destacamentos = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [idEliminar, setIdEliminar] = useState(null);
   const [nombreEliminar, setNombreEliminar] = useState(null);
   let contador = 1;
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const {state, dispatch} = useExplo()
 
   const handleClose = () => {
     setIdEliminar(null);
@@ -49,8 +52,7 @@ const Destacamentos = () => {
         setIsLoading(false)
         exitSpecificQuery("Destacamento eliminado exitosamente")
         setShow(false);
-        const respuesta = await getDestacamentos();
-        setData(respuesta);
+        dispatch({type: "change_destacamentos"})
       }else{
         setIsLoading(false)
         errorSpecificQuery("Error al procesar la solicitud.")
@@ -65,19 +67,12 @@ const Destacamentos = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-        const result = await getDestacamentos();
-        if(result){
-          setData(result);
-          setIsLoading(false)
-          setError(null); 
-        }else{
-          setError("Error al cargar los datos.");
-          setIsLoading(false)
-        }
-    };
-    fetchData();
-  }, []);
+    if(state.destacamentos){
+      setData(state.destacamentos)
+    }
+    setIsLoading(false)
+  }, [state.destacamentos]);
+
 
     const dowload = async () => {
       try {

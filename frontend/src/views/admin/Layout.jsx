@@ -1,15 +1,12 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { getUserSession } from "../../funciones";
 import { useEffect } from "react";
 import { capitalize } from "../../funciones";
 import { useNavigate } from "react-router-dom";
-
-const Logout = () => {
-  localStorage.removeItem("token");
-  location.href = "/";
-};
+import { useExplo } from "../../hook/useExplo";
+import Accordion from "react-bootstrap/Accordion";
+import { NavLink } from "react-router-dom";
 
 const Titulo = () => {
   const location = useLocation();
@@ -28,53 +25,129 @@ const Titulo = () => {
       return "Usuarios";
     case "/dashboard/admin/logs":
       return "Registro de Actividades de Administradores";
+    case "/dashboard/admin/tesoreria/pagos":
+      return "Listado de pagos y solvencias";
+    case "/dashboard/admin/tesoreria/solicitudes":
+      return "Listado de solicitudes de pagos";
+      case "/dashboard/admin/tesoreria/solicitudes/crear":
+      return "Crear solicitud de pago";
     default:
       return "";
   }
 };
 
 const Menu = () => {
+  const { Logout } = useExplo();
   return (
     <>
       <nav className="row d-flex flex-column roboto-regular text-white mx-md-2">
-        <a
-          className="text-decoration-none mb-3 px-md-3 enlace-menu text-white"
-          href="/dashboard/admin"
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? "text-decoration-none mb-3 px-md-3 enlace-menu text-white nav-link-active"
+              : "text-decoration-none mb-3 px-md-3 enlace-menu text-white"
+          }
+          to="/dashboard/admin"
+          end
         >
           <i className="bi bi-house-door me-2"></i> <span>Home</span>
-        </a>
-        <a
-          className="text-decoration-none text-white enlace-menu mb-3 px-md-3 "
-          href="/dashboard/admin/explo"
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? "text-decoration-none mb-3 px-md-3 enlace-menu text-white nav-link-active"
+              : "text-decoration-none mb-3 px-md-3 enlace-menu text-white"
+          }
+          to="/dashboard/admin/explo"
         >
           <i className="bi bi-people me-2"></i> <span>Exploradores</span>
-        </a>
-        <a
-          className="text-decoration-none text-white enlace-menu mb-3 px-md-3 "
-          href="/dashboard/admin/destacamentos"
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? "text-decoration-none mb-3 px-md-3 enlace-menu text-white nav-link-active"
+              : "text-decoration-none mb-3 px-md-3 enlace-menu text-white"
+          }
+          to="/dashboard/admin/destacamentos"
         >
           <i className="bi bi-building me-2"></i> <span>Destacamentos</span>
-        </a>
-        <a
-          className="text-decoration-none text-white enlace-menu mb-3 px-md-3 "
-          href="/dashboard/admin/directiva"
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? "text-decoration-none mb-3 px-md-3 enlace-menu text-white nav-link-active"
+              : "text-decoration-none mb-3 px-md-3 enlace-menu text-white"
+          }
+          to="/dashboard/admin/directiva"
         >
           <i className="bi bi-briefcase me-2"></i> <span>Directiva Zonal</span>
-        </a>
-        <a
-          className="text-decoration-none text-white enlace-menu mb-3 px-md-3 "
-          href="/dashboard/admin/ascensos"
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? "text-decoration-none mb-3 px-md-3 enlace-menu text-white nav-link-active"
+              : "text-decoration-none mb-3 px-md-3 enlace-menu text-white"
+          }
+          to="/dashboard/admin/ascensos"
         >
           <i className="bi bi-star me-2"></i> <span>Ascensos</span>
-        </a>
-        <a
-          className="text-decoration-none mb-3 text-white enlace-menu px-md-3 "
-          href="/dashboard/admin/usuarios"
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? "text-decoration-none px-md-3 enlace-menu text-white nav-link-active"
+              : "text-decoration-none px-md-3 enlace-menu text-white"
+          }
+          to="/dashboard/admin/usuarios"
         >
           <i className="bi bi-person me-2"></i> <span>Usuarios</span>
-        </a>
+        </NavLink>
+        <Accordion
+          defaultActiveKey=""
+          flush
+          className="bg-transparent border-0 mt-0 px-0"
+        >
+          <Accordion.Item eventKey="0" className="bg-transparent border-0 m-0">
+            <Accordion.Header className="custom-accordion-header mx-0">
+              <i className="bi bi-cash-coin me-2"></i> <span>Tesorería</span>
+            </Accordion.Header>
+            <Accordion.Body className="py-0">
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-decoration-none mb-2 px-md-3 enlace-menu text-white nav-link-active"
+                    : "text-decoration-none mb-2 px-md-3 enlace-menu text-white"
+                }
+                to="/dashboard/admin/tesoreria/pagos"
+              >
+                Listado de Pagos
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-decoration-none mb-2 px-md-3 enlace-menu text-white nav-link-active"
+                    : "text-decoration-none mb-2 px-md-3 enlace-menu text-white"
+                }
+                to="/dashboard/admin/tesoreria/solicitudes"
+                end
+              >
+                Solicitudes
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-decoration-none px-md-3 enlace-menu text-white nav-link-active"
+                    : "text-decoration-none px-md-3 enlace-menu text-white"
+                }
+                to="/dashboard/admin/tesoreria/solicitudes/crear"
+              >
+                Crear Solicitud
+              </NavLink>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
         <a
-          className="text-decoration-none mb-3 text-white enlace-menu px-md-3 "
+          className="text-decoration-none my-3 text-white enlace-menu px-md-3 "
           href="/dashboard/admin/logs"
         >
           <i className="bi bi-search me-2"></i>{" "}
@@ -101,15 +174,16 @@ const Layout = () => {
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const { state } = useExplo();
 
   useEffect(() => {
-    const infoUser = getUserSession();
-    setAdmin(infoUser);
-  }, []);
+    setAdmin(state.user_info);
+  }, [state.user_info]);
 
   const retroceder = () => {
     navigate(-1);
   };
+
   return (
     <>
       {/* Dashboard tamaño desktop */}

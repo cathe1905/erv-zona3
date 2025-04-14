@@ -137,6 +137,10 @@ body {
   max-width: 320px;
 }
 
+.nav-link-active{
+  background-color: #008bbe;
+}
+
 .altura-completa {
   position: fixed;
   top: 0;
@@ -185,3 +189,93 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
 }
 
+.table-sticky thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1; 
+}
+
+.table-sticky tbody td {
+  background-color: white;
+}
+
+.table-sticky thead th:first-child,
+.table-sticky thead th:nth-child(2) {
+  z-index: 3; 
+}
+
+.table-sticky tbody td:first-child,
+.table-sticky tbody td:nth-child(2) {
+  z-index: 2; 
+}
+
+.table-sticky {
+  border-collapse: separate; 
+  border-spacing: 0; 
+  border: 1px solid #dee2e6;
+}
+
+.table-sticky th, 
+.table-sticky td {
+  white-space: nowrap; 
+  box-shadow: 
+    -1px 0 0 0 #dee2e6, 
+    0 -1px 0 0 #dee2e6, 
+    -1px -1px 0 0 #dee2e6; 
+}
+
+
+.table-sticky th:first-child,
+.table-sticky td:first-child {
+  box-shadow: 
+    1px 0 0 0 #dee2e6, 
+    0 -1px 0 0 #dee2e6; 
+}
+
+.table-sticky th:nth-child(2),
+.table-sticky td:nth-child(2) {
+  box-shadow: 
+    1px 0 0 0 #dee2e6, 
+    0 -1px 0 0 #dee2e6, 
+    -1px -1px 0 0 #dee2e6; 
+}
+
+.month{
+  cursor: pointer;
+}
+.month:hover{
+  color:blue;
+}
+
+.custom-accordion-header {
+  background-color: transparent !important;
+  color: white;
+  font-weight: normal;
+  padding: 0.5rem 1rem;
+  border: none;
+  font-family: 'Roboto', sans-serif;
+}
+
+.custom-accordion-header .accordion-button {
+  background-color: transparent;
+  color: white;
+  padding-left: 0;
+}
+
+.accordion-button:not(.collapsed) {
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.accordion-button::after {
+  filter: invert(1);
+}
+
+.accordion-body a {
+  padding-left: 1rem;
+}
+
+.custom-accordion-header .accordion-button:focus {
+  box-shadow: none;
+  outline: none;
+}

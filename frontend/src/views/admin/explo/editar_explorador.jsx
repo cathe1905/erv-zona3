@@ -5,26 +5,21 @@ import {
   exitSpecificQuery,
   api,
   capitalize,
-  getAscensos,
-  getDestacamentos,
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import GrowExample from "../../../components/GrowExample";
+import { useExplo } from "../../../hook/useExplo";
 
 export const EditarExploAdmin = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const id = parseInt(params.get("id"), 10) || null;
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState(null);
   const [ascensos, setAscensos] = useState(null);
   const [destacamentos, setDestacamentos] = useState(null);
-//   const [destacamento, setDestacamento] = useState("");
   const [data, setData] = useState({
     nombres: "",
     apellidos: "",
@@ -37,6 +32,8 @@ export const EditarExploAdmin = () => {
     email: "",
     destacamento_id: "",
   });
+
+  const {state} = useExplo()
 
   useEffect(() => {
     const getExploById = async () => {
@@ -62,25 +59,18 @@ export const EditarExploAdmin = () => {
   }, [id]);
 
   useEffect(() => {
-    async function getdataAscensos() {
-      const respuesta = await getAscensos();
-      if (respuesta) {
-        setAscensos(respuesta);
-      } else {
-        setError("Error al cargar los ascensos");
-      }
+    if(state.ascensos)
+      setAscensos(state.ascensos);
+  }, [state.ascensos]);
+
+  useEffect(() => {
+    if(state.destacamentos){
+      setDestacamentos(state.destacamentos)
     }
-    getdataAscensos();
-    const fetch_destacamento = async () => {
-      const result = await getDestacamentos();
-      setDestacamentos(result);
-    };
-    fetch_destacamento();
-  }, []);
+  }, [state.destacamentos]);
 
   const handleSubmit = async (e) => {
 
-    
     setIsLoading(true);
     e.preventDefault();
     const data_enviar = {

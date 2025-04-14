@@ -137,7 +137,7 @@ $router->post('/backend/rechazar-solicitud', [PaymentsRequestsController::class,
 $router->get('/backend/pagos', [PaymentsController::class, 'get_payments']);
 $router->post('/backend/aprobar-pagos', [PaymentsController::class, 'set_payments']);
 
-$router->get('/backend/historial-solicitudes', [PaymentsHistoryController::class, 'get_all_history']);
+$router->get('/backend/historial-solicitudes', [PaymentsHistoryController::class, 'get_history_by_id']);
 
 
 

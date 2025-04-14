@@ -17,7 +17,9 @@ class PaymentsController
             $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
 
-            echo json_encode(Payments::all_payments($año, $destacamento_id, $nombre, $page, $limit));
+            $total= Payments::all_payments_count($año, $destacamento_id, $nombre);
+            $result= Payments::all_payments($año, $destacamento_id, $nombre, $page, $limit);
+            echo json_encode(['payments' => $result, 'total' => $total] );
         }catch (\Exception $e) {
             http_response_code(500);
             error_log("Error al ejecutar el registro de pagos" . $e->getMessage());

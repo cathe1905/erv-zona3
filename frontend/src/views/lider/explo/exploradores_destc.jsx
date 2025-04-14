@@ -7,7 +7,6 @@ import {
   errorSpecificQuery,
   exitSpecificQuery,
   api,
-  getUserSession,
   downloadExcel,
 } from "../../../funciones";
 import GrowExample from "../../../components/GrowExample";
@@ -16,8 +15,10 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Table } from "react-bootstrap";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
+import { useExplo } from "../../../hook/useExplo";
 
 const Explo_dest = () => {
+  const {state} = useExplo();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [destacamento, setDestacamento] = useState("");
@@ -47,11 +48,10 @@ const Explo_dest = () => {
   };
 
   useEffect(() => {
-    const userData = getUserSession();
-    if (userData) {
-      setDestacamento(userData.destacamento_id);
+    if (state.user_info) {
+      setDestacamento(state.user_info.destacamento_id);
     }
-  }, []);
+  }, [state.user_info]);
 
   const getExploradores = useCallback(async () => {
     if (!destacamento) return;
@@ -61,22 +61,20 @@ const Explo_dest = () => {
       );
       if (result.ok) {
         const respuesta = await result.json();
-        setIsLoading(false);
         setData(respuesta.exploradores);
         setTotal(respuesta.total);
       } else {
-        setIsLoading(false);
         setError("Error al cargar los datos.");
         const respuesta = await result.json();
         const mensaje = respuesta.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
       }
     } catch (error) {
-      setIsLoading(false);
       console.error("Hubo un problema con la solicitud", error);
       console.log(error);
       errorGeneralQuery();
-      return;
+    }finally{
+      setIsLoading(false);
     }
   }, [destacamento, rama, query, ascenso, page, limit]);
 
@@ -85,24 +83,9 @@ const Explo_dest = () => {
   }, [getExploradores]);
 
   useEffect(() => {
-    const getAscensos = async () => {
-      try {
-        const result = await fetch(`${api}backend/ascensos`);
-        if (result.ok) {
-          const respuesta = await result.json();
-          setAscensos(respuesta);
-        } else {
-          const respuesta = await result.json();
-          const mensaje = respuesta.error || "Error al procesar la solicitud.";
-          errorSpecificQuery(mensaje);
-        }
-      } catch (error) {
-        console.error("Hubo un problema con la solicitud", error);
-        errorGeneralQuery();
-      }
-    };
-    getAscensos();
-  }, []);
+    if(state.ascensos)
+      setAscensos(state.ascensos);
+  }, [state.ascensos]);
 
   const handleFilterChange = (key, value) => {
     setParams({
@@ -143,12 +126,10 @@ const Explo_dest = () => {
         body: JSON.stringify(id),
       });
       if (query.ok) {
-        setIsLoading(false);
         exitSpecificQuery("Explorador eliminado exitosamente");
         setShow(false);
         getExploradores();
       } else {
-        setIsLoading(false);
         setShow(false);
         const respuesta = await query.json();
         const mensaje = respuesta.error || "Error al procesar la solicitud.";
@@ -157,6 +138,8 @@ const Explo_dest = () => {
     } catch (error) {
       console.log(error);
       errorGeneralQuery();
+    }finally{
+      setIsLoading(false);
     }
   };
 

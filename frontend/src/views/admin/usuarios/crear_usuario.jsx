@@ -3,16 +3,16 @@ import {
   exitSpecificQuery,
   errorSpecificQuery,
   errorGeneralQuery,
-  getDestacamentos,
 } from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { capitalize, api, find_names_by_ids } from "../../../funciones";
-import { getUserSession } from "../../../funciones";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import GrowExample from "../../../components/GrowExample";
+import { useExplo } from "../../../hook/useExplo";
 
 const CrearUsuario = () => {
+  const {state} = useExplo()
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [logSent, setLogSent] = useState(false);
@@ -35,15 +35,14 @@ const CrearUsuario = () => {
   const [id, setId] = useState(null);
 
   useEffect(() => {
-    const fetchDestacamentos = async () => {
-      const result = await getDestacamentos();
-      setDestacamentos(result);
-    };
-    fetchDestacamentos();
+    setIdUserSession(state.user_info.id);
+  }, [state.user_info.id]);
 
-    const dataUserSession = getUserSession();
-    setIdUserSession(dataUserSession.id);
-  }, []);
+  useEffect(() => {
+    if(state.destacamentos){
+      setDestacamentos(state.destacamentos)
+    }
+  }, [state.destacamentos])
 
   useEffect(() => {
     const log_data_enviar = {
@@ -67,11 +66,9 @@ const CrearUsuario = () => {
             body: JSON.stringify(log_data_enviar),
           });
           if (query.ok) {
-            setIsLoading(false);
             exitSpecificQuery("Usuario guardado exitosamente, pide al usuario que confirme su cuenta a través del mail enviado a su correo.");
             navigate("/dashboard/admin/usuarios");
           } else {
-            setIsLoading(false);
             const result = await query.json();
             const mensaje = result.error || "Error al procesar la solicitud.";
             errorSpecificQuery(mensaje);
@@ -79,6 +76,8 @@ const CrearUsuario = () => {
         } catch (error) {
           console.log(error);
           errorGeneralQuery();
+        }finally{
+          setIsLoading(false);
         }
       };
       save_log();

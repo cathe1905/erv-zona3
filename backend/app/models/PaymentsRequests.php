@@ -141,7 +141,7 @@ class PaymentsRequests extends ActiveRecord
         return $sanitizado;
     }
 
-    public static function all_paymets_requests($estatus, $destacamento_id, $año, $mes, $page, $limit)
+    public static function all_paymets_requests($estatus, $destacamento_id, $año, $mes, $page, $limit, $id = null)
     {
         $query = "SELECT 
             sp.id, 
@@ -158,87 +158,135 @@ class PaymentsRequests extends ActiveRecord
                 'nombres', r.nombres,
                 'apellidos', r.apellidos
             ) AS responsable,
-
+    
             JSON_OBJECT(
                 'id', d.id,
                 'nombre', d.nombre
             ) AS destacamento,
-
+    
             JSON_ARRAYAGG(
                 JSON_OBJECT(
                     'id', e.id,
                     'nombres', e.nombres,
                     'apellidos', e.apellidos,
-                    'meses', JSON_UNQUOTE(JSON_EXTRACT(sp.relaciones_oficiales_meses, CONCAT('$.', e.id)))
+                    'meses', JSON_EXTRACT(sp.relaciones_oficiales_meses, CONCAT('$.', e.id))
                 )
             ) AS oficiales_meses
-
+    
         FROM 
             solicitudes_pagos sp
-
+    
         JOIN 
             exploradores r 
             ON r.id = sp.responsable_id
-
+    
         JOIN 
             destacamentos d 
             ON d.id = sp.destacamento_id
-
+    
         JOIN 
             exploradores e 
             ON JSON_CONTAINS(sp.oficiales_ids, JSON_QUOTE(CAST(e.id AS CHAR)), '$.oficiales')";
-
-        $inicio = ($limit * ($page - 1));
-
+    
+        $conditions = [];
+        
         if ($estatus !== null) {
-            $query .= " WHERE sp.estatus = '" . self::$db->escape_string($estatus) . "'";
+            $conditions[] = "sp.estatus = '" . self::$db->escape_string($estatus) . "'";
         }
-
+    
         if ($destacamento_id !== null) {
-            if ($estatus) {
-                $query .= " AND d.id =  '" . self::$db->escape_string($destacamento_id) . "'";
-            } else {
-                $query .= " WHERE d.id =  '" . self::$db->escape_string($destacamento_id) . "'";
-            }
+            $conditions[] = "d.id = '" . self::$db->escape_string($destacamento_id) . "'";
         }
-
-        //año siempre estará presente
-        //evalua si año y mes traen valor valido
+    
         if ($año != null && $mes !== null) {
-            if ($destacamento_id || $estatus != null) {
-                $query .= " AND DATE_FORMAT(sp.fecha_solicitud, '%Y/%m') = '"  . self::$db->escape_string($año . '/' . $mes) . "'";
-            } else {
-                $query .= " WHERE DATE_FORMAT(sp.fecha_solicitud, '%Y/%m') = '"  . self::$db->escape_string($año . '/' . $mes) . "'";
-            }
+            $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y/%m') = '" . self::$db->escape_string($año . '/' . $mes) . "'";
+        } elseif ($año != null) {
+            $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y') = '" . self::$db->escape_string($año) . "'";
         }
-        // evalua si solo existe la informacion de año
-        if ($año != null && $mes === null) {
-            if ($destacamento_id != null || $estatus != null) {
-                $query .= " AND DATE_FORMAT(sp.fecha_solicitud, '%Y') = '"  . self::$db->escape_string($año) . "'";
-            } else {
-                $query .= " WHERE DATE_FORMAT(sp.fecha_solicitud, '%Y') = '"  . self::$db->escape_string($año) . "'";
-            }
+    
+        if ($id !== null) {
+            $conditions[] = "sp.id = '" . self::$db->escape_string($id) . "'";
         }
-
+    
+        if (!empty($conditions)) {
+            $query .= " WHERE " . implode(" AND ", $conditions);
+        }
+    
+        $inicio = ($limit * ($page - 1));
+    
         $query .= " GROUP BY 
         sp.id, sp.comprobante_imagen, sp.monto, sp.valor_cuota, sp.tasa, sp.referencia, 
         sp.estatus, sp.fecha_solicitud, responsable, destacamento LIMIT " . self::$db->escape_string($limit) . " OFFSET " . $inicio;
-
-
+    
         $result = static::$db->query($query);
         $solicitudes = [];
-
+    
         if ($result) {
             while ($row = $result->fetch_assoc()) {
+                // Convertir los campos JSON a objetos PHP
+                $row['responsable'] = json_decode($row['responsable'], true);
+                $row['destacamento'] = json_decode($row['destacamento'], true);
+                
+                // Procesar oficiales_meses
+                $oficialesMeses = json_decode($row['oficiales_meses'], true);
+                foreach ($oficialesMeses as &$oficial) {
+                    if (isset($oficial['meses']) && is_string($oficial['meses'])) {
+                        $oficial['meses'] = json_decode($oficial['meses'], true);
+                    }
+                }
+                $row['oficiales_meses'] = $oficialesMeses;
+                
                 $solicitudes[] = $row;
             }
             return $solicitudes;
         } else {
             echo 'Error en la ejecución de la consulta: ' . static::$db->error;
+            return false;
         }
-
-        
     }
+
+    public static function all_paymets_requests_count($estatus, $destacamento_id, $año, $mes, $id)
+{
+    $query = "SELECT COUNT(DISTINCT sp.id) as total
+              FROM solicitudes_pagos sp
+              JOIN exploradores r ON r.id = sp.responsable_id
+              JOIN destacamentos d ON d.id = sp.destacamento_id
+              JOIN exploradores e ON JSON_CONTAINS(sp.oficiales_ids, JSON_QUOTE(CAST(e.id AS CHAR)), '$.oficiales')";
+
+    $conditions = [];
+    
+    if ($estatus !== null) {
+        $conditions[] = "sp.estatus = '" . self::$db->escape_string($estatus) . "'";
+    }
+
+    if ($destacamento_id !== null) {
+        $conditions[] = "d.id = '" . self::$db->escape_string($destacamento_id) . "'";
+    }
+
+    if ($año != null && $mes !== null) {
+        $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y/%m') = '" . self::$db->escape_string($año . '/' . $mes) . "'";
+    } elseif ($año != null) {
+        $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y') = '" . self::$db->escape_string($año) . "'";
+    }
+
+    if ($id !== null) {
+        $conditions[] = "sp.id = '" . self::$db->escape_string($id) . "'";
+    }
+
+    if (!empty($conditions)) {
+        $query .= " WHERE " . implode(" AND ", $conditions);
+    }
+
+    $result = static::$db->query($query);
+    
+    if ($result) {
+        $row = $result->fetch_assoc();
+        return $row['total'];
+    } else {
+        error_log('Error en la ejecución de la consulta de conteo: ' . static::$db->error);
+        return 0;
+    }
+}
 
     public static function edit_status($estatus, $id)
     {

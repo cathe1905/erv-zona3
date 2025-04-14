@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState} from "react";
 import {jwtDecode} from 'jwt-decode';
 import { Outlet, useNavigate } from "react-router-dom";
+
 
 const refreshToken= async(data) =>{
     if(!data) return;
@@ -26,8 +28,11 @@ const refreshToken= async(data) =>{
     
 }
 const RequireAuth = ({role}) => {
+
+    const RoleNumbers= Array.isArray(role) ? role : [role]
     const [isAuthorized, setIsAuthorized] = useState(false);
     const navigate = useNavigate();
+   
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -52,7 +57,8 @@ const RequireAuth = ({role}) => {
                     return;
                 }
             }
-            if (token.data.role == role) {
+
+            if (RoleNumbers.includes(parseInt(token.data.role))) {
                 setIsAuthorized(true);
             } else {
                 navigate("/");

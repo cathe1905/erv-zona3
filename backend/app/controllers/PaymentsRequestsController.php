@@ -9,47 +9,43 @@ class PaymentsRequestsController
 {
 
     public static function get_payments_requests()
-    {
-        try {
-            $año = $_GET['año'] ?? null;
+{
+    try {
+        $año = isset($_GET['año']) && $_GET['año'] !== 'null' ? $_GET['año'] : null;
+        $estatus = isset($_GET['estatus']) && $_GET['estatus'] !== 'null' ? $_GET['estatus'] : null;
+        $destacamento_id = isset($_GET['destacamento_id']) && $_GET['destacamento_id'] !== 'null' ? intval($_GET['destacamento_id']) : null;
+        $id = isset($_GET['id']) && $_GET['id'] !== 'null' ? intval($_GET['id']) : null;
+        $mes = isset($_GET['mes']) && $_GET['mes'] !== 'null' ? $_GET['mes'] : null;
+        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+        $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
 
-            if (!$año) {
-                http_response_code(400);
-                echo json_encode(['error' => 'El año es obligatorio']);
-                return;
-            }
+        // Obtener el total de registros (para paginación)
+        $total = PaymentsRequests::all_paymets_requests_count($estatus, $destacamento_id, $año, $mes, $id);
+        
+        // Obtener los resultados paginados
+        $solicitudes = PaymentsRequests::all_paymets_requests($estatus, $destacamento_id, $año, $mes, $page, $limit, $id);
 
-            $estatus = isset($_GET['estatus']) && $_GET['estatus'] !== 'null' ? $_GET['estatus'] : null;
-            $destacamento_id = isset($_GET['destacamento_id']) && $_GET['destacamento_id'] !== 'null' ? intval($_GET['destacamento_id']) : null;
-
-            $mes = isset($_GET['mes']) && $_GET['mes'] !== 'null' ? $_GET['mes'] : null;
-            $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
-
-            $solicitudes = PaymentsRequests::all_paymets_requests($estatus, $destacamento_id, $año, $mes, $page, $limit);
-
-            if (is_array($solicitudes)) {
-                http_response_code(200);
-                $response = [
-                    'mensaje' => 'Consulta exitosa',
-                    'solicitudes' => $solicitudes,
-                ];
-                echo json_encode($response);
-            } else {
-                http_response_code(400);
-                $response = [
-                    'mensaje' => 'Error al obtener las solicitudes. Intente nuevamente más tarde.',
-                ];
-                echo json_encode($response);
-            }
-        } catch (\Exception $e) {
-            http_response_code(500);
-            error_log("Error al obtener las solicitudes " . $e->getMessage());
+        if (is_array($solicitudes)) {
+            http_response_code(200);
+            $response = [
+                'solicitudes' => $solicitudes,
+                'total' => $total
+            ];
+            echo json_encode($response);
+        } else {
+            http_response_code(400);
             echo json_encode([
-                'error' => 'Ocurrió un error inesperado: ' . $e->getMessage(),
+                'error' => 'Error al obtener las solicitudes. Intente nuevamente más tarde.',
             ]);
         }
+    } catch (\Exception $e) {
+        http_response_code(500);
+        error_log("Error al obtener las solicitudes " . $e->getMessage());
+        echo json_encode([
+            'error' => 'Ocurrió un error inesperado: ' . $e->getMessage(),
+        ]);
     }
+}
     public static function create_payment_request()
     {
         newRecord(PaymentsRequests::class, 'solicitudes');

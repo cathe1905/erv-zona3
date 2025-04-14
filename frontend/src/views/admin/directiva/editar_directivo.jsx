@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { capitalize } from "../../../funciones";
-import {errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api, getDestacamentos, getAscensos} from "../../../funciones";
+import {errorGeneralQuery, errorSpecificQuery, exitSpecificQuery, api} from "../../../funciones";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import GrowExample from "../../../components/GrowExample";
+import { useExplo } from "../../../hook/useExplo";
 
 const EditarDirectiva = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const id = parseInt(params.get("id"), 10) || null;
   const [destacamentos, setDestacamentos] = useState(null);
   const [ascensos, setAscensos] = useState(null);
@@ -26,6 +26,8 @@ const EditarDirectiva = () => {
     foto: "",
     destacamento_id: "",
   });
+
+  const {state} = useExplo()
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -70,11 +72,9 @@ const EditarDirectiva = () => {
       );
 
       if (result.ok) {
-        setIsLoading(false)
         exitSpecificQuery("Directivo actualizado exitosamente");
         navigate("/dashboard/admin/directiva");
       } else {
-        setIsLoading(false)
         const resultado = await result.json();
         const mensaje = resultado.error || "Error al procesar la solicitud.";
         errorSpecificQuery(mensaje);
@@ -82,6 +82,8 @@ const EditarDirectiva = () => {
     } catch (error) {
       console.error(error);
       errorGeneralQuery();
+    }finally{
+      setIsLoading(false)
     }
   };
   const handleChange = (e) => {
@@ -116,18 +118,19 @@ const EditarDirectiva = () => {
     };
     get_directivo_db();
 
-    const fetch_destacamento = async () => {
-      const result = await getDestacamentos();
-      setDestacamentos(result);
-    };
-    fetch_destacamento();
-
-    const fetch_ascensos = async () => {
-      const result = await getAscensos();
-      setAscensos(result);
-    };
-    fetch_ascensos();
   }, [id]);
+
+  useEffect(() => {
+    if(state.destacamentos){
+      setDestacamentos(state.destacamentos)
+    }
+  }, [state.destacamentos]);
+
+  useEffect(() => {
+    if(state.ascensos){
+      setAscensos(state.ascensos)
+    }
+  }, [state.ascensos])
 
   return (
     <>
