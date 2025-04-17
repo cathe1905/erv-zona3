@@ -1,3 +1,4 @@
+
 export function formatDate(date: string): string {
   if (typeof date !== "string") return "";
 
@@ -17,6 +18,19 @@ export const MapPaidMonths = (months: [], month: number): string => {
   return monthRequired ? formatDate(monthRequired.fecha_pago) : "";
 };
 
+export const MapPaidMonthsRequest = (
+  months: string[],
+  month: number,
+): boolean => {
+  if (months.length > 0) {
+    const monthRequired = months.find((item) => item.mes === month);
+    if (monthRequired) {
+      return true;
+    }
+  }
+  return false;
+};
+
 export const evaluateStatus = (months: []) => {
   if (months.length === 0) return "Insolvente";
 
@@ -27,29 +41,33 @@ export const evaluateStatus = (months: []) => {
 
 export function formatearFechaHora(fechaHoraStr: string): string {
   // Convertimos a formato ISO para que el constructor lo entienda bien
-  const fechaISO = fechaHoraStr.replace(' ', 'T');
+  const fechaISO = fechaHoraStr.replace(" ", "T");
 
   const fecha = new Date(fechaISO);
-  if (isNaN(fecha.getTime())) return 'Formato inválido';
+  if (isNaN(fecha.getTime())) return "Formato inválido";
 
   const opcionesFecha: Intl.DateTimeFormatOptions = {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
   };
 
   const opcionesHora: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: '2-digit',
+    hour: "numeric",
+    minute: "2-digit",
     hour12: true,
   };
 
-  const fechaFormateada = new Intl.DateTimeFormat('es-ES', opcionesFecha).format(fecha);
-  const horaFormateada = new Intl.DateTimeFormat('es-ES', opcionesHora).format(fecha);
+  const fechaFormateada = new Intl.DateTimeFormat(
+    "es-ES",
+    opcionesFecha
+  ).format(fecha);
+  const horaFormateada = new Intl.DateTimeFormat("es-ES", opcionesHora).format(
+    fecha
+  );
 
   return `${fechaFormateada} ${horaFormateada}`;
 }
-
 
 export const months = {
   1: "Enero",
@@ -67,31 +85,34 @@ export const months = {
 };
 
 export const monthsArray = [
-  { id: '01', nombre: 'Enero' },
-  { id: '02', nombre: 'Febrero' },
-  { id: '03', nombre: 'Marzo' },
-  { id: '04', nombre: 'Abril' },
-  { id: '05', nombre: 'Mayo' },
-  { id: '06', nombre: 'Junio' },
-  { id: '07', nombre: 'Julio' },
-  { id: '08', nombre: 'Agosto' },
-  { id: '09', nombre: 'Septiembre' },
-  { id: '10', nombre: 'Octubre' },
-  { id: '11', nombre: 'Noviembre' },
-  { id: '12', nombre: 'Diciembre' }
+  { id: "01", nombre: "Enero" },
+  { id: "02", nombre: "Febrero" },
+  { id: "03", nombre: "Marzo" },
+  { id: "04", nombre: "Abril" },
+  { id: "05", nombre: "Mayo" },
+  { id: "06", nombre: "Junio" },
+  { id: "07", nombre: "Julio" },
+  { id: "08", nombre: "Agosto" },
+  { id: "09", nombre: "Septiembre" },
+  { id: "10", nombre: "Octubre" },
+  { id: "11", nombre: "Noviembre" },
+  { id: "12", nombre: "Diciembre" },
 ];
 
 export const status = [
-  {id: "approved", value: "Aprobada"},
-  {id: "rejected", value: "Rechazada"},
-  {id: "pending", value: "Pendiente"}
-]
+  { id: "approved", value: "Aprobada" },
+  { id: "rejected", value: "Rechazada" },
+  { id: "pending", value: "Pendiente" },
+];
 
-export const showDetailMonths = (months : string[]) : string[] =>{
-  const transformedArray= months.map(month => {
-    const splited= month.split('-');
-    return `${splited[1]}-${splited[0]}`
-  })
+export const showDetailMonths = (months: string[]): string[] => {
+  const transformedArray = months.map((month) => {
+    const splited = month.split("-");
+    return `${splited[1]}-${splited[0]}`;
+  });
 
-  return transformedArray.sort()
-}
+  return transformedArray.sort();
+};
+
+
+
