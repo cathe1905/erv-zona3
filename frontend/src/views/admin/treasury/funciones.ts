@@ -1,4 +1,3 @@
-
 export function formatDate(date: string): string {
   if (typeof date !== "string") return "";
 
@@ -114,5 +113,28 @@ export const showDetailMonths = (months: string[]): string[] => {
   return transformedArray.sort();
 };
 
+export const monthsAbrev = [
+  { id: "01", nombre: "Ene" },
+  { id: "02", nombre: "Feb" },
+  { id: "03", nombre: "Mar" },
+  { id: "04", nombre: "Abr" },
+  { id: "05", nombre: "May" },
+  { id: "06", nombre: "Jun" },
+  { id: "07", nombre: "Jul" },
+  { id: "08", nombre: "Ago" },
+  { id: "09", nombre: "Sep" },
+  { id: "10", nombre: "Oct" },
+  { id: "11", nombre: "Nov" },
+  { id: "12", nombre: "Dic" },
+];
+
+export const monthsTotalToPay= (Obj) =>{
+   let total= 0
+   for(let oficial in Obj ){
+    total+= Obj[oficial].length
+   }
+   return total
+}
+  
 
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { api } from "../funciones";
 import axios from "axios";
+import { DataPostType } from "../views/admin/treasury/types";
 
 type getAllPaymentsType = {
   año: string;
@@ -102,10 +103,32 @@ export default function useTreasury() {
     }
   };
 
+  const newPaymentRequest= async (request: DataPostType) =>{
+    try {
+      setLoading(true);
+
+      const url = `${api}backend/solicitud_pagos`;
+
+      const data = await axios.post(url, request);
+      
+      if (data.statusText=== "Created") {
+        return true;
+      }else{
+        return false;
+      }
+      
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return {
     getAllPayments,
     getAllPaymentsRequests,
     getHistoryRequest,
     isLoading,
+    newPaymentRequest
   };
 }

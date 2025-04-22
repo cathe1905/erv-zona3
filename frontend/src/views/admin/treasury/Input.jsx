@@ -24,8 +24,7 @@ export default function Input({months,month,id,allInputs,setAllInputs,handleInpu
         <input checked disabled type="checkbox" />
       ) : (
         <input
-          value={month}
-          onChange={() => handleInput(key)}
+          onChange={(e) => handleInput(e,key)}
           type="checkbox"
           checked={allInputs[key] || false}
         />

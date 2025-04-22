@@ -154,9 +154,9 @@ class PaymentsRequests extends ActiveRecord
             sp.fecha_solicitud,
             
             JSON_OBJECT(
-                'id', r.id,
-                'nombres', r.nombres,
-                'apellidos', r.apellidos
+                'id', u.id,
+                'nombres', u.nombre,
+                'apellidos', u.apellido
             ) AS responsable,
     
             JSON_OBJECT(
@@ -177,8 +177,8 @@ class PaymentsRequests extends ActiveRecord
             solicitudes_pagos sp
     
         JOIN 
-            exploradores r 
-            ON r.id = sp.responsable_id
+            usuarios u 
+            ON u.id = sp.responsable_id
     
         JOIN 
             destacamentos d 
@@ -249,7 +249,7 @@ class PaymentsRequests extends ActiveRecord
 {
     $query = "SELECT COUNT(DISTINCT sp.id) as total
               FROM solicitudes_pagos sp
-              JOIN exploradores r ON r.id = sp.responsable_id
+              JOIN usuarios u ON u.id = sp.responsable_id
               JOIN destacamentos d ON d.id = sp.destacamento_id
               JOIN exploradores e ON JSON_CONTAINS(sp.oficiales_ids, JSON_QUOTE(CAST(e.id AS CHAR)), '$.oficiales')";
 

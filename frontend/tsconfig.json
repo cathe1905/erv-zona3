@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",              // Compatibilidad con ESM (Vite usa ESM)
+      "module": "ESNext",              // Módulos ES (necesario para Vite)
+      "lib": ["DOM", "DOM.Iterable", "ESNext"], // APIs del navegador
+      "jsx": "preserve",               // JSX no se compila (Vite lo maneja con Babel/esbuild)
+      "strict": false,                  // Habilita todas las verificaciones de tipo
+      "moduleResolution": "bundler",   // Compatibilidad con resoluciones modernas (Vite 4+)
+      "esModuleInterop": true,         // Permite importar módulos CommonJS
+      "skipLibCheck": true,            // Acelera la compilación omitiendo checks en .d.ts
+      "forceConsistentCasingInFileNames": true, // Evita errores en sistemas case-sensitive
+      "noEmit": true,                  // Vite se encarga del bundling (no necesitamos .js de salida)
+      "allowJs": true,                 // Permite archivos .js/.jsx (útil para migración gradual)
+      "isolatedModules": true,         // Requerido para Vite (cada archivo es módulo independiente)
+      "baseUrl": "./",                 // Rutas base
+      "paths": {                       // Alias de rutas (debe coincidir con vite.config.ts)
+        "@/*": ["src/*"]
+      }
+    },
+    "include": ["src/**/*", "vite.config.ts"],
+    "exclude": ["node_modules", "dist"]
+  }
