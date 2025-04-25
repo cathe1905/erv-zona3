@@ -279,3 +279,39 @@ body {
   box-shadow: none;
   outline: none;
 }
+
+.style-th-oficial {
+  position: sticky;
+  left: 33px;
+  z-index: 3;
+  background-color: #f8f9fa;
+  min-width: 140px;
+  width: 140px;
+}
+
+.style-th-n{
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background-color: #f8f9fa;
+  width: 33px;
+  min-width: 33px;
+}
+
+.style-td-n{
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background-color: #f8f9fa;
+  width: 33px;
+  min-width: 33px;
+}
+.style-td-oficial {
+  position: sticky;
+  left: 33px;
+  z-index: 2;
+  background-color: #f8f9fa;
+  min-width: 140px;
+  width: 140px;
+}
+

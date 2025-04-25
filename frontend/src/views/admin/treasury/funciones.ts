@@ -1,3 +1,6 @@
+import { InputType } from "node:zlib";
+import { DataPostType, InputsTrueTemporaryType, PaidDataType, ParamsType } from "./reducer/types";
+
 export function formatDate(date: string): string {
   if (typeof date !== "string") return "";
 
@@ -128,13 +131,56 @@ export const monthsAbrev = [
   { id: "12", nombre: "Dic" },
 ];
 
-export const monthsTotalToPay= (Obj) =>{
+export const monthsTotalToPay= (Obj: DataPostType['solicitudes']['relaciones_oficiales_meses']) =>{
    let total= 0
    for(let oficial in Obj ){
     total+= Obj[oficial].length
    }
    return total
 }
+
+export const SelectedConsecutiveMonths = (Inputs: InputsTrueTemporaryType, data: PaidDataType[]) => {
+  let idsErrors: string[]= []
+  for (const [key, value] of Object.entries(Inputs)) {
+    const orderArray = [...value].sort((a, b) => a - b);
+
+    // Comenzar desde el segundo elemento (índice 1)
+    for (let i = 1; i < orderArray.length; i++) {
+      if (orderArray[i] - orderArray[i - 1] !== 1) {
+        idsErrors= [...idsErrors, key]
+      }
+    }
+    //si es 1, los meses a pagar comienzan desde enero, no hace falta verificar si tiene meses pagados
+    if (orderArray[0] !== 1) {
+      //busco el array de meses pagados de ese oficial
+      const paidMonthList = data.find((of) => of.oficial_id === key);
+      if (paidMonthList.meses_pagados.length) {
+        for (let i = 1; i < orderArray[0]; i++) {
+          if (!paidMonthList.meses_pagados.some((month) => month.mes === i)) {
+            idsErrors= [...idsErrors, key]
+          }
+        }
+      } else {
+        //si viene vacio y no comienza desde enero, entonces hay meses vacios
+        idsErrors= [...idsErrors, key]
+      }
+    }
+  }
+  return idsErrors;
+};
+
+export const FormatedDatePost = (ValidatedInputs: InputsTrueTemporaryType, año: ParamsType['año']) => {
+  const nuevos_oficiales = Object.keys(ValidatedInputs);
+  const nuevas_relaciones = {};
+
+  for (const [key, value] of Object.entries(ValidatedInputs)) {
+    nuevas_relaciones[key] = value.map(
+      (month) => `${año}-${month.toString().padStart(2, "0")}-01`
+    );
+  }
+  return {oficiales: nuevos_oficiales, meses: nuevas_relaciones}
+
+};
   
 
 

@@ -1,18 +1,4 @@
-export type DataPostType = {
-    solicitudes: {
-      responsable_id: string;
-      destacamento_id: string;
-      comprobante_imagen: string;
-      oficiales_ids: {
-        oficiales: string[]; 
-      };
-      relaciones_oficiales_meses: Record<string, string>; 
-      monto: string;
-      valor_cuota: string;
-      tasa: string;
-      referencia: string;
-    };
-  };
+
 
   type MesPagado = {
     año: number;

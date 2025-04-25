@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { api } from "../funciones";
 import axios from "axios";
-import { DataPostType } from "../views/admin/treasury/types";
+import { DataPostType } from "@/views/admin/treasury/reducer/types";
 
 type getAllPaymentsType = {
   año: string;
   destacamento_id: string;
-  nombre: string;
-  page: string;
-  limit: string;
+  nombre?: string;
+  page?: string;
+  limit?: string;
 };
 
 type getAllPaymentsRequestsType= Omit<getAllPaymentsType, 'nombre'> & {
@@ -109,7 +109,7 @@ export default function useTreasury() {
 
       const url = `${api}backend/solicitud_pagos`;
 
-      const data = await axios.post(url, request);
+      const data = await axios.post(url, JSON.stringify(request));
       
       if (data.statusText=== "Created") {
         return true;

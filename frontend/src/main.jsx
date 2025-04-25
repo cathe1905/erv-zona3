@@ -36,7 +36,7 @@ import ListadoPagos from "./views/admin/treasury/ListadoPagos.jsx";
 import ListadoSolicitudes from "./views/admin/treasury/ListadoSolicitudes.jsx";
 import { ExploProvider } from "./context/ExploContext.tsx";
 import LoginPage from "./views/auth/login.jsx";
-import CrearSolicitud from "./views/admin/treasury/CrearSolicitud.jsx";
+import CrearSolicitud from "./views/admin/treasury/CrearSolicitud.tsx";
 
 // export const UserContext = React.createContext();
 
