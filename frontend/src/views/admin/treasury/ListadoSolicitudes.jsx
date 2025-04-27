@@ -11,7 +11,8 @@ import {
   status,
   formatearFechaHora,
   formatDate,
-  showDetailMonths
+  evaluation,
+  monthsTotalToPayList
 } from "./funciones";
 import {
   Form,
@@ -23,12 +24,12 @@ import {
 import { FaSearch } from "react-icons/fa";
 import { FaEye, FaHistory } from "react-icons/fa";
 import { api } from "../../../funciones";
+import { toast } from "react-toastify";
 
 export default function ListadoSolicitudes() {
   const { state } = useExplo();
   const yearStart = 2025;
-  const { getAllPaymentsRequests, getHistoryRequest, isLoading } =
-    useTreasury();
+  const { getAllPaymentsRequests, getHistoryRequest, isLoading, rejectPaymentRequest, approvedPaymentRequest } = useTreasury();
   const currentYear = new Date().getFullYear();
   const [total, setTotal] = useState(0);
   const [data, setData] = useState([]);
@@ -55,6 +56,7 @@ export default function ListadoSolicitudes() {
     valor_cuota: 0,
     estatus: "",
     tasa: "",
+    total_month: 0
   });
   const handleShowDetail = (request) => {
     setDetails({
@@ -68,10 +70,10 @@ export default function ListadoSolicitudes() {
       valor_cuota: request.valor_cuota,
       estatus: request.estatus,
       tasa: request.tasa,
+      total_month: monthsTotalToPayList(request.oficiales_meses)
     });
     setShowDetail(true);
   };
-
   const [historial, setHistorial] = useState({
     estatus_anterior: "",
     estatus_nuevo: "",
@@ -79,15 +81,34 @@ export default function ListadoSolicitudes() {
     solicitud_id: 0,
     comentario: "",
   });
+  const valor_cuota= 1;
+  const [DataPost, setDataPost] = useState({
+    id: "",
+    id_user: "",
+    comment: ""
+  })
 
+  const fetchPaymentRequests = async () => {
+    const PaymentRequests = await getAllPaymentsRequests(params);
+    setData(PaymentRequests.solicitudes);
+    setTotal(PaymentRequests.total);
+  };
   useEffect(() => {
-    const fetchPaymentRequests = async () => {
-      const PaymentRequests = await getAllPaymentsRequests(params);
-      setData(PaymentRequests.solicitudes);
-      setTotal(PaymentRequests.total);
-    };
+
     fetchPaymentRequests();
   }, [params]);
+
+  useEffect(() => {
+
+    if(showDetail){
+      setDataPost((prev) =>({
+        ...prev,
+        id: details.solicitud_id,
+        id_user: state.user_info.id,
+      }))
+    }
+    
+  }, [showDetail]);
 
   const handleHistory = async (id) => {
     const history = await getHistoryRequest(id);
@@ -162,6 +183,38 @@ export default function ListadoSolicitudes() {
   const handleCloseDetail = () => {
     setShowDetail(false);
   };
+
+  const handleRejectRequest= async () => {
+
+    if(DataPost.comment === ""){
+      toast.error('El campo comentario es obligatorio.')
+      return;
+    }
+    const result= await rejectPaymentRequest(DataPost)
+
+    if(result){
+      toast.success('Solicitud rechazada exitosamente.')
+      fetchPaymentRequests()
+    }else{
+      toast.error('Ocurrió un error, contacte a soporte.')
+    }
+
+    setShowDetail(false)
+  }
+
+  const handleApprovedRequest = async () =>{
+    const result= await approvedPaymentRequest(DataPost)
+
+    if(result === true){
+      toast.success('Solicitud aprobada exitosamente.')
+      fetchPaymentRequests()
+    }else{
+      toast.error('Ocurrió un error, contacte a soporte.')
+    }
+
+    setShowDetail(false)
+  }
+
   return (
     <>
       <div className="row d-flex g-3 mt-3">
@@ -429,7 +482,7 @@ export default function ListadoSolicitudes() {
                   </p>
                 </div>
               </div>
-              <div className="d-flex gap-2">
+              <div className="d-flex gap-2" style={{height: "300px", overflowY: "scroll"}}>
                 <Table bordered className="table-responsive overflow-y-scroll">
                   <thead>
                     <tr>
@@ -438,42 +491,69 @@ export default function ListadoSolicitudes() {
                     </tr>
                   </thead>
                   <tbody>
-                    {details.oficiales.map((item) => (
-                      <tr key={item.id}>
-                        <td>
-                          {item.nombres} {" "} {item.apellidos}
-                        </td>
-                        <td>{item.meses && showDetailMonths(item.meses).map(month =>( month + " "))}</td>
-                      </tr>
-                    ))}
+
+                    {details.oficiales.length > 0 && (
+                      evaluation(details.oficiales)?.map((item, index) => (
+                        <tr key={index}>
+                          <td>
+                            {item.nombre_apellido}
+                          </td>
+                          <td>{item.meses.join(', ')}</td>
+                        </tr>
+                      ))
+                    )}
+                    
                   </tbody>
                 </Table>
               </div>
-              <div>
-                <img src={`${api}imagenes/${details.comprobante}`} alt="" />
+              <div className="text-center my-3">
+                <img
+                  src={`${api}imagenes/${details.comprobante}`}
+                  alt="Comprobante"
+                  className="img-fluid rounded shadow-sm border"
+                  style={{ maxHeight: "300px", objectFit: "contain" }}
+                />
               </div>
               <div className="row">
-                <div className="d-flex gap-2 col-6">
+                <div className="d-flex gap-2 col-3">
                   <p className="fw-bold">Monto:</p>
                   <p>{details.monto}</p>
                 </div>
 
-                <div className="d-flex gap-2 col-6">
+                <div className="d-flex gap-2 col-3">
                   <p className="fw-bold">Tasa:</p>
                   <p>{details.tasa}</p>
                 </div>
+                <div className="d-flex gap-2 col-6">
+                  <p className="fw-bold">Total meses a pagar:</p>
+                  <p>{details.total_month}</p>
+                </div>
+              </div>
+              <div className="d-flex gap-2 ">
+                <p className="fw-bold">Monto calculado a pagar:</p>
+                <p>
+                $ {details.total_month * valor_cuota} ={" "}
+                  {(
+                    Number(details.tasa) *
+                    details.total_month *
+                    valor_cuota
+                  ).toLocaleString("es-VE", { style: "currency", currency: "VES" })}{" "}
+                </p>
               </div>
               {details.estatus === "pending" && (
-                <div>
+                <div className="mt-3">
                   <textarea
-                    style={{ height: "40px" }}
-                    placeholder="Escribe un comentario"
-                    name=""
-                    id=""
+                  minLength={20}
+                  name="comment"
+                  onChange={(e) => setDataPost({...DataPost, comment: e.target.value})}
+                  value={DataPost.comment}
+                    className="form-control mb-3"
+                    style={{ height: "60px", fontSize: "0.9rem" }}
+                    placeholder="Escribe un comentario, en caso de rechazar la solicitud."
                   ></textarea>
-                  <div className="d-flex gap-2 col-6">
-                    <button>Aprobar</button>
-                    <button>Rechazar</button>
+                  <div className="d-flex gap-2">
+                    <Button onClick={handleApprovedRequest} variant="success">Aprobar</Button>
+                    <Button onClick={handleRejectRequest} variant="danger">Rechazar</Button>
                   </div>
                 </div>
               )}

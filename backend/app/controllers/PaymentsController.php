@@ -39,7 +39,7 @@ class PaymentsController
             $data = json_decode($jsonInput, true);
 
             //obtenemos los datos que necesitamos para procesar los pagos y guardar el histórico.
-            $id_solicitud = $data['id_solicitud'] ?? null;
+            $id_solicitud = $data['id'] ?? null;
             $id_user_admin = $data['id_user'] ?? null;
             $comment = $data['comment'];
 
@@ -78,7 +78,6 @@ class PaymentsController
 
                 //se decodifica la columna que trae los id de los oficiales y los meses ya que en DB estan como json
                 $decoded_json_solicitud = json_decode($solicitud['relaciones_oficiales_meses'], true);
-                $today_date = date("Y/m/d");
 
                 $pagos_instancias = [];
                 $errors= [];
@@ -93,7 +92,6 @@ class PaymentsController
                                 'mes' => $date,
                                 'monto' => $solicitud['monto'],
                                 'responsable_id' => $solicitud['responsable_id'],
-                                'fecha_pago' => $today_date,
                                 'solicitud_id' => $solicitud['id'],
                                 'destacamento_id' => $solicitud['destacamento_id']
                             ]
@@ -119,7 +117,7 @@ class PaymentsController
 
                if($result !== 'success'){
                 http_response_code(400);
-                echo json_encode([ 'error'=> 'Uno o mas pagos no pudieron se procesados, todo el proceso falló. Reintentar mas tarde']);
+                echo json_encode([ 'error'=> 'Uno o mas pagos no pudieron se procesados, todo el proceso falló y el estatus quedará en processing. Reintentar mas tarde']);
                 return;
                }
 

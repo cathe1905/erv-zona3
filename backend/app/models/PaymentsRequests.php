@@ -187,46 +187,46 @@ class PaymentsRequests extends ActiveRecord
         JOIN 
             exploradores e 
             ON JSON_CONTAINS(sp.oficiales_ids, JSON_QUOTE(CAST(e.id AS CHAR)), '$.oficiales')";
-    
+
         $conditions = [];
-        
+
         if ($estatus !== null) {
             $conditions[] = "sp.estatus = '" . self::$db->escape_string($estatus) . "'";
         }
-    
+
         if ($destacamento_id !== null) {
             $conditions[] = "d.id = '" . self::$db->escape_string($destacamento_id) . "'";
         }
-    
+
         if ($año != null && $mes !== null) {
             $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y/%m') = '" . self::$db->escape_string($año . '/' . $mes) . "'";
         } elseif ($año != null) {
             $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y') = '" . self::$db->escape_string($año) . "'";
         }
-    
+
         if ($id !== null) {
             $conditions[] = "sp.id = '" . self::$db->escape_string($id) . "'";
         }
-    
+
         if (!empty($conditions)) {
             $query .= " WHERE " . implode(" AND ", $conditions);
         }
-    
+
         $inicio = ($limit * ($page - 1));
-    
+
         $query .= " GROUP BY 
         sp.id, sp.comprobante_imagen, sp.monto, sp.valor_cuota, sp.tasa, sp.referencia, 
         sp.estatus, sp.fecha_solicitud, responsable, destacamento LIMIT " . self::$db->escape_string($limit) . " OFFSET " . $inicio;
-    
+
         $result = static::$db->query($query);
         $solicitudes = [];
-    
+
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 // Convertir los campos JSON a objetos PHP
                 $row['responsable'] = json_decode($row['responsable'], true);
                 $row['destacamento'] = json_decode($row['destacamento'], true);
-                
+
                 // Procesar oficiales_meses
                 $oficialesMeses = json_decode($row['oficiales_meses'], true);
                 foreach ($oficialesMeses as &$oficial) {
@@ -235,7 +235,7 @@ class PaymentsRequests extends ActiveRecord
                     }
                 }
                 $row['oficiales_meses'] = $oficialesMeses;
-                
+
                 $solicitudes[] = $row;
             }
             return $solicitudes;
@@ -246,47 +246,47 @@ class PaymentsRequests extends ActiveRecord
     }
 
     public static function all_paymets_requests_count($estatus, $destacamento_id, $año, $mes, $id)
-{
-    $query = "SELECT COUNT(DISTINCT sp.id) as total
+    {
+        $query = "SELECT COUNT(DISTINCT sp.id) as total
               FROM solicitudes_pagos sp
               JOIN usuarios u ON u.id = sp.responsable_id
               JOIN destacamentos d ON d.id = sp.destacamento_id
               JOIN exploradores e ON JSON_CONTAINS(sp.oficiales_ids, JSON_QUOTE(CAST(e.id AS CHAR)), '$.oficiales')";
 
-    $conditions = [];
-    
-    if ($estatus !== null) {
-        $conditions[] = "sp.estatus = '" . self::$db->escape_string($estatus) . "'";
-    }
+        $conditions = [];
 
-    if ($destacamento_id !== null) {
-        $conditions[] = "d.id = '" . self::$db->escape_string($destacamento_id) . "'";
-    }
+        if ($estatus !== null) {
+            $conditions[] = "sp.estatus = '" . self::$db->escape_string($estatus) . "'";
+        }
 
-    if ($año != null && $mes !== null) {
-        $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y/%m') = '" . self::$db->escape_string($año . '/' . $mes) . "'";
-    } elseif ($año != null) {
-        $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y') = '" . self::$db->escape_string($año) . "'";
-    }
+        if ($destacamento_id !== null) {
+            $conditions[] = "d.id = '" . self::$db->escape_string($destacamento_id) . "'";
+        }
 
-    if ($id !== null) {
-        $conditions[] = "sp.id = '" . self::$db->escape_string($id) . "'";
-    }
+        if ($año != null && $mes !== null) {
+            $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y/%m') = '" . self::$db->escape_string($año . '/' . $mes) . "'";
+        } elseif ($año != null) {
+            $conditions[] = "DATE_FORMAT(sp.fecha_solicitud, '%Y') = '" . self::$db->escape_string($año) . "'";
+        }
 
-    if (!empty($conditions)) {
-        $query .= " WHERE " . implode(" AND ", $conditions);
-    }
+        if ($id !== null) {
+            $conditions[] = "sp.id = '" . self::$db->escape_string($id) . "'";
+        }
 
-    $result = static::$db->query($query);
-    
-    if ($result) {
-        $row = $result->fetch_assoc();
-        return $row['total'];
-    } else {
-        error_log('Error en la ejecución de la consulta de conteo: ' . static::$db->error);
-        return 0;
+        if (!empty($conditions)) {
+            $query .= " WHERE " . implode(" AND ", $conditions);
+        }
+
+        $result = static::$db->query($query);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            return $row['total'];
+        } else {
+            error_log('Error en la ejecución de la consulta de conteo: ' . static::$db->error);
+            return 0;
+        }
     }
-}
 
     public static function edit_status($estatus, $id)
     {
@@ -298,5 +298,24 @@ class PaymentsRequests extends ActiveRecord
         } else {
             return 'failed';
         }
+    }
+
+    public static function hasPendingOrProcessingRequest($destacamento_id)
+    {
+        $stmt = static::$db->prepare("SELECT estatus 
+                                     FROM solicitudes_pagos 
+                                     WHERE destacamento_id = ?
+                                     ORDER BY fecha_solicitud DESC 
+                                     LIMIT 1");
+        $stmt->bind_param("i", $destacamento_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return in_array($row['estatus'], ['pending', 'processing']);
+        }
+
+        return false;
     }
 }

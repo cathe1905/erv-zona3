@@ -1,5 +1,4 @@
-import { InputType } from "node:zlib";
-import { DataPostType, InputsTrueTemporaryType, PaidDataType, ParamsType } from "./reducer/types";
+import { DataPostType, InputsTrueTemporaryType, oficMonthsList, PaidDataType, ParamsType, SummaryMonthsType } from "./reducer/types";
 
 export function formatDate(date: string): string {
   if (typeof date !== "string") return "";
@@ -139,6 +138,13 @@ export const monthsTotalToPay= (Obj: DataPostType['solicitudes']['relaciones_ofi
    return total
 }
 
+export const monthsTotalToPayList= (Obj: oficMonthsList[]) =>{
+  const counter= Obj.reduce((acum, item) => acum + (item.meses.length) ,0)
+  return counter;
+}
+
+
+
 export const SelectedConsecutiveMonths = (Inputs: InputsTrueTemporaryType, data: PaidDataType[]) => {
   let idsErrors: string[]= []
   for (const [key, value] of Object.entries(Inputs)) {
@@ -181,6 +187,19 @@ export const FormatedDatePost = (ValidatedInputs: InputsTrueTemporaryType, año:
   return {oficiales: nuevos_oficiales, meses: nuevas_relaciones}
 
 };
+
+export const evaluation = (oficiales_meses : oficMonthsList[]) =>{
+   const group= oficiales_meses.map((item) => {
+        const monthsJoined: SummaryMonthsType["meses"] =
+          item.meses.map((month: string) => {
+              return monthsAbrev.find((m) => m.id === month.split("-")[1])
+                ?.nombre;
+            }
+          );
+        return { nombre_apellido: `${item.nombres} ${item.apellidos}`, meses: monthsJoined };
+     });
+     return group
+}
   
 
 

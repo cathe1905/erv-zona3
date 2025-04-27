@@ -1,5 +1,5 @@
 import { Table } from "react-bootstrap";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useExplo } from "../../../hook/useExplo";
 import useTreasury from "../../../services/useTreasury";
 import GrowExample from "../../../components/GrowExample";
@@ -16,12 +16,12 @@ export default function CrearSolicitud() {
 
   const [paymentsState, dispatch] = useReducer(paymentsRequestReducer,RequestState);
   const { state } = useExplo();
-  const { getAllPayments, isLoading} = useTreasury();
+  const { getAllPayments, isLoading, hasPendingRequest} = useTreasury();
   const currentYear = new Date().getFullYear();
 
 
   useEffect(() => {
-    if (paymentsState.errors.length) {
+    if (paymentsState.errors.length > 0) {
       if(paymentsState.errors.length > 4){
         toast.error(
           'Se encontraron errores con varios oficiales, no se permite seleccionar un mes y dejar vacío un mes anterior.', {
@@ -52,17 +52,28 @@ export default function CrearSolicitud() {
   },[paymentsState?.DataPost?.solicitudes?.relaciones_oficiales_meses])
   
   useEffect(() => {
-    const fetchPayments = async () => {
-      const { payments } = await getAllPayments(paymentsState.params);
+    const checkAndFetch = async () => {
+      
       dispatch({ type: "resetAll" });
-      dispatch({ type: "setPaidData", payload: { data: payments } }); //podria crear un dispatch unico para estos tres
-      dispatch({type: "updateDataPost", payload: { item: "responsable_id", value: state.user_info.id },});
-      dispatch({type: "updateDataPost",payload: { item: "destacamento_id", value: paymentsState.params.destacamento_id}});
-      dispatch({type: "updateDataPost",payload: { item: "valor_cuota", value: "1" },});
+
+      if (paymentsState.params.destacamento_id) {
+        const result = await hasPendingRequest(paymentsState.params.destacamento_id);
+        
+        if (result === "Pending") {
+          dispatch({type: "updateParams", payload: {name: "destacamento_id", value: "" }})
+          toast.error('Este destacamento tiene una solicitud pendiente, para crear una nueva solicitud debe resolver la primera.');
+        } else {
+          const { payments } = await getAllPayments(paymentsState.params);
+          dispatch({ type: "setPaidData", payload: { data: payments } }); //podria crear un dispatch unico para estos tres
+          dispatch({type: "updateDataPost", payload: { item: "responsable_id", value: state.user_info.id },});
+          dispatch({type: "updateDataPost",payload: { item: "destacamento_id", value: paymentsState.params.destacamento_id}});
+          dispatch({type: "updateDataPost",payload: { item: "valor_cuota", value: "1" },});
+        }
+      }
     };
-    if (paymentsState.params.destacamento_id) {
-      fetchPayments();
-    }
+  
+    checkAndFetch();
+
   }, [paymentsState.params]);
 
   useEffect(() => {
@@ -98,8 +109,7 @@ export default function CrearSolicitud() {
     e.preventDefault();
     dispatch({type: "toogleLoading", payload: {value: true}})
 
-    const { monto, comprobante_imagen, tasa, referencia } =
-      paymentsState.DataPost.solicitudes;
+    const { monto, comprobante_imagen, tasa, referencia } = paymentsState.DataPost.solicitudes;
 
     if (
       !Object.values(paymentsState.allInputs).some((val) => val === true) ||
@@ -212,6 +222,7 @@ export default function CrearSolicitud() {
                                 payload: { month: index + 1, value: e.target.checked },
                               })
                             }
+                            // name={``}
                           />{" "}
                         {month.nombre}
                       </th>

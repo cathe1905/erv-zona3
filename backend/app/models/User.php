@@ -2,8 +2,6 @@
 
 namespace Model;
 
-use function Controllers\debuguear;
-
 class User extends ActiveRecord
 {
     // Base DE DATOS

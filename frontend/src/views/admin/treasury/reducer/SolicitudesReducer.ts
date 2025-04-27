@@ -22,10 +22,7 @@ export type RequestActions =
   | { type: "toogleAllInputs"; payload: { value: boolean } }
   | { type: "setInputsOficiales" }
   | { type: "setMonthsToPay"; payload: { total: number } }
-  | {
-      type: "updateDataPost";
-      payload: { item: string; value: DataPostType['solicitudes'][keyof DataPostType['solicitudes']]; }
-    }
+  | {type: "updateDataPost"; payload: { item: string; value: DataPostType['solicitudes'][keyof DataPostType['solicitudes']]; }}
   | { type: "setSummaryMonths"}
   | { type: "openModal" }
   | { type: "goBack" }
@@ -36,10 +33,7 @@ export type RequestActions =
   | { type: "validation" }
   | { type: "setTotalMonthsToPay" }
   | { type: "toogleInputsMonth"; payload: { month: number; value: boolean } } //inputs superiores horizontales (todos los meses)
-  | {
-      type: "toogleInputsOficiales";
-      payload: { id: PaidDataType["oficial_id"]; value: boolean };
-    }; // inputs verticales laterales (todos los oficiales)
+  | {type: "toogleInputsOficiales"; payload: { id: PaidDataType["oficial_id"]; value: boolean }}; // inputs verticales laterales (todos los oficiales)
 
 export type RequestStateTypes = {
   params: ParamsType
@@ -242,7 +236,8 @@ export const paymentsRequestReducer = (
   }
   if (action.type === "toogleInputsOficiales") {
     const entries = Object.entries(state.allInputs).map(([key, value]) => {
-      if (key.includes(`${action.payload.id}-`)) {
+      const keyOfic = key.split('-')[0]; 
+      if ( keyOfic === String(action.payload.id)) {
         return [key, action.payload.value];
       } else {
         return [key, value];

@@ -7,7 +7,7 @@ use function Controllers\debuguear;
 class Payments extends ActiveRecord
 {
     protected static $table = 'pagos';
-    protected static $columnsDB = ['id', 'oficial_id', 'mes', 'monto', 'responsable_id', 'fecha_pago', 'solicitud_id', 'destacamento_id'];
+    protected static $columnsDB = ['id', 'oficial_id', 'mes', 'monto', 'responsable_id', 'solicitud_id', 'destacamento_id'];
 
     public $id;
     public $oficial_id;
@@ -25,7 +25,6 @@ class Payments extends ActiveRecord
         $this->mes = $arg['mes'] ?? '';
         $this->monto = $arg['monto'] ?? '';
         $this->responsable_id = $arg['responsable_id'] ?? '';
-        $this->fecha_pago = $arg['fecha_pago'] ?? '';
         $this->solicitud_id = $arg['solicitud_id'] ?? '';
         $this->destacamento_id = $arg['destacamento_id'] ?? '';
     }
@@ -54,10 +53,6 @@ class Payments extends ActiveRecord
             self::$errors[] = 'El campo monto es obligatorio';
         }
 
-        if (!$this->fecha_pago) {
-            self::$errors[] = 'El campo valor_cuota es obligatorio';
-        }
-
         if (!$this->solicitud_id) {
             self::$errors[] = 'El campo monto es obligatorio';
         }
@@ -74,10 +69,11 @@ class Payments extends ActiveRecord
         try {
             //limpio y sanitizo todas las entradas y guardo el registro.
             foreach ($multiple_objects as $pago) {
-
                 $atributos = $pago->sanitizarAtributos();
+
                 //si algo sale mal caerá al catch y deshará los registros anteriores.
                 if (!self::guardar($atributos)) {
+                    error_log("Falló al guardar: ".print_r($atributos, true));
                     throw new \Exception('Error al guardar el registro.');
                 }
             }
@@ -89,6 +85,7 @@ class Payments extends ActiveRecord
             }
         } catch (\Exception $e) {
             // Si hay algún error, hacer rollback
+            error_log("Error en crear_pago: " . $e->getMessage());
             self::$db->query("ROLLBACK");
             return 'Error: ' . $e->getMessage();
         }
@@ -119,14 +116,14 @@ class Payments extends ActiveRecord
                         'mes', MONTH(p.mes),
                         'fecha_pago', p.fecha_pago,
                         'monto', p.monto,
-                        'responsable_id', p.responsable_id,
                         'solicitud_id', p.solicitud_id,
                         'año', YEAR(p.mes),
-                        'responsable', CONCAT(r.nombres, ' ', r.apellidos)
+                        'responsable_id', p.responsable_id,
+                        'responsable', CONCAT(u.nombre, ' ', u.apellido)  
                     )
                 )
                 FROM pagos p
-                JOIN exploradores r ON p.responsable_id = r.id
+                JOIN usuarios u ON p.responsable_id = u.id  
                 WHERE p.oficial_id = e.id
                 AND p.destacamento_id = d.id
                 AND YEAR(p.mes) = " . static::$db->escape_string($año) . "

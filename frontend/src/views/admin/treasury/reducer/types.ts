@@ -66,5 +66,12 @@ export type Pago = {
   responsable: string;
 };
 
+export type oficMonthsList = {
+  id: number
+  nombres: string
+  apellidos: string
+  meses: string[]
+}
+
   
  

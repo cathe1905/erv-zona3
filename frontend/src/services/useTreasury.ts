@@ -17,6 +17,12 @@ type getAllPaymentsRequestsType= Omit<getAllPaymentsType, 'nombre'> & {
   id: string
 }
 
+type infoPaymentRequestType={
+  id: string
+  id_user: string
+  comment?: string
+}
+
 const filterParams = (obj : getAllPaymentsType | getAllPaymentsRequestsType) =>{
   return Object.fromEntries(
     Object.entries(obj).filter(([_, value]) => value !== "")
@@ -123,12 +129,77 @@ export default function useTreasury() {
       setLoading(false);
     }
   }
+   const rejectPaymentRequest= async (infoPaymentRequest: infoPaymentRequestType) =>{
+    try {
+      setLoading(true);
+
+      const url = `${api}backend/rechazar-solicitud`;
+
+      const data = await axios.post(url, infoPaymentRequest);
+
+      if (data.statusText=== "Created") {
+        return true;
+      }else{
+        return false;
+      }
+      
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+   }
+
+   const approvedPaymentRequest= async (infoPaymentRequest: infoPaymentRequestType) =>{
+      try {
+        setLoading(true);
+
+        const url = `${api}backend/aprobar-pagos`;
+        const response = await axios.post(url, infoPaymentRequest);
+
+        if (response.status === 201) { // 201 es el código para "Created"
+          return true;
+        } else {
+          // Si el servidor devuelve un error estructurado
+          return response.data?.message || 'Error desconocido';
+        }
+        
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    const hasPendingRequest = async (id: string) =>{
+      try {
+        setLoading(true);
+
+        const url = `${api}backend/ultima-solicitud?id=${id}`;
+        const response = await axios(url);
+
+        if (response.status === 200) { 
+          return response.data.mensaje;
+        } else {
+          return response.data?.message || 'Error desconocido';
+        }
+        
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+   
 
   return {
     getAllPayments,
     getAllPaymentsRequests,
     getHistoryRequest,
     isLoading,
-    newPaymentRequest
+    newPaymentRequest,
+    rejectPaymentRequest,
+    approvedPaymentRequest,
+    hasPendingRequest
   };
 }

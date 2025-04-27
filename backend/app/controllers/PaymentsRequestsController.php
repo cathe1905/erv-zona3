@@ -139,4 +139,30 @@ class PaymentsRequestsController
         }
        
     }
+
+    public static function getLastStatus(){
+        try{
+            $destacamento_id = isset($_GET['id']) && $_GET['id'] !== 'null' ? $_GET['id'] : null;
+            if (!$destacamento_id) {
+                http_response_code(400);
+                echo json_encode(['error' => 'id no encontrado']);
+                return;
+            }
+
+            if (PaymentsRequests::hasPendingOrProcessingRequest($destacamento_id)) {
+                http_response_code(200);
+                echo json_encode(['mensaje' => 'Pending']);
+            } else {
+                http_response_code(200);
+                echo json_encode(['mensaje' => 'No Pending']);
+            }
+
+        }catch (\Exception $e) {
+            http_response_code(500);
+            error_log("Error al ejecutar el rechazo de pago" . $e->getMessage());
+            echo json_encode([
+                'error' => 'Ocurrió un error inesperado: ' . $e->getMessage(),
+            ]);
+        }
+    }
 }
