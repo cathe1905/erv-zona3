@@ -482,7 +482,7 @@ export default function ListadoSolicitudes() {
                   </p>
                 </div>
               </div>
-              <div className="d-flex gap-2" style={{height: "300px", overflowY: "scroll"}}>
+              <div className="d-flex gap-2" style={{maxHeight: "300px", overflowY: "scroll"}}>
                 <Table bordered className="table-responsive overflow-y-scroll">
                   <thead>
                     <tr>

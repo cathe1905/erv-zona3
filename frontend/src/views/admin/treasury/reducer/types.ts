@@ -30,6 +30,23 @@ export type DataPostType = {
     [key: string]: string[];
   }
 
+  export const initialStateDataPost: DataPostType = {
+    solicitudes: {
+      responsable_id: "",  
+      destacamento_id: "", 
+      comprobante_imagen: "",  
+      oficiales_ids: {
+        oficiales: [] 
+      },
+      relaciones_oficiales_meses: {},  
+      monto: "",  
+      valor_cuota: "", 
+      tasa: "", 
+      referencia: "", 
+    }
+  };
+  
+
   export type InputsTrueTemporaryType={
     [key: string]: number[];
   }

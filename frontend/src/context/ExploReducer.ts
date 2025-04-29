@@ -2,14 +2,14 @@ import { Ascenso, Destacamento } from "./types";
 
 export type ExploAction = 
 { type: "add_user", payload: {info: StateProps['user_info']}} |
-{ type: "delete_user"} |
 { type: "add_token_exp", payload: {exp: StateProps['token_exp']}} |
 { type: "add_destacamentos", payload: {destacamentos: Destacamento[]}} |
 { type: "change_destacamentos"} | 
 { type: "reset_flag_destacamentos"} |
 { type: "add_ascensos", payload: {ascensos: Ascenso[]}} |
 { type: "change_ascensos"} | 
-{ type: "reset_flag_ascensos"} 
+{ type: "reset_flag_ascensos"} |
+{ type: "reset_all"} 
 
 
 export type StateProps = {
@@ -41,9 +41,9 @@ export const initialState: StateProps = {
   },
   token_exp: 0,
   destacamentos: [],
-  flag_destacamentos: true,
+  flag_destacamentos: false,
   ascensos: [],
-  flag_ascensos: true
+  flag_ascensos: false
 };
 
 export const ExploReducer = (state: StateProps = initialState, action: ExploAction) =>{
@@ -62,7 +62,7 @@ export const ExploReducer = (state: StateProps = initialState, action: ExploActi
     }
   }
 
-  if(action.type === "delete_user"){
+  if(action.type === "reset_all"){
     return{
       user_info: {
         nombre: "",
@@ -75,9 +75,9 @@ export const ExploReducer = (state: StateProps = initialState, action: ExploActi
       },
       token_exp: 0,
       destacamentos: [],
-      flag_destacamentos: true,
+      flag_destacamentos: false,
       ascensos: [],
-      flag_ascensos: true
+      flag_ascensos: false
     }
   }
 

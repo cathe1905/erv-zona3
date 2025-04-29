@@ -85,6 +85,8 @@ export const ExploProvider = ({ children }: ExploProviderProps) => {
     const data_decode: DecodedToken = jwtDecode(userData);
     dispatch({ type: "add_user", payload: { info: data_decode.data } });
     dispatch({ type: "add_token_exp", payload: { exp: data_decode.exp } });
+    dispatch({type: "change_ascensos"})
+    dispatch({type: "change_destacamentos"})
   }, []);
 
   useEffect(() => {
@@ -99,7 +101,7 @@ export const ExploProvider = ({ children }: ExploProviderProps) => {
 
   const Logout = useCallback(() => {
     localStorage.removeItem("token");
-    dispatch({ type: "delete_user" });
+    dispatch({ type: "reset_all" });
     location.href = "/";
   }, []);
 

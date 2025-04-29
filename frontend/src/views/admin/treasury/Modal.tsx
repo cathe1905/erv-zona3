@@ -30,6 +30,7 @@ export default function SummaryModal({ paymentsState, dispatch}: SummaryModalTyp
       );
     }
     dispatch({type:"resetAll"})
+    dispatch({type: "updateParams", payload: {name: "destacamento_id", value: "" }})
     dispatch({ type: "hideModal" })
   };
 

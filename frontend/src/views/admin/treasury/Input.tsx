@@ -33,7 +33,7 @@ export default function Input({months,month,id,paymentsState, dispatch}: InputPr
           name={key}
           onChange={(e) => dispatch({type:"toogleInput", payload: {input: key, value: e.target.checked}})}
           type="checkbox"
-          checked={paymentsState.allInputs[key]}
+          checked={paymentsState.allInputs[key] || false}
         />
       )}
     </>

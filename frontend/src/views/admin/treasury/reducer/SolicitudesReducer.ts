@@ -11,7 +11,7 @@ import {
   InputKey,
   SummaryMonthsType,
   InputsTrueTemporaryType,
-  ParamsType,
+  ParamsType, initialStateDataPost
 } from "./types";
 
 export type RequestActions =
@@ -47,6 +47,7 @@ export type RequestStateTypes = {
   summaryMonths: SummaryMonthsType[];
   errors: string[];
   isLoading: boolean
+  selectAll: boolean
 };
 
 export const RequestState = {
@@ -55,7 +56,7 @@ export const RequestState = {
     destacamento_id: "",
   },
   PaidData: [],
-  DataPost: {} as DataPostType,
+  DataPost: initialStateDataPost,
   show: false,
   allInputs: {} as Inputs,
   InputsMonths: Object.fromEntries(
@@ -65,7 +66,8 @@ export const RequestState = {
   totalMonthstoPay: 0,
   summaryMonths: [],
   errors: [],
-  isLoading: false
+  isLoading: false,
+  selectAll: false
 };
 
 export const paymentsRequestReducer = (
@@ -187,7 +189,9 @@ export const paymentsRequestReducer = (
       totalMonthstoPay: 0,
       summaryMonths: [],
       errors: [],
-      isLoading: false
+      isLoading: false,
+      selectAll: false,
+      
     };
   }
   if (action.type === "resetErrors") {
@@ -213,6 +217,7 @@ export const paymentsRequestReducer = (
         Array.from({ length: 12 }, (_, i) => [i + 1, false])
       ),
       InputsOficiales: initialOficialIdState,
+      selectAll: action.payload.value
     };
   }
   if (action.type === "toogleInputsMonth") {
@@ -296,7 +301,7 @@ export const paymentsRequestReducer = (
   if (action.type === "setTotalMonthsToPay") {
     return {
       ...state,
-      totalMonthstoPay: monthsTotalToPay(state.DataPost.solicitudes.relaciones_oficiales_meses)
+      totalMonthstoPay: monthsTotalToPay(state?.DataPost?.solicitudes?.relaciones_oficiales_meses)
     };
   }
 

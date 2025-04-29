@@ -71,7 +71,7 @@ export default function CrearSolicitud() {
         }
       }
     };
-  
+    
     checkAndFetch();
 
   }, [paymentsState.params]);
@@ -119,6 +119,8 @@ export default function CrearSolicitud() {
       !referencia
     ) {
       toast.error("Todos los campos son obligatorios");
+      dispatch({type: "toogleLoading", payload: {value: false}})
+      return;
     }
 
     dispatch({type: "validation"})
@@ -181,6 +183,7 @@ export default function CrearSolicitud() {
               className="me-2"
               id="select-all"
               type="checkbox"
+              checked={paymentsState.selectAll}
               onChange={(e) =>
                 dispatch({
                   type: "toogleAllInputs",
@@ -214,7 +217,7 @@ export default function CrearSolicitud() {
                     {monthsAbrev.map((month, index) => (
                         <th key={index}>
                           <input
-                            checked={paymentsState.InputsMonths[index + 1]}
+                            checked={paymentsState.InputsMonths[index + 1] || false}
                             type="checkbox"
                             onChange={(e) =>
                               dispatch({
@@ -222,7 +225,6 @@ export default function CrearSolicitud() {
                                 payload: { month: index + 1, value: e.target.checked },
                               })
                             }
-                            // name={``}
                           />{" "}
                         {month.nombre}
                       </th>
@@ -237,7 +239,7 @@ export default function CrearSolicitud() {
                       {index + 1}
                     </td>
                     <td className="style-td-oficial">
-                      <input checked={ paymentsState.InputsOficiales[oficial.oficial_id]}
+                      <input checked={ paymentsState.InputsOficiales[oficial.oficial_id] || false}
                         type="checkbox"
                         onChange={(e) =>
                           dispatch({
@@ -295,7 +297,7 @@ export default function CrearSolicitud() {
               <input
                 required
                 onChange={handleChange}
-                value={paymentsState?.DataPost?.solicitudes?.monto}
+                value={paymentsState?.DataPost?.solicitudes?.monto || ""}
                 name="monto"
                 className="form-control form-control-sm w-50"
                 type="text"
@@ -310,7 +312,7 @@ export default function CrearSolicitud() {
               <input
                 required
                 onChange={handleChange}
-                value={paymentsState?.DataPost?.solicitudes?.tasa}
+                value={paymentsState?.DataPost?.solicitudes?.tasa || ""}
                 name="tasa"
                 className="form-control form-control-sm w-75"
                 type="text"
@@ -325,7 +327,7 @@ export default function CrearSolicitud() {
               <input
                 required
                 onChange={handleChange}
-                value={paymentsState?.DataPost?.solicitudes?.referencia}
+                value={paymentsState?.DataPost?.solicitudes?.referencia || ""}
                 name="referencia"
                 className="form-control form-control-sm w-50"
                 type="text"
