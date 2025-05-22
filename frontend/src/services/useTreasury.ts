@@ -190,6 +190,46 @@ export default function useTreasury() {
         setLoading(false);
       }
     }
+
+    const getRequestById = async (id: string)  =>{
+      try {
+        setLoading(true);
+
+        const url = `${api}backend/solicitud_pagos/actualizar?id=${id}`;
+        const response = await axios(url);
+      
+        if (response.status === 200) { 
+          return response.data
+        } else {
+          return response.data?.message || 'Error desconocido';
+        }
+        
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    const EditRequest = async (request: DataPostType) =>{
+      try {
+        setLoading(true);
+
+        const url = `${api}backend/solicitud_pagos/actualizar`;
+        const response = await axios.post(url, request);
+
+      if (response.statusText=== "Created") {
+        return true;
+      }else{
+        return false;
+      }
+        
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
    
 
   return {
@@ -200,6 +240,8 @@ export default function useTreasury() {
     newPaymentRequest,
     rejectPaymentRequest,
     approvedPaymentRequest,
-    hasPendingRequest
+    hasPendingRequest,
+    getRequestById,
+    EditRequest
   };
 }

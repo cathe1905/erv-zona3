@@ -11,6 +11,7 @@ export type ParamsType={
 
 export type DataPostType = {
     solicitudes: {
+      id?: string;
       responsable_id: string;
       destacamento_id: string;
       comprobante_imagen: string;
@@ -22,6 +23,7 @@ export type DataPostType = {
       valor_cuota: string;
       tasa: string;
       referencia: string;
+      fecha_solicitud?: string
     };
 };
 

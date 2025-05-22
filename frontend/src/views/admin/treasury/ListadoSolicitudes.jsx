@@ -6,6 +6,7 @@ import { Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import PaginationGeneral from "../../../components/Pagination";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   monthsArray,
   status,
@@ -22,11 +23,12 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
-import { FaEye, FaHistory } from "react-icons/fa";
+import { FaEye, FaHistory, FaPencilAlt } from "react-icons/fa";
 import { api } from "../../../funciones";
 import { toast } from "react-toastify";
 
 export default function ListadoSolicitudes() {
+  const navigate= useNavigate()
   const { state } = useExplo();
   const yearStart = 2025;
   const { getAllPaymentsRequests, getHistoryRequest, isLoading, rejectPaymentRequest, approvedPaymentRequest } = useTreasury();
@@ -385,6 +387,13 @@ export default function ListadoSolicitudes() {
                       variant="link"
                     >
                       <FaHistory />
+                    </Button>
+                     <Button
+                      disabled={request.estatus !== "pending"}
+                      onClick={() => navigate(`/dashboard/admin/tesoreria/solicitudes/editar?id=${request.id}`)}
+                      variant="link"
+                    >
+                      <FaPencilAlt />
                     </Button>
                   </td>
                 </tr>

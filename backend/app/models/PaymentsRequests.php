@@ -318,4 +318,31 @@ class PaymentsRequests extends ActiveRecord
 
         return false;
     }
+
+    public static function find($id)
+    {
+    $query = "SELECT * FROM " . static::$table . " WHERE id = " . $id;
+    $resultado = self::consultarSQL($query);
+    
+    if (!empty($resultado)) {
+        $registro = array_shift($resultado);
+        
+        // Si es un objeto (como parece ser), accede a las propiedades como objeto
+        if (is_object($registro)) {
+            // Decodificar oficiales_ids si existe
+            if (property_exists($registro, 'oficiales_ids')) {
+                $registro->oficiales_ids = json_decode($registro->oficiales_ids, true);
+            }
+            
+            // Decodificar relaciones_oficiales_meses si existe
+            if (property_exists($registro, 'relaciones_oficiales_meses')) {
+                $registro->relaciones_oficiales_meses = json_decode($registro->relaciones_oficiales_meses, true);
+            }
+        }
+        
+        return $registro;
+    }
+    
+    return null;
+}
 }

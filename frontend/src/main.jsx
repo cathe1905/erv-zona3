@@ -37,8 +37,7 @@ import ListadoSolicitudes from "./views/admin/treasury/ListadoSolicitudes.jsx";
 import { ExploProvider } from "./context/ExploContext.tsx";
 import LoginPage from "./views/auth/login.jsx";
 import CrearSolicitud from "./views/admin/treasury/CrearSolicitud.tsx";
-
-// export const UserContext = React.createContext();
+import EditarSolicitud from "./views/admin/treasury/EditarSolicitud.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   
@@ -81,6 +80,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                     <Route path="/dashboard/admin/tesoreria/solicitudes" element={<ListadoSolicitudes/>} />
                     <Route path="/dashboard/admin/tesoreria/pagos" element={<ListadoPagos />} />
                     <Route path="/dashboard/admin/tesoreria/solicitudes/crear" element={<CrearSolicitud />} />
+                    <Route path="/dashboard/admin/tesoreria/solicitudes/editar" element={<EditarSolicitud />} />
                   </Route>
                 </Route>
                 
