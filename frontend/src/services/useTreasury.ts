@@ -191,6 +191,7 @@ export default function useTreasury() {
       }
     }
 
+    // Get
     const getRequestById = async (id: string)  =>{
       try {
         setLoading(true);
@@ -211,6 +212,7 @@ export default function useTreasury() {
       }
     }
 
+    // Post
     const EditRequest = async (request: DataPostType) =>{
       try {
         setLoading(true);

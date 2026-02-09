@@ -1,3 +1,10 @@
+// Reducer central para la creación de solicitudes de pago.
+// Aquí se concentra:
+// - Manejo de selección de oficiales y meses
+// - Validaciones de negocio (meses consecutivos)
+// - Preparación del payload final (DataPost)
+// - Estado del modal de resumen
+
 import {
   FormatedDatePost,
   monthsAbrev,
@@ -74,24 +81,28 @@ export const paymentsRequestReducer = (
   state: RequestStateTypes = RequestState,
   action: RequestActions
 ) => {
+
   if (action.type === "setPaidData") {
     return {
       ...state,
       PaidData: action.payload.data,
     };
   }
+
   if (action.type === "setInput") {
     return {
       ...state,
       allInputs: { ...state.allInputs, ...action.payload.input },
     };
   }
+
   if (action.type === "updateParams") {
     return {
       ...state,
       params: { ...state.params, [action.payload.name]: action.payload.value,},
     };
   }
+
   if (action.type === "toogleInput") {
     return {
       ...state,
@@ -101,8 +112,12 @@ export const paymentsRequestReducer = (
       },
     };
   }
+
   if (action.type === "setInputsOficiales") {
-    //asegurarme que ya Datapaid exista para llamar esta accion
+
+    // Inicializa los checkboxes laterales (oficiales)
+    // Se ejecuta solo después de cargar PaidData
+    // Cada oficial parte desmarcado (false)
     const initialOficialIdState = Object.fromEntries(
       state.PaidData.map((item) => [item.oficial_id, false])
     );
@@ -111,7 +126,10 @@ export const paymentsRequestReducer = (
       InputsOficiales: initialOficialIdState,
     };
   }
+
   if (action.type === "setMonthsToPay") {
+
+    // Calcula el total de meses a pagar en base a la relación oficial-mes ya validada.
     const total = monthsTotalToPay(
       state.DataPost.solicitudes.relaciones_oficiales_meses
     );
@@ -155,11 +173,19 @@ export const paymentsRequestReducer = (
   }
 
   if (action.type === "setSummaryMonths") {
+
+    // Construye el resumen que se muestra en el modal:
+    // - Recorre los oficiales seleccionados
+    // - Traduce los meses seleccionados a nombres abreviados
+    // - Une oficial + meses legibles para el usuario
     const evaluation =
       state.DataPost?.solicitudes?.oficiales_ids?.oficiales?.map((item) => {
+
+        // Obtiene la información completa del oficial.
         const oficial = state.PaidData.find(
           (oficial) => oficial.oficial_id === item
         );
+        // Convierte los meses (YYYY-MM) a nombres abreviados
         const monthsJoined: SummaryMonthsType["meses"] =
           state.DataPost.solicitudes.relaciones_oficiales_meses[item].map(
             (month: string) => {
@@ -174,8 +200,12 @@ export const paymentsRequestReducer = (
       summaryMonths: evaluation,
     };
   }
+
   if (action.type === "resetAll") {
-    // en este estoy excluyendo PaidData porque los meses pagados deben mantenerse visibles asi termine el envio de solicitud
+
+    // Reinicia el flujo completo de creación de solicitud
+    // NOTA: PaidData se vuelve a cargar desde el fetch,
+    // los meses pagados deben mantenerse visibles solo mientras se edita
     return {
       ...state,
       DataPost: {} as DataPostType,
@@ -194,19 +224,26 @@ export const paymentsRequestReducer = (
       
     };
   }
+
   if (action.type === "resetErrors") {
     return {
       ...state,
       errors: [],
     };
   }
+
   if (action.type === "toogleAllInputs") {
+
+    // Activa o desactiva TODOS los inputs individuales (oficial-mes)
+    // Se basa únicamente en allInputs
     const newInputs = Object.fromEntries(
       Object.entries(state.allInputs).map(([key]) => [
         key,
         action.payload.value,
       ])
     );
+
+    // Reinicia checkboxes laterales de oficiales
     const initialOficialIdState = Object.fromEntries(
       state.PaidData.map((item) => [item.oficial_id, false])
     );
@@ -220,7 +257,11 @@ export const paymentsRequestReducer = (
       selectAll: action.payload.value
     };
   }
+
   if (action.type === "toogleInputsMonth") {
+
+    // Marca o desmarca todos los oficiales para un mes específico
+    // La key de allInputs viene como: "oficialId-mes"
     const entries = Object.entries(state.allInputs).map(([key, value]) => {
       const keyMonth = key.split('-')[1]; 
       if (keyMonth === String(action.payload.month)) {
@@ -239,7 +280,11 @@ export const paymentsRequestReducer = (
       },
     };
   }
+
   if (action.type === "toogleInputsOficiales") {
+
+    // Marca o desmarca todos los meses de un oficial específico
+    // La key de allInputs viene como: "oficialId-mes"
     const entries = Object.entries(state.allInputs).map(([key, value]) => {
       const keyOfic = key.split('-')[0]; 
       if ( keyOfic === String(action.payload.id)) {
@@ -258,8 +303,12 @@ export const paymentsRequestReducer = (
       },
     };
   }
+
   if (action.type === "validation") {
-    //extrae los inputs con value true y los agrupa con el id correspondiente
+
+    // Extrae todos los inputs activos (true)
+    // y los agrupa por oficial:
+    // { oficialId: [mes1, mes2, mes3] }
     const trueInputs: InputsTrueTemporaryType = {};
     for (const [key, value] of Object.entries(state.allInputs)) {
       if (value === true) {
@@ -274,7 +323,10 @@ export const paymentsRequestReducer = (
         }
       }
     }
-    const errors = SelectedConsecutiveMonths(trueInputs, state.PaidData); //devuelve todos los ids de los oficiales con errores
+
+    // Valida que los meses seleccionados sean consecutivos
+    // Retorna IDs de oficiales con errores
+    const errors = SelectedConsecutiveMonths(trueInputs, state.PaidData); 
 
     if (errors.length) {
       return {
@@ -282,7 +334,10 @@ export const paymentsRequestReducer = (
         errors,
       };
     }
+
+    // Formatea los datos finales para el backend (YYYY-MM)
     const DatesAndIds= FormatedDatePost(trueInputs, state.params.año);
+
     return {
       ...state,
       DataPost: {
@@ -298,7 +353,10 @@ export const paymentsRequestReducer = (
 
     };
   }
+
   if (action.type === "setTotalMonthsToPay") {
+    
+    // Calcula el total final de meses a pagar luego de la validación
     return {
       ...state,
       totalMonthstoPay: monthsTotalToPay(state?.DataPost?.solicitudes?.relaciones_oficiales_meses)

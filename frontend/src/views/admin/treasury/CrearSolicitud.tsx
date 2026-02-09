@@ -1,5 +1,5 @@
 import { Table } from "react-bootstrap";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer} from "react";
 import { useExplo } from "../../../hook/useExplo";
 import useTreasury from "../../../services/useTreasury";
 import GrowExample from "../../../components/GrowExample";
@@ -21,13 +21,19 @@ export default function CrearSolicitud() {
 
 
   useEffect(() => {
+
+    // Si el reducer detectó errores de validación (ej: meses seleccionados no consecutivos).
     if (paymentsState.errors.length > 0) {
+
+      // Si hay muchos oficiales con error, mostramos un mensaje genérico.
       if(paymentsState.errors.length > 4){
         toast.error(
           'Se encontraron errores con varios oficiales, no se permite seleccionar un mes y dejar vacío un mes anterior.', {
             autoClose: 10000, 
           },)
-      }else{
+      }
+      // Si son pocos, mostramos los nombres de los oficiales con error.
+      else{
         const oficiales= paymentsState.errors.map(id =>{
           return paymentsState.PaidData.find(oficial => oficial.oficial_id === id).nombre
         }).join(', ')
@@ -37,16 +43,21 @@ export default function CrearSolicitud() {
           },
         )
       }
+      // Limpiamos errores y detenemos loading luego de notificar.
       dispatch({type: "resetErrors"})
       dispatch({type: "toogleLoading", payload: {value: false}})
     }
   }, [paymentsState.errors])
 
   useEffect(() =>{
+
+    // Cuando ya existe la relación oficial-mes en la data a enviar,
+    // significa que la validación fue exitosa y podemos mostrar el resumen
     if(paymentsState?.DataPost?.solicitudes?.relaciones_oficiales_meses){
-      dispatch({type: "setSummaryMonths"})
-      dispatch({type: "setTotalMonthsToPay"})
-      dispatch({type: "openModal"})
+
+      dispatch({type: "setSummaryMonths"}) // Agrupa meses seleccionados
+      dispatch({type: "setTotalMonthsToPay"}) // Calcula total de meses
+      dispatch({type: "openModal"}) // Abre modal de confirmación
     }
 
   },[paymentsState?.DataPost?.solicitudes?.relaciones_oficiales_meses])
@@ -54,17 +65,31 @@ export default function CrearSolicitud() {
   useEffect(() => {
     const checkAndFetch = async () => {
       
+      // Reiniciamos el estado cada vez que cambian los parámetros (destacamento/año).
       dispatch({ type: "resetAll" });
 
+      // Solo continuamos si hay un destacamento seleccionado.
       if (paymentsState.params.destacamento_id) {
+
+        // Verificamos si el destacamento tiene una solicitud pendiente.
         const result = await hasPendingRequest(paymentsState.params.destacamento_id);
         
         if (result === "Pending") {
+
+          // Si hay solicitud pendiente, bloqueamos la creación de una nueva
           dispatch({type: "updateParams", payload: {name: "destacamento_id", value: "" }})
           toast.error('Este destacamento tiene una solicitud pendiente, para crear una nueva solicitud debe resolver la primera.');
-        } else {
+        } 
+        // El destacamento no tiene solicitudes pendientes, puede continuar.
+        else {
+
+          // cargamos los pagos del destacamento
           const { payments } = await getAllPayments(paymentsState.params);
+
+          // Guardamos oficiales y meses pagados
           dispatch({ type: "setPaidData", payload: { data: payments } }); //podria crear un dispatch unico para estos tres
+
+          // Inicializamos datos base del formulario
           dispatch({type: "updateDataPost", payload: { item: "responsable_id", value: state.user_info.id },});
           dispatch({type: "updateDataPost",payload: { item: "destacamento_id", value: paymentsState.params.destacamento_id}});
           dispatch({type: "updateDataPost",payload: { item: "valor_cuota", value: "1" },});
@@ -77,6 +102,8 @@ export default function CrearSolicitud() {
   }, [paymentsState.params]);
 
   useEffect(() => {
+
+    // Una vez cargados los pagos, inicializamos el estado de los checkboxes por oficial.
     if (paymentsState.PaidData) {
       dispatch({ type: "setInputsOficiales" });
     }
@@ -111,6 +138,9 @@ export default function CrearSolicitud() {
 
     const { monto, comprobante_imagen, tasa, referencia } = paymentsState.DataPost.solicitudes;
 
+    // Validación básica:
+    // - Al menos un oficial/mes seleccionado.
+    // - Campos obligatorios completos.
     if (
       !Object.values(paymentsState.allInputs).some((val) => val === true) ||
       !monto ||
@@ -123,6 +153,7 @@ export default function CrearSolicitud() {
       return;
     }
 
+    // Dispara validaciones de negocio (meses consecutivos, etc.)
     dispatch({type: "validation"})
   
     dispatch({type: "toogleLoading", payload: {value: false}})
@@ -179,6 +210,11 @@ export default function CrearSolicitud() {
         </div>
         {paymentsState.params.destacamento_id && (
           <div className="col-md-4 col-lg-5">
+
+            {/* 
+              Selecciona todos los oficiales y todos los meses.
+              Este checkbox sincroniza InputsOficiales + InputsMonths desde el reducer.
+            */}
             <input
               className="me-2"
               id="select-all"

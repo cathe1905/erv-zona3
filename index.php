@@ -1,4 +1,8 @@
 <?php
+// Para usar la aplicacion en local solo dejar disponibles los headers, comentar todo lo demas.
+// Verifica el puerto donde este corriendo el servidor en httpd.conf (icono verde de wampserver -> apache)
+// y si hay algun cambio modificar VITE_API_URL
+
 require_once __DIR__ . '/backend/includes/funciones.php';
 use function Controllers\loadEnv;
 loadEnv(__DIR__ . '/.env');
