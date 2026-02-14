@@ -34,27 +34,19 @@ export default function useTreasury() {
 
   const getAllPayments = async (params: getAllPaymentsType) => {
     try {
+
       setLoading(true);
+
       const filteredParams = filterParams(params)
-      console.log('filtered paramas: ')
-      console.log(filteredParams)
       const queryString = new URLSearchParams(filteredParams).toString();
-      console.log('queryString')
-      console.log(queryString)
       const url = `${api}backend/pagos?${queryString}`;
-      console.log('url')
-      console.log(url)
       const data = await axios(url);
-      console.log('data')
-      console.log(data)
 
       if (!Array.isArray(data.data.payments)) {
-        console.log('data.data.payments no es array')
-        console.log(data.data.error)
         return data.data.error;
       }
 
-      if (data.statusText === "OK") {
+      if (data.status === 200) {
         return data.data;
       }
     } catch (error) {
@@ -78,10 +70,10 @@ export default function useTreasury() {
       const data = await axios(url);
 
       if (!Array.isArray(data.data.solicitudes)) {
-        return data.data.error;
+        return data.data.error; 
       }
       
-      if (data.statusText === "OK") {
+      if (data.status === 200) {
         return data.data;
       }
 
@@ -105,7 +97,7 @@ export default function useTreasury() {
         return data.data.error;
       }
       
-      if (data.statusText === "OK") {
+      if (data.status === 200) {
         return data.data.historial;
       }
 
