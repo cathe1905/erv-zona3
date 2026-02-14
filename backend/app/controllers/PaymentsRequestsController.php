@@ -165,4 +165,9 @@ class PaymentsRequestsController
             ]);
         }
     }
+
+    public static function deletePaymentsRequest(){
+
+        deleteRecord(PaymentsRequests::class, 'solicitud');
+    }
 }

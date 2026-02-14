@@ -138,6 +138,7 @@ $router->get('/backend/solicitud_pagos/actualizar', [PaymentsRequestsController:
 $router->post('/backend/solicitud_pagos/actualizar', [PaymentsRequestsController::class, 'edit_payment_request']);
 $router->post('/backend/rechazar-solicitud', [PaymentsRequestsController::class, 'reject_request']);
 $router->get('/backend/ultima-solicitud', [PaymentsRequestsController::class, 'getLastStatus']);
+$router->post('/backend/solicitud_pagos/eliminar', [PaymentsRequestsController::class, 'deletePaymentsRequest']);
 
 $router->get('/backend/pagos', [PaymentsController::class, 'get_payments']);
 $router->post('/backend/aprobar-pagos', [PaymentsController::class, 'set_payments']);

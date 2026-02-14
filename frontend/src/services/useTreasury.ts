@@ -109,6 +109,27 @@ export default function useTreasury() {
     }
   };
 
+  const deletePaymentRequest = async (solicitud_id: string) => {
+    try {
+      setLoading(true);
+
+      const url = `${api}backend/solicitud_pagos/eliminar`;
+
+      const data = await axios.post(url, JSON.stringify(solicitud_id));
+      
+      if (data.statusText=== 'OK') {
+        return true;
+      }else{
+        return false;
+      }
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const newPaymentRequest= async (request: DataPostType) =>{
     try {
       setLoading(true);
@@ -244,6 +265,7 @@ export default function useTreasury() {
     approvedPaymentRequest,
     hasPendingRequest,
     getRequestById,
-    EditRequest
+    EditRequest,
+    deletePaymentRequest
   };
 }

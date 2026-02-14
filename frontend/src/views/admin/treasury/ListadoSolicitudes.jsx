@@ -6,7 +6,6 @@ import { Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import PaginationGeneral from "../../../components/Pagination";
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   monthsArray,
   status,
@@ -23,16 +22,17 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
-import { FaEye, FaHistory, FaPencilAlt } from "react-icons/fa";
+import { FaEye, FaHistory, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { api } from "../../../funciones";
 import { toast } from "react-toastify";
 
 export default function ListadoSolicitudes() {
-  const navigate= useNavigate()
   const { state } = useExplo();
+  const [show, setShow] = useState(false);
   const yearStart = 2025;
-  const { getAllPaymentsRequests, getHistoryRequest, isLoading, rejectPaymentRequest, approvedPaymentRequest } = useTreasury();
+  const { getAllPaymentsRequests, getHistoryRequest, isLoading, rejectPaymentRequest, approvedPaymentRequest, deletePaymentRequest } = useTreasury();
   const currentYear = new Date().getFullYear();
+   const [idEliminar, setIdEliminar] = useState(null);
   const [total, setTotal] = useState(0);
   const [data, setData] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
@@ -217,6 +217,36 @@ export default function ListadoSolicitudes() {
     setShowDetail(false)
   }
 
+  const handleClose = () => {
+    setIdEliminar(null);
+    setShow(false);
+  };
+  const handleShow = (id) => {
+    setIdEliminar(id);
+    setShow(true);
+  };
+
+  const handleDelete = async () => {
+    const result = await deletePaymentRequest({ id: idEliminar });
+    
+    if(result === true){
+      toast.success('Solicitud eliminada exitosamente.')
+      setShow(false);
+      fetchPaymentRequests()
+    }else{
+      toast.error('Ocurrió un error, contacte a soporte.')
+    }
+  };
+
+  const handleEdit = () => {
+    toast.info(
+      "Funcionalidad en construcción 🚧\n\nLa edición de solicitudes estará disponible próximamente.",
+      {
+        autoClose: 4000,
+      }
+    );
+  };
+
   return (
     <>
       <div className="row d-flex g-3 mt-3">
@@ -390,10 +420,18 @@ export default function ListadoSolicitudes() {
                     </Button>
                      <Button
                       disabled={request.estatus !== "pending"}
-                      onClick={() => navigate(`/dashboard/admin/tesoreria/solicitudes/editar?id=${request.id}`)}
+                      onClick={() => handleEdit()}
                       variant="link"
                     >
                       <FaPencilAlt />
+                    </Button>
+
+                      <Button
+                      variant="link"
+                      disabled={request.estatus !== "pending"}
+                      onClick={() => handleShow(request.id)}
+                    >
+                      <FaTrash className="text-danger" />
                     </Button>
                   </td>
                 </tr>
@@ -572,7 +610,28 @@ export default function ListadoSolicitudes() {
                 Cancelar
               </Button>
             </Modal.Footer>
-          </Modal>
+            </Modal>
+                <Modal
+                  show={show}
+                  onHide={handleClose}
+                  backdrop="static"
+                  keyboard={false}
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Eliminar solicitud</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    ¿Estás seguro(a) que deseas eliminar esta solicitud de datos?. Todos los datos se perderán.
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                      Cancelar
+                    </Button>
+                    <Button onClick={handleDelete} variant="primary">
+                      Si
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
           {total > 0 && (
             <div className="d-flex justify-content-end">
               <PaginationGeneral

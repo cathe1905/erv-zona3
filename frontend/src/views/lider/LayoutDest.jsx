@@ -6,6 +6,8 @@ import { capitalize} from "../../funciones";
 import { useNavigate } from "react-router-dom";
 import GrowExample from "../../components/GrowExample";
 import { useExplo } from "../../hook/useExplo";
+import Accordion from "react-bootstrap/Accordion";
+import { NavLink } from "react-router-dom";
 
 const Menu = ({ destacamento }) => {
   const {Logout} = useExplo()
@@ -25,6 +27,50 @@ const Menu = ({ destacamento }) => {
           <i className="bi bi-people me-2"></i> <span>Exploradores</span>
         </a>
 
+         <Accordion
+          defaultActiveKey=""
+          flush
+          className="bg-transparent border-0 mt-0 px-0 py-0"
+        >
+          <Accordion.Item eventKey="0" className="bg-transparent border-0 m-0">
+            <Accordion.Header className="custom-accordion-header mx-0">
+              <i className="bi bi-cash-coin me-2"></i> <span>Tesorería</span>
+            </Accordion.Header>
+            <Accordion.Body className="py-0">
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-decoration-none mb-2 px-md-3 enlace-menu text-white nav-link-active"
+                    : "text-decoration-none mb-2 px-md-3 enlace-menu text-white"
+                }
+                to="/dashboard/admin/tesoreria/pagos"
+              >
+                Listado de Pagos
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-decoration-none mb-2 px-md-3 enlace-menu text-white nav-link-active"
+                    : "text-decoration-none mb-2 px-md-3 enlace-menu text-white"
+                }
+                to="/dashboard/admin/tesoreria/solicitudes"
+                end
+              >
+                Solicitudes
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-decoration-none px-md-3 enlace-menu text-white nav-link-active"
+                    : "text-decoration-none px-md-3 enlace-menu text-white"
+                }
+                to="/dashboard/admin/tesoreria/solicitudes/crear"
+              >
+                Crear Solicitud
+              </NavLink>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
         <a
           type="button"
           onClick={Logout}
