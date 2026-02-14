@@ -56,6 +56,7 @@ export default function ListadoPagos() {
   useEffect(() => {
     const fetchPayments = async () => {
       const Payments = await getAllPayments(params);
+      console.log(Payments)
       setData(Payments.payments);
       setTotal(Payments.total)
     };
