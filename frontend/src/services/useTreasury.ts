@@ -115,8 +115,9 @@ export default function useTreasury() {
       const url = `${api}backend/solicitud_pagos`;
 
       const data = await axios.post(url, JSON.stringify(request));
-      console.log(data)
-      if (data.statusText=== "Created") {
+
+      // 201 = "Created"
+      if (data.status === 201) {
         return true;
       }else{
         return false;
@@ -135,8 +136,9 @@ export default function useTreasury() {
       const url = `${api}backend/rechazar-solicitud`;
 
       const data = await axios.post(url, infoPaymentRequest);
-console.log(data)
-      if (data.statusText=== "Created") {
+
+      // 201 = "Created"
+      if (data.status === 201) {
         return true;
       }else{
         return false;
@@ -155,8 +157,9 @@ console.log(data)
 
         const url = `${api}backend/aprobar-pagos`;
         const response = await axios.post(url, infoPaymentRequest);
-console.log(response )
-        if (response.status === 201) { // 201 es el código para "Created"
+
+        // 201 = "Created"
+        if (response.status === 201) { 
           return true;
         } else {
           // Si el servidor devuelve un error estructurado
